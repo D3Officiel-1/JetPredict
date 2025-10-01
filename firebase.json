@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "predict-ci",
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "name": "JetPredict",
+  "short_name": "JetPredict",
+  "description": "Prédiction de côte",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#121832",
+  "theme_color": "#121832",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Nouvelle Note",
+      "short_name": "Note",
+      "description": "Créer une nouvelle note rapide",
+      "url": "/new-note",
+      "icons": [{ "src": "/icons/shortcut-note.svg", "sizes": "96x96" }]
+    },
+    {
+      "name": "Mes Notifications",
+      "short_name": "Notifications",
+      "description": "Voir les dernières notifications",
+      "url": "/notification",
+      "icons": [{ "src": "/icons/shortcut-bell.svg", "sizes": "96x96" }]
+    }
+  ],
+  "share_target": {
+    "action": "/share",
+    "method": "GET",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url"
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/open-file",
+      "accept": {
+        "text/plain": [".txt", ".text"]
+      },
+      "icons": [
+        {
+          "src": "/icons/file-handler-icon.svg",
+          "sizes": "128x128"
+        }
+      ]
+    }
+  ],
+  "protocol_handlers": [
+    {
+      "protocol": "web+jetpredict",
+      "url": "/protocol?url=%s"
+    }
+  ]
+}

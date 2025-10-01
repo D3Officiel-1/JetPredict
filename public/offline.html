@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JetPredict - Hors Ligne</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap');
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: #121832;
+            color: #E0E0E0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+        }
+        .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+        h1 {
+            font-size: 2rem;
+            color: #00bfff;
+            margin: 0 0 1rem 0;
+        }
+        p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        .button {
+            margin-top: 2rem;
+            padding: 12px 24px;
+            background-color: #00bfff;
+            color: #121832;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: transform 0.2s;
+        }
+        .button:hover {
+            transform: scale(1.05);
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon">🛰️</div>
+        <h1>Vous êtes hors ligne</h1>
+        <p>Il semble que vous n'ayez pas de connexion Internet. Certaines fonctionnalités de JetPredict peuvent être limitées.</p>
+        <p>Veuillez vérifier votre connexion et réessayer.</p>
+        <a href="/" class="button" onclick="window.location.reload(); return false;">Réessayer</a>
+    </div>
+</body>
+</html>
