@@ -70,15 +70,20 @@ const menuContainerVariants = {
 };
 
 const menuItemVariants = {
-    closed: { opacity: 0, scale: 0.5, y: 10 },
-    open: {
-        opacity: 1,
-        scale: 1,
-        y: 0,
-        transition: {
-            type: "spring",
-            stiffness: 400,
-            damping: 15
+    closed: { opacity: 0, scale: 0.5, x: 0, y: 0 },
+    open: (index: number) => {
+        const angle = 90 + (index * 45); 
+        const radius = 80;
+        return {
+            x: radius * Math.cos(angle * (Math.PI / 180)),
+            y: -radius * Math.sin(angle * (Math.PI / 180)),
+            opacity: 1,
+            scale: 1,
+            transition: {
+                type: "spring",
+                stiffness: 400,
+                damping: 15
+            }
         }
     },
 };
@@ -100,20 +105,12 @@ const FABMenuItem = ({
   tooltip?: string;
   index: number;
 }) => {
-    // Angles for the left arc: 90 (up), 135 (up-left), 180 (left)
-    const angle = 90 + (index * 45); 
-    const radius = 70; // Distance from center
-    const xOffset = radius * Math.cos(angle * (Math.PI / 180));
-    const yOffset = -radius * Math.sin(angle * (Math.PI / 180));
-
+    
     const content = (
          <motion.div
             variants={menuItemVariants}
-            style={{
-                position: 'absolute',
-                x: xOffset,
-                y: yOffset
-            }}
+            custom={index}
+            style={{ position: 'absolute' }}
         >
             <TooltipProvider>
                 <Tooltip>
@@ -318,9 +315,9 @@ export default function Header() {
                           animate="open"
                           exit="closed"
                         >
-                            <FABMenuItem index={2} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
+                            <FABMenuItem index={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                             <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
-                            <FABMenuItem index={0} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
+                            <FABMenuItem index={0} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
                         </motion.div>
                     )}
                 </AnimatePresence>
