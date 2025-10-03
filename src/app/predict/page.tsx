@@ -35,7 +35,6 @@ import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { PlanId } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { TelegramIcon, WhatsAppIcon } from '@/components/icons';
 import { useToast } from '@/hooks/use-toast';
 import { SinglePrediction } from '@/types';
 
@@ -383,10 +382,8 @@ export default function PredictPage() {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <a href="https://www.whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" target="_blank" rel="noopener noreferrer">
-                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 text-white shadow-lg shadow-green-500/40 flex items-center justify-center">
-                                            <Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={32} height={32} />
-                                        </Button>
+                                    <a href="https://www.whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" target="_blank" rel="noopener noreferrer" className="block w-14 h-14 transition-transform hover:scale-110">
+                                        <Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={56} height={56} />
                                     </a>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Rejoindre la chaîne WhatsApp</p></TooltipContent>
@@ -397,10 +394,8 @@ export default function PredictPage() {
                          <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <a href="https://t.me/Jet_Predict_Bot" target="_blank" rel="noopener noreferrer">
-                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-sky-500 to-blue-500 text-white shadow-lg shadow-blue-500/40 flex items-center justify-center">
-                                            <Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={32} height={32} />
-                                        </Button>
+                                    <a href="https://t.me/Jet_Predict_Bot" target="_blank" rel="noopener noreferrer" className="block w-14 h-14 transition-transform hover:scale-110">
+                                        <Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={56} height={56} />
                                     </a>
                                 </TooltipTrigger>
                                 <TooltipContent><p>Ouvrir le bot Telegram</p></TooltipContent>
@@ -501,4 +496,3 @@ export default function PredictPage() {
     </div>
   );
 }
-
