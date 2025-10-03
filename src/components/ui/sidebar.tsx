@@ -26,6 +26,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
+import { WhatsAppIcon, TelegramIcon } from '@/components/icons';
 
 const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
     <div className="flex items-start gap-4">
@@ -41,7 +42,7 @@ const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title:
 
 const fabVariants = {
   closed: { scale: 1, rotate: 0 },
-  open: { scale: 1, rotate: -45 },
+  open: { scale: 1, rotate: 0 },
 };
 
 const menuContainerVariants = {
@@ -108,7 +109,7 @@ const FABMenuItem = ({
                             onClick={disabled ? undefined : onClick}
                         >
                             {href && !disabled ? (
-                                <Link href={href}>{icon}</Link>
+                                <Link href={href} target="_blank" rel="noopener noreferrer">{icon}</Link>
                             ) : (
                                 <span>{icon}</span>
                             )}
@@ -124,7 +125,6 @@ const FABMenuItem = ({
   
   return content;
 };
-
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
@@ -298,9 +298,9 @@ export default function Header() {
                         variants={menuContainerVariants}
                         className="absolute bottom-0 right-0"
                     >
-                        <FABMenuItem icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} angle={-150}/>
-                        <FABMenuItem icon={<Users size={24} />} label="Parrainage" href="/referral" angle={-120}/>
-                        <FABMenuItem icon={<LifeBuoy size={24} />} label="Support Premium" href="/support" disabled={!canAccessSupport} tooltip="Réservé au forfait Mois" angle={-90}/>
+                        <FABMenuItem icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} angle={-135}/>
+                        <FABMenuItem icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" angle={-90}/>
+                        <FABMenuItem icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" angle={-45}/>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -309,7 +309,6 @@ export default function Header() {
                 variants={fabVariants}
                 className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
                 whileTap={{ scale: 0.9 }}
-                onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
             >
                 <motion.div animate={{ rotate: isFabMenuOpen ? 45 : 0 }}><Compass size={28} /></motion.div>
             </motion.button>
