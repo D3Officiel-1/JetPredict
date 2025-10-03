@@ -100,13 +100,20 @@ const FABMenuItem = ({
   tooltip?: string;
   index: number;
 }) => {
-    const yOffset = -60 - (index * 56); // 60 for base offset, 56 for each item height + gap
+    // Angles for the left arc: 90 (up), 135 (up-left), 180 (left)
+    const angle = 90 + (index * 45); 
+    const radius = 70; // Distance from center
+    const xOffset = radius * Math.cos(angle * (Math.PI / 180));
+    const yOffset = -radius * Math.sin(angle * (Math.PI / 180));
 
     const content = (
          <motion.div
             variants={menuItemVariants}
-            style={{ y: yOffset }}
-            className="absolute left-1/2 -translate-x-1/2"
+            style={{
+                position: 'absolute',
+                x: xOffset,
+                y: yOffset
+            }}
         >
             <TooltipProvider>
                 <Tooltip>
@@ -298,7 +305,7 @@ export default function Header() {
       
        <div className="fixed bottom-6 right-6 z-40">
             <motion.div
-                className="relative"
+                className="relative flex items-center justify-center"
                 initial={false}
                 animate={isFabMenuOpen ? "open" : "closed"}
             >
@@ -306,7 +313,7 @@ export default function Header() {
                     {isFabMenuOpen && (
                         <motion.div
                           variants={menuContainerVariants}
-                          className="absolute bottom-0 right-0"
+                          className="absolute"
                           initial="closed"
                           animate="open"
                           exit="closed"
