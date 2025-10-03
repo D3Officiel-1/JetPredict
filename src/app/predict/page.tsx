@@ -383,9 +383,9 @@ export default function PredictPage() {
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
-                                    <a href="https://www.whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x" target="_blank" rel="noopener noreferrer">
-                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 text-white shadow-lg shadow-green-500/40">
-                                            <WhatsAppIcon className="h-7 w-7" />
+                                    <a href="https://www.whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" target="_blank" rel="noopener noreferrer">
+                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-green-500 to-teal-500 text-white shadow-lg shadow-green-500/40 flex items-center justify-center">
+                                            <Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={32} height={32} />
                                         </Button>
                                     </a>
                                 </TooltipTrigger>
