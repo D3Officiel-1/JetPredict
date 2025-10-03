@@ -63,7 +63,7 @@ const StrategyGuideStep = ({ icon, title, children }: { icon: React.ReactNode, t
 
 export default function PredictPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [userData, setUserData] = useState<{ notificationSettings?: { alertsEnabled?: boolean, soundEnabled?: boolean, vibrationEnabled?: boolean } } | null>(null);
+  const [userData, setUserData] = useState<{ username?: string, solde_referral?: number, notificationSettings?: { alertsEnabled?: boolean, soundEnabled?: boolean, vibrationEnabled?: boolean } } | null>(null);
   const [planId, setPlanId] = useState<PlanId | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -223,6 +223,16 @@ export default function PredictPage() {
     }
     return email ? email.substring(0, 2).toUpperCase() : '??';
   };
+
+  const getPlanName = (plan: PlanId | null) => {
+    switch (plan) {
+      case 'hourly': return 'Forfait Heure';
+      case 'daily': return 'Forfait Jour';
+      case 'weekly': return 'Forfait Semaine';
+      case 'monthly': return 'Forfait Mois';
+      default: return 'Abonnement';
+    }
+  };
   
   const isVerified = user?.emailVerified === true;
   const canAccessPremiumFeatures = planId === 'weekly' || planId === 'monthly';
@@ -265,108 +275,115 @@ export default function PredictPage() {
     };
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-background">
-      <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-8">
-        <div className="flex items-center gap-4">
-          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} />
-          <h1 className="font-headline text-xl font-bold text-primary">
-            JetPredict
-          </h1>
-        </div>
-        <DropdownMenu>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                          <Avatar className="h-9 w-9">
-                            <AvatarImage src={user.photoURL ?? ''} alt="Avatar" />
-                            <AvatarFallback>{getInitials(user.email)}</AvatarFallback>
-                          </Avatar>
-                           {unreadCount > 0 && <span className="premium-notification-pulse"></span>}
-                           {!isVerified && (
-                              <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-background" />
-                          )}
-                        </Button>
-                    </DropdownMenuTrigger>
-                </TooltipTrigger>
-                {unreadCount > 0 && (
-                   <TooltipContent>
-                      <p>Vous avez {unreadCount} notification(s) non lue(s)</p>
-                   </TooltipContent>
-                )}
-                 {!isVerified && (
-                  <TooltipContent>
-                      <p>Veuillez vérifier votre email</p>
-                  </TooltipContent>
-                 )}
-            </Tooltip>
-          </TooltipProvider>
+    <div className="flex min-h-screen w-full flex-col bg-background p-4 md:p-8">
+       <div className="flex items-center justify-between gap-4 mb-4 md:mb-8">
+            <div className="flex items-center gap-4">
+                <DropdownMenu>
+                    <TooltipProvider>
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="relative h-12 w-12 rounded-full">
+                                <Avatar className="h-12 w-12 border-2 border-primary/50">
+                                    <AvatarImage src={user.photoURL ?? ''} alt="Avatar" />
+                                    <AvatarFallback>{getInitials(user.email)}</AvatarFallback>
+                                </Avatar>
+                                {unreadCount > 0 && <span className="premium-notification-pulse"></span>}
+                                {!isVerified && (
+                                    <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-destructive ring-2 ring-background" />
+                                )}
+                                </Button>
+                            </DropdownMenuTrigger>
+                        </TooltipTrigger>
+                        {unreadCount > 0 && (
+                        <TooltipContent>
+                            <p>Vous avez {unreadCount} notification(s) non lue(s)</p>
+                        </TooltipContent>
+                        )}
+                        {!isVerified && (
+                        <TooltipContent>
+                            <p>Veuillez vérifier votre email</p>
+                        </TooltipContent>
+                        )}
+                    </Tooltip>
+                </TooltipProvider>
 
-          <DropdownMenuContent className="w-56" align="end" forceMount>
-            <DropdownMenuLabel className="font-normal">
-              <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">{user.displayName || 'Mon Compte'}</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  {user.email}
-                </p>
-              </div>
-            </DropdownMenuLabel>
-             {!isVerified && (
-                  <DropdownMenuItem asChild>
-                      <Link href="/verify-email" className="text-destructive focus:bg-destructive/10 focus:text-destructive">
-                          <ShieldAlert className="mr-2 h-4 w-4" />
-                          <span>Email non vérifié</span>
-                      </Link>
-                  </DropdownMenuItem>
-              )}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem asChild disabled={!isVerified}>
-              <Link href="/notification">
-                <Bell className="mr-2 h-4 w-4" />
-                <span>Notifications</span>
-                 {unreadCount > 0 && <span className="notification-dot"></span>}
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild disabled={!isVerified}>
-              <Link href="/profile">
-                <UserIcon className="mr-2 h-4 w-4" />
-                <span>Profil</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild disabled={!isVerified}>
-              <Link href="/referral">
-                <Users className="mr-2 h-4 w-4" />
-                <span>Parrainage</span>
-              </Link>
-            </DropdownMenuItem>
-             <DropdownMenuItem asChild disabled={!isVerified || !canAccessPremiumFeatures}>
-                <Link href="/simulation">
-                    <Beaker className="mr-2 h-4 w-4" />
-                    <span>Simulation</span>
-                </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild disabled={!isVerified}>
-              <Link href="/settings">
-                <Settings className="mr-2 h-4 w-4" />
-                <span>Paramètres</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild disabled={!isVerified || !canAccessSupport}>
-              <Link href="/support">
-                <LifeBuoy className="mr-2 h-4 w-4" />
-                <span>Support</span>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-             <DropdownMenuItem onClick={handleLogout}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Se déconnecter</span>
-              </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </header>
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+                <DropdownMenuContent className="w-56" align="start" forceMount>
+                    <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{userData?.username || user.displayName || 'Mon Compte'}</p>
+                        <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                        </p>
+                    </div>
+                    </DropdownMenuLabel>
+                    {!isVerified && (
+                        <DropdownMenuItem asChild>
+                            <Link href="/verify-email" className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+                                <ShieldAlert className="mr-2 h-4 w-4" />
+                                <span>Email non vérifié</span>
+                            </Link>
+                        </DropdownMenuItem>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild disabled={!isVerified}>
+                    <Link href="/notification">
+                        <Bell className="mr-2 h-4 w-4" />
+                        <span>Notifications</span>
+                        {unreadCount > 0 && <span className="notification-dot"></span>}
+                    </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild disabled={!isVerified}>
+                    <Link href="/profile">
+                        <UserIcon className="mr-2 h-4 w-4" />
+                        <span>Profil</span>
+                    </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild disabled={!isVerified}>
+                    <Link href="/referral">
+                        <Users className="mr-2 h-4 w-4" />
+                        <span>Parrainage</span>
+                    </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild disabled={!isVerified || !canAccessPremiumFeatures}>
+                        <Link href="/simulation">
+                            <Beaker className="mr-2 h-4 w-4" />
+                            <span>Simulation</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild disabled={!isVerified}>
+                    <Link href="/settings">
+                        <Settings className="mr-2 h-4 w-4" />
+                        <span>Paramètres</span>
+                    </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild disabled={!isVerified || !canAccessSupport}>
+                    <Link href="/support">
+                        <LifeBuoy className="mr-2 h-4 w-4" />
+                        <span>Support</span>
+                    </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Se déconnecter</span>
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+                </DropdownMenu>
+
+                <div>
+                    <h1 className="font-bold text-lg text-foreground">{userData?.username || user.displayName}</h1>
+                    <p className="text-sm text-primary">{getPlanName(planId)}</p>
+                </div>
+            </div>
+
+            <div className="text-right">
+                <p className="text-xs text-muted-foreground">Solde Parrainage</p>
+                <p className="font-bold text-lg text-green-400">{(userData?.solde_referral || 0).toLocaleString('fr-FR')} FCFA</p>
+            </div>
+       </div>
+
+      <main className="flex flex-1 flex-col gap-4 md:gap-8">
         <CrashPredictorDashboard planId={planId} notificationSettings={userData?.notificationSettings} />
       </main>
 
@@ -408,7 +425,7 @@ export default function PredictPage() {
                                 <TooltipTrigger asChild>
                                     <Dialog>
                                         <DialogTrigger asChild>
-                                            <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/40">
+                                           <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-white shadow-lg shadow-indigo-500/40">
                                                 <HelpCircle className="h-7 w-7" />
                                             </Button>
                                         </DialogTrigger>
