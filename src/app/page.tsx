@@ -43,14 +43,12 @@ const testimonials = [
     {
         name: "Moussa K.",
         role: "Utilisateur VIP",
-        avatar: "https://i.pravatar.cc/150?u=a042581f4e29026704d",
         rating: 5,
         quote: "JetPredict a changé ma façon de parier. Les prédictions pour les matchs de foot sont incroyablement précises. L'indice de fiabilité est un vrai plus !",
     },
     {
         name: "Awa T.",
         role: "Utilisatrice VVIP",
-        avatar: "https://i.pravatar.cc/150?u=a04258114e29026702d",
         rating: 5,
         quote: "Enfin une application qui tient ses promesses pour les paris. L'interface est simple et les résultats parlent d'eux-mêmes. Je recommande à 100%.",
     },
@@ -548,10 +546,6 @@ export default function LandingPage() {
                             <Card className="bg-card/50 p-6 rounded-2xl border-primary/20 hover:border-primary/50 transition-colors duration-300 shadow-lg hover:shadow-primary/10 h-full">
                                 <CardContent className="p-0">
                                     <div className="flex items-center gap-4 mb-4">
-                                        <Avatar className="w-12 h-12 border-2 border-primary/50">
-                                            <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                                            <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
-                                        </Avatar>
                                         <div>
                                             <CardTitle className="text-lg">{testimonial.name}</CardTitle>
                                             <p className="text-sm text-muted-foreground">{testimonial.role}</p>
