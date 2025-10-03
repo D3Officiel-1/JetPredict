@@ -815,86 +815,75 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
         </Card>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
-          <Card className="relative flex flex-col">
-            <CardHeader className="flex-row items-start sm:items-center justify-between p-4 sm:p-6">
-              <div>
-                <CardTitle className="flex items-center gap-2 font-medium text-muted-foreground">
-                  <Target className="h-5 w-5" />
-                  Prochaines Prédictions
-                </CardTitle>
-              </div>
-              {prediction?.predictions && prediction.predictions.length > 0 && (
-                  <div className="flex items-center gap-1 sm:gap-2">
-                      <TooltipProvider>
-                        {!canCopy ? (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span><CopyButton /></span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Passez au forfait Jour ou supérieur pour activer.</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        ) : (
-                          <CopyButton />
-                        )}
+           <Card className="relative flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-6">
+                    <CardTitle className="flex items-center gap-2 font-bold text-lg">
+                        <Target className="h-5 w-5 text-primary" />
+                        Prochaines Prédictions
+                    </CardTitle>
+                    {prediction?.predictions && prediction.predictions.length > 0 && (
+                        <div className="flex items-center gap-1 sm:gap-2">
+                            <TooltipProvider>
+                                {!canCopy ? (
+                                    <Tooltip>
+                                        <TooltipTrigger asChild><span><CopyButton /></span></TooltipTrigger>
+                                        <TooltipContent><p>Passez au forfait Jour ou supérieur.</p></TooltipContent>
+                                    </Tooltip>
+                                ) : <CopyButton />}
+                                {!canAccessPremiumFeatures ? (
+                                    <Tooltip>
+                                        <TooltipTrigger asChild><span><PipButton /></span></TooltipTrigger>
+                                        <TooltipContent><p>Passez au forfait Semaine ou Mois.</p></TooltipContent>
+                                    </Tooltip>
+                                ) : <PipButton />}
+                            </TooltipProvider>
+                        </div>
+                    )}
+                </CardHeader>
+                
+                <CardContent className="p-0 flex-1 overflow-y-auto max-h-[400px]">
+                    {isPredicting ? (
+                        <div className="flex h-full items-center justify-center p-6 text-center">
+                            <div className="flex flex-col items-center gap-2 text-muted-foreground">
+                                <Loader2 className="h-8 w-8 animate-spin" />
+                                <p>Analyse en cours...</p>
+                            </div>
+                        </div>
+                    ) : prediction?.predictions && prediction.predictions.length > 0 ? (
+                        <div className="flex flex-col">
+                            {prediction.predictions.map((p, index) => (
+                                <motion.div
+                                    key={index}
+                                    className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-border/50 last:border-b-0 cursor-pointer hover:bg-muted/50 transition-colors duration-200"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                                    onClick={() => handlePredictionClick(p)}
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <Clock className={cn("h-5 w-5", getPredictionTimeColor(p.time))} />
+                                        <span className={cn("font-code text-lg font-semibold", getPredictionTimeColor(p.time))}>
+                                            {p.time}
+                                        </span>
+                                    </div>
+                                    <span className="font-code text-xl font-bold text-primary">
+                                        {p.predictedCrashPoint.toFixed(2)}x
+                                    </span>
+                                </motion.div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex flex-col items-center justify-center h-full p-12 text-center text-muted-foreground gap-4">
+                            <Target className="h-16 w-16 text-primary/30" />
+                            <div className="space-y-1">
+                                <h3 className="text-lg font-semibold text-foreground">Aucune prédiction</h3>
+                                <p className="text-sm">Lancez une analyse pour voir les résultats ici.</p>
+                            </div>
+                        </div>
+                    )}
+                </CardContent>
+            </Card>
 
-                        {!canAccessPremiumFeatures ? (
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <span><PipButton /></span>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Passez au forfait Semaine ou Mois pour activer.</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        ) : (
-                          <PipButton />
-                        )}
-                      </TooltipProvider>
-                </div>
-              )}
-            </CardHeader>
-            
-            <CardContent className="p-0 flex-1 overflow-x-auto">
-              {isPredicting ? (
-                <div className="flex h-full items-center justify-center p-6 text-center">
-                  <div className="flex flex-col items-center gap-2 text-muted-foreground">
-                    <Loader2 className="h-8 w-8 animate-spin" />
-                    <p>Analyse en cours...</p>
-                  </div>
-                </div>
-              ) : prediction?.predictions && prediction.predictions.length > 0 ? (
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead className="text-center">Heure</TableHead>
-                        <TableHead className="text-center">Cote</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {prediction.predictions.map((p, index) => (
-                        <TableRow 
-                          key={index}
-                          className="animate-flash cursor-pointer" 
-                          style={{ animationDelay: `${index * 100}ms` }}
-                          onClick={() => handlePredictionClick(p)}
-                        >
-                          <TableCell className={cn("text-center font-code text-base", getPredictionTimeColor(p.time))}>{p.time}</TableCell>
-                          <TableCell className="text-center font-code text-base font-bold text-primary">{p.predictedCrashPoint.toFixed(2)}x</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-              ) : (
-                <div className="flex items-center justify-center h-full p-6 text-center">
-                  <p className="text-base sm:text-lg font-bold tracking-tighter text-muted-foreground">
-                    Aucune prédiction disponible.
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
 
           <Card>
             <CardHeader className="p-4 sm:p-6">
