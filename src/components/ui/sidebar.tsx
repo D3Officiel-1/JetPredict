@@ -48,7 +48,7 @@ const fabVariants = {
 const menuContainerVariants = {
     closed: {
         opacity: 0,
-        scale: 0,
+        scale: 0.8,
         transition: {
             when: "afterChildren",
             staggerChildren: 0.05,
@@ -70,18 +70,17 @@ const menuContainerVariants = {
 };
 
 const menuItemVariants = {
-    closed: { opacity: 0, scale: 0.5, y: 50 },
-    open: (i: number) => ({
+    closed: { opacity: 0, scale: 0.5, y: 10 },
+    open: {
         opacity: 1,
         scale: 1,
         y: 0,
         transition: {
             type: "spring",
             stiffness: 400,
-            damping: 15,
-            delay: i * 0.05
+            damping: 15
         }
-    }),
+    },
 };
 
 const FABMenuItem = ({
@@ -91,8 +90,7 @@ const FABMenuItem = ({
   onClick,
   disabled = false,
   tooltip,
-  angle,
-  custom,
+  index,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -100,19 +98,15 @@ const FABMenuItem = ({
   onClick?: () => void;
   disabled?: boolean;
   tooltip?: string;
-  angle: number;
-  custom: number;
+  index: number;
 }) => {
-    const RADIUS = 80;
-    const x = RADIUS * Math.cos(angle * (Math.PI / 180));
-    const y = RADIUS * Math.sin(angle * (Math.PI / 180));
+    const yOffset = -60 - (index * 56); // 60 for base offset, 56 for each item height + gap
 
     const content = (
          <motion.div
             variants={menuItemVariants}
-            custom={custom}
-            style={{ x, y }}
-            className="absolute"
+            style={{ y: yOffset }}
+            className="absolute left-1/2 -translate-x-1/2"
         >
             <TooltipProvider>
                 <Tooltip>
@@ -317,9 +311,9 @@ export default function Header() {
                           animate="open"
                           exit="closed"
                         >
-                            <FABMenuItem custom={0} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} angle={-135} />
-                            <FABMenuItem custom={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" angle={-90} />
-                            <FABMenuItem custom={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" angle={-45} />
+                            <FABMenuItem index={2} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
+                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
+                            <FABMenuItem index={0} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                         </motion.div>
                     )}
                 </AnimatePresence>
