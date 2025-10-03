@@ -1106,11 +1106,11 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                             )}
                         </div>
                          <motion.button
-                            className="absolute top-4 right-4 h-10 w-10 rounded-full bg-black/20 text-muted-foreground hover:text-foreground hover:bg-black/30 border border-white/10 backdrop-blur-sm flex items-center justify-center"
+                            className="absolute bottom-6 h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
                             onClick={() => setIsFullScreenPredictionOpen(false)}
-                            initial={{ opacity: 0, scale: 0.5 }}
-                            animate={{ opacity: 1, scale: 1, transition: { delay: 0.2 } }}
-                            exit={{ opacity: 0, scale: 0.5 }}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+                            exit={{ opacity: 0, y: 20 }}
                         >
                             <X />
                         </motion.button>
@@ -1121,6 +1121,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
+
 
 
 

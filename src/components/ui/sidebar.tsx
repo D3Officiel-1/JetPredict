@@ -69,24 +69,15 @@ const menuContainerVariants = {
     },
 };
 
-const menuItemVariants = {
-    closed: { opacity: 0, scale: 0.5, x: 0, y: 0 },
-    open: (index: number) => {
-        const angle = 90 + (index * 45); 
-        const radius = 90;
-        return {
-            x: radius * Math.cos(angle * (Math.PI / 180)),
-            y: -radius * Math.sin(angle * (Math.PI / 180)),
-            opacity: 1,
-            scale: 1,
-            transition: {
-                type: "spring",
-                stiffness: 400,
-                damping: 15
-            }
-        }
-    },
-};
+const menuItemVariants = { closed: { opacity: 0, scale: 0.5, x: 0, y: 0 },
+ open: (index: number) => { const angle = 90 + (index * 45);
+   const radius = 90; 
+   return { x: radius * Math.cos(angle * (Math.PI / 180)),
+     y: -radius * Math.sin(angle * (Math.PI / 180)),
+      opacity: 1, 
+      scale: 1, 
+      transition: { type: "spring", stiffness: 400, damping: 15 } } }, };
+
 
 const FABMenuItem = ({
   icon,
@@ -316,7 +307,7 @@ export default function Header() {
                           exit="closed"
                         >
                             <FABMenuItem index={0} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
-                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
+                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x" />
                             <FABMenuItem index={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                         </motion.div>
                     )}
