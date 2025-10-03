@@ -816,7 +816,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
         </Card>
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
-           <Card className="relative flex flex-col">
+           <Card className="relative flex flex-col bg-card/50 border-border/30 backdrop-blur-md">
                 <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-6">
                     <CardTitle className="flex items-center gap-2 font-bold text-lg">
                         <Target className="h-5 w-5 text-primary" />
@@ -886,7 +886,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
             </Card>
 
 
-          <Card>
+          <Card className="bg-card/50 border-border/30 backdrop-blur-md">
             <CardHeader className="p-4 sm:p-6">
               <CardTitle>Graphique des Prédictions</CardTitle>
               <CardDescription>
@@ -1000,7 +1000,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-primary/10 to-transparent -z-10"></div>
                         <div className="absolute inset-0 border-[6px] border-primary/20 rounded-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
 
-                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground" onClick={() => setIsFullScreenPredictionOpen(false)}>
+                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 h-10 w-10 rounded-full bg-black/20 text-muted-foreground hover:text-foreground hover:bg-black/30 border border-white/10 backdrop-blur-sm" onClick={() => setIsFullScreenPredictionOpen(false)}>
                             <X />
                         </Button>
                         
@@ -1088,4 +1088,5 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
+
 
