@@ -42,11 +42,12 @@ const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title:
 
 const fabVariants = {
   closed: { scale: 1, rotate: 0 },
-  open: { scale: 1, rotate: 0 },
+  open: { scale: 1.1, rotate: 0 },
 };
 
 const menuContainerVariants = {
     closed: {
+        opacity: 0,
         scale: 0,
         transition: {
             when: "afterChildren",
@@ -55,18 +56,32 @@ const menuContainerVariants = {
         },
     },
     open: {
+        opacity: 1,
         scale: 1,
         transition: {
             when: "beforeChildren",
             staggerChildren: 0.1,
             delayChildren: 0.1,
+            type: "spring",
+            stiffness: 300,
+            damping: 20
         },
     },
 };
 
 const menuItemVariants = {
-    closed: { opacity: 0, scale: 0 },
-    open: { opacity: 1, scale: 1 },
+    closed: { opacity: 0, scale: 0.5, y: 50 },
+    open: (i: number) => ({
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        transition: {
+            type: "spring",
+            stiffness: 400,
+            damping: 15,
+            delay: i * 0.05
+        }
+    }),
 };
 
 const FABMenuItem = ({
@@ -77,6 +92,7 @@ const FABMenuItem = ({
   disabled = false,
   tooltip,
   angle,
+  custom,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -85,6 +101,7 @@ const FABMenuItem = ({
   disabled?: boolean;
   tooltip?: string;
   angle: number;
+  custom: number;
 }) => {
     const RADIUS = 80;
     const x = RADIUS * Math.cos(angle * (Math.PI / 180));
@@ -93,6 +110,7 @@ const FABMenuItem = ({
     const content = (
          <motion.div
             variants={menuItemVariants}
+            custom={custom}
             style={{ x, y }}
             className="absolute"
         >
@@ -284,36 +302,40 @@ export default function Header() {
         </div>
       </header>
       
-      <div className="fixed bottom-6 right-6 z-40">
-        <motion.div
-            className="relative"
-            initial="closed"
-            animate={isFabMenuOpen ? "open" : "closed"}
-            onHoverStart={() => setIsFabMenuOpen(true)}
-            onHoverEnd={() => setIsFabMenuOpen(false)}
-        >
-             <AnimatePresence>
-                {isFabMenuOpen && (
-                    <motion.div
-                        variants={menuContainerVariants}
-                        className="absolute bottom-0 right-0"
-                    >
-                        <FABMenuItem icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} angle={-135}/>
-                        <FABMenuItem icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" angle={-90}/>
-                        <FABMenuItem icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" angle={-45}/>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            <motion.button
-                variants={fabVariants}
-                className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
-                whileTap={{ scale: 0.9 }}
+       <div className="fixed bottom-6 right-6 z-40">
+            <motion.div
+                className="relative"
+                initial={false}
+                animate={isFabMenuOpen ? "open" : "closed"}
             >
-                <motion.div animate={{ rotate: isFabMenuOpen ? 45 : 0 }}><Compass size={28} /></motion.div>
-            </motion.button>
-        </motion.div>
-      </div>
+                <AnimatePresence>
+                    {isFabMenuOpen && (
+                        <motion.div
+                          variants={menuContainerVariants}
+                          className="absolute bottom-0 right-0"
+                          initial="closed"
+                          animate="open"
+                          exit="closed"
+                        >
+                            <FABMenuItem custom={0} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} angle={-135} />
+                            <FABMenuItem custom={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" angle={-90} />
+                            <FABMenuItem custom={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" angle={-45} />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <motion.button
+                    variants={fabVariants}
+                    className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
+                    onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    <motion.div animate={{ rotate: isFabMenuOpen ? 45 : 0, scale: isFabMenuOpen ? 1.2 : 1 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
+                        {isFabMenuOpen ? <X size={28} /> : <Compass size={28} />}
+                    </motion.div>
+                </motion.button>
+            </motion.div>
+        </div>
 
        <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
             <DialogContent className="max-w-md">
