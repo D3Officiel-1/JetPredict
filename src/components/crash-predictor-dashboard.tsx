@@ -1011,26 +1011,26 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
                          <div className="w-full max-w-2xl mt-auto space-y-4">
                             {isFetchingStrategies ? (
-                                <div className="flex items-center justify-center p-4">
-                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                <span>Génération des stratégies...</span>
+                                <div className="flex items-center justify-center p-4 text-muted-foreground">
+                                    <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                                    <span>Analyse des stratégies par l'IA...</span>
                                 </div>
                             ) : strategies ? (
                                 <div className="grid md:grid-cols-2 gap-4">
-                                <div className="bg-secondary/50 p-4 rounded-lg">
-                                    <h4 className="flex items-center font-semibold mb-2 text-green-400">
-                                    <Shield className="mr-2 h-5 w-5" />
-                                    Stratégie Conservatrice
-                                    </h4>
-                                    <p className="text-sm text-muted-foreground">{strategies.conservativeStrategy}</p>
-                                </div>
-                                <div className="bg-secondary/50 p-4 rounded-lg">
-                                    <h4 className="flex items-center font-semibold mb-2 text-orange-400">
-                                    <Zap className="mr-2 h-5 w-5" />
-                                    Stratégie Agressive
-                                    </h4>
-                                    <p className="text-sm text-muted-foreground">{strategies.aggressiveStrategy}</p>
-                                </div>
+                                    <div className="bg-background/40 p-5 rounded-xl border border-green-500/20 shadow-inner">
+                                        <h4 className="flex items-center font-semibold mb-2 text-green-400">
+                                            <Shield className="mr-2 h-5 w-5" />
+                                            Stratégie Conservatrice
+                                        </h4>
+                                        <p className="text-sm text-muted-foreground">{strategies.conservativeStrategy}</p>
+                                    </div>
+                                    <div className="bg-background/40 p-5 rounded-xl border border-orange-500/20 shadow-inner">
+                                        <h4 className="flex items-center font-semibold mb-2 text-orange-400">
+                                            <Zap className="mr-2 h-5 w-5" />
+                                            Stratégie Agressive
+                                        </h4>
+                                        <p className="text-sm text-muted-foreground">{strategies.aggressiveStrategy}</p>
+                                    </div>
                                 </div>
                             ) : canAccessPremiumFeatures ? (
                                 <p className="text-sm text-muted-foreground">Aucune stratégie disponible.</p>
@@ -1051,3 +1051,4 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
+
