@@ -106,8 +106,8 @@ interface NotificationSettings {
     vibrationEnabled?: boolean;
 }
 
-let pipWindow: Window | null = null;
-
+let pipVideoElement: HTMLVideoElement | null = null;
+let pipCanvasInterval: NodeJS.Timeout | null = null;
 
 export function CrashPredictorDashboard({ planId, notificationSettings }: { planId: PlanId, notificationSettings?: NotificationSettings }) {
   const [isClient, setIsClient] = useState(false);
@@ -138,6 +138,7 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
   const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>('conservative');
   
   const notifiedPredictions = useRef(new Set());
+  const pipCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
 
   const allowedRiskLevels = useMemo(() => PLAN_RISK_LEVELS[planId] || [], [planId]);
@@ -433,7 +434,67 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     return 'text-red-500';
   };
 
- const handlePictureInPicture = async () => {
+ const drawPipCanvas = useCallback(() => {
+    const canvas = pipCanvasRef.current;
+    if (!canvas || !prediction?.predictions) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = 300 * dpr;
+    canvas.height = 400 * dpr;
+    ctx.scale(dpr, dpr);
+
+    // Get CSS variables
+    const style = getComputedStyle(document.body);
+    const bg = style.getPropertyValue('--background').trim();
+    const fg = style.getPropertyValue('--foreground').trim();
+    const primary = style.getPropertyValue('--primary').trim();
+    const border = style.getPropertyValue('--border').trim();
+
+    ctx.fillStyle = `hsl(${bg})`;
+    ctx.fillRect(0, 0, 300, 400);
+
+    ctx.fillStyle = `hsl(${fg})`;
+    ctx.font = 'bold 18px "Space Grotesk", sans-serif';
+    ctx.textAlign = "center";
+    ctx.fillText("JetPredict", 150, 30);
+    
+    const now = new Date();
+    ctx.font = '14px "Space Grotesk", sans-serif';
+    ctx.fillText(now.toLocaleTimeString('fr-FR'), 150, 50);
+
+    const upcomingPredictions = prediction.predictions.filter(p => {
+        const [h, m] = p.time.split(':').map(Number);
+        const pTime = new Date();
+        pTime.setHours(h, m, 0, 0);
+        return pTime.getTime() > now.getTime() - 60000;
+    }).slice(0, 10);
+
+    ctx.font = '16px "Source Code Pro", monospace';
+    ctx.textAlign = "left";
+    
+    upcomingPredictions.forEach((p, index) => {
+        const y = 90 + index * 30;
+        
+        const colorClass = getPredictionTimeColor(p.time);
+        if(colorClass === 'text-green-500') ctx.fillStyle = '#22c55e';
+        else if(colorClass === 'text-orange-500') ctx.fillStyle = '#f97316';
+        else if(colorClass === 'text-red-500') ctx.fillStyle = '#ef4444';
+        else ctx.fillStyle = `hsl(${fg})`;
+        
+        ctx.fillText(p.time, 20, y);
+        
+        ctx.fillStyle = `hsl(${primary})`;
+        ctx.textAlign = "right";
+        ctx.fillText(`${p.predictedCrashPoint.toFixed(2)}x`, 280, y);
+        ctx.textAlign = "left";
+    });
+
+  }, [prediction, currentTime]);
+
+  const handlePictureInPicture = async () => {
     if (!canAccessPremiumFeatures) {
         toast({
             variant: "destructive",
@@ -443,152 +504,37 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
         router.push('/pricing');
         return;
     }
-
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-    if (isMobile) {
-        setIsOverlayGuideOpen(true);
+    
+    if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
         return;
     }
 
+    const canvas = pipCanvasRef.current;
+    if (!canvas) return;
 
-    if (!('documentPictureInPicture' in window)) {
-        toast({
-            variant: "destructive",
-            title: "Non supporté",
-            description: "Votre navigateur ne supporte pas la superposition.",
-        });
-        return;
-    }
+    // First draw
+    drawPipCanvas();
+    
+    // Create video and play stream
+    pipVideoElement = document.createElement('video');
+    pipVideoElement.srcObject = canvas.captureStream();
+    pipVideoElement.muted = true;
+    
+    pipVideoElement.addEventListener('loadedmetadata', async () => {
+        if(!pipVideoElement) return;
+        await pipVideoElement.play();
+        await pipVideoElement.requestPictureInPicture();
+    });
 
-    try {
-        pipWindow = await (window as any).documentPictureInPicture.requestWindow({
-            width: 300,
-            height: 400,
-        });
+    pipVideoElement.addEventListener('leavepictureinpicture', () => {
+        if(pipCanvasInterval) clearInterval(pipCanvasInterval);
+        pipCanvasInterval = null;
+        pipVideoElement = null;
+    });
 
-        const computedStyle = window.getComputedStyle(document.body);
-        const styleVars = [
-            '--background', '--foreground', '--card', '--card-foreground',
-            '--popover', '--popover-foreground', '--primary', '--primary-foreground',
-            '--secondary', '--secondary-foreground', '--muted', '--muted-foreground',
-            '--accent', '--accent-foreground', '--destructive', '--destructive-foreground',
-            '--border', '--input', '--ring'
-        ].map(v => `${v}: ${computedStyle.getPropertyValue(v)}`).join('; ');
-
-        const css = `
-            :root { ${styleVars} }
-            @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap');
-            
-            body { 
-                margin: 0; 
-                font-family: 'Space Grotesk', 'Arial', sans-serif; 
-                background: radial-gradient(circle, hsl(var(--background) / 0.8), hsl(var(--background))), hsl(var(--background));
-                color: hsl(var(--foreground)); 
-                padding: 16px;
-                font-size: 14px;
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                box-sizing: border-box;
-            }
-            * {
-              box-sizing: border-box;
-            }
-            #content {
-              flex-grow: 1;
-              overflow-y: auto;
-              scrollbar-width: none;
-            }
-            #content::-webkit-scrollbar { 
-                display: none;
-            }
-            h2 { 
-              font-size: 1.2em; 
-              color: hsl(var(--primary)); 
-              border-bottom: 1px solid hsl(var(--border)); 
-              padding-bottom: 8px; 
-              margin: 0 0 12px 0; 
-              white-space: nowrap; 
-              overflow: hidden; 
-              text-overflow: ellipsis; 
-              font-weight: 700;
-            }
-            .prediction-row { 
-              display: flex; 
-              justify-content: space-between; 
-              padding: 8px 4px; 
-              font-size: 1em; 
-              border-bottom: 1px solid hsl(var(--border) / 0.5);
-              transition: background-color 0.2s ease;
-            }
-            .prediction-row:hover {
-              background-color: hsl(var(--accent) / 0.5);
-            }
-            .prediction-row span:first-child { 
-              font-family: monospace, 'Space Grotesk'; 
-            }
-            .prediction-row span:last-child { 
-              font-weight: 700; 
-              color: hsl(var(--primary));
-            }
-            .color-green { color: #22c55e; }
-            .color-orange { color: #f97316; }
-            .color-red { color: #ef4444; }
-        `;
-        const style = pipWindow.document.createElement('style');
-        style.textContent = css;
-        pipWindow.document.head.appendChild(style);
-
-        const contentDiv = pipWindow.document.createElement('div');
-        contentDiv.id = 'content';
-        pipWindow.document.body.appendChild(contentDiv);
-
-        const updatePipContent = () => {
-            if (!pipWindow || pipWindow.closed) {
-                clearInterval(intervalId);
-                return;
-            }
-            const now = new Date();
-            const upcomingPredictions = prediction?.predictions?.filter(p => {
-                const [h, m] = p.time.split(':').map(Number);
-                const pTime = new Date();
-                pTime.setHours(h, m, 0, 0);
-                return pTime.getTime() > now.getTime() - 60000;
-            }).slice(0, 20);
-
-            let content = `<h2>JetPredict - ${now.toLocaleTimeString('fr-FR')}</h2>`;
-            if (upcomingPredictions && upcomingPredictions.length > 0) {
-                content += upcomingPredictions.map(p => {
-                     const colorMap: { [key: string]: string } = {
-                        'text-green-500': 'color-green',
-                        'text-orange-500': 'color-orange',
-                        'text-red-500': 'color-red'
-                    };
-                    const colorClass = getPredictionTimeColor(p.time);
-                    const colorClassName = colorMap[colorClass] || '';
-                     return `<div class="prediction-row"><span class="${colorClassName}">${p.time}</span> <span>${p.predictedCrashPoint.toFixed(2)}x</span></div>`;
-                }).join('');
-            } else {
-                content += '<p>Aucune prédiction à venir.</p>';
-            }
-            contentDiv.innerHTML = content;
-        };
-
-        const intervalId = setInterval(updatePipContent, 1000);
-        pipWindow.addEventListener('pagehide', () => {
-            clearInterval(intervalId);
-            pipWindow = null;
-        });
-
-    } catch (error) {
-        console.error("Erreur PiP:", error);
-        toast({
-            variant: "destructive",
-            title: "Erreur de superposition",
-            description: "Impossible d'ouvrir la fenêtre de superposition.",
-        });
-    }
+    if (pipCanvasInterval) clearInterval(pipCanvasInterval);
+    pipCanvasInterval = setInterval(drawPipCanvas, 1000);
   };
 
 
@@ -736,6 +682,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
   return (
       <div className="flex flex-1 flex-col gap-4 md:gap-8">
+        <canvas ref={pipCanvasRef} style={{ display: 'none' }} width="300" height="400"></canvas>
         <Card className="bg-card/50 border-border/30 backdrop-blur-md">
           <CardHeader>
             <CardTitle>Contrôle de Prédiction IA</CardTitle>
@@ -1121,6 +1068,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
+
 
 
 
