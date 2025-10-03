@@ -676,7 +676,7 @@ export default function LandingPage() {
                             ></iframe>
                         </div>
                         <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
-                        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 justify-start">
+                        <div className="flex flex-col sm:flex-row items-end gap-2 justify-start">
                             <button onClick={handleAndroidInstallClick} className="cursor-pointer">
                                 <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} className={cn("dark:invert-0 invert")}/>
                             </button>
