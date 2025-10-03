@@ -20,11 +20,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Plus, Wallet, X } from 'lucide-react';
+import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet } from 'lucide-react';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
     <div className="flex items-start gap-4">
@@ -40,32 +41,31 @@ const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title:
 
 const fabVariants = {
   closed: { scale: 1, rotate: 0 },
-  open: { scale: 1, rotate: 45 },
+  open: { scale: 1, rotate: -45 },
 };
 
-const menuVariants = {
-  closed: {
-    opacity: 0,
-    scale: 0,
-    transition: {
-      when: "afterChildren",
-      staggerChildren: 0.05,
-      staggerDirection: -1,
+const menuContainerVariants = {
+    closed: {
+        scale: 0,
+        transition: {
+            when: "afterChildren",
+            staggerChildren: 0.05,
+            staggerDirection: -1,
+        },
     },
-  },
-  open: {
-    opacity: 1,
-    scale: 1,
-    transition: {
-      when: "beforeChildren",
-      staggerChildren: 0.05,
+    open: {
+        scale: 1,
+        transition: {
+            when: "beforeChildren",
+            staggerChildren: 0.1,
+            delayChildren: 0.1,
+        },
     },
-  },
 };
 
-const itemVariants = {
-  closed: { opacity: 0, y: 15 },
-  open: { opacity: 1, y: 0 },
+const menuItemVariants = {
+    closed: { opacity: 0, scale: 0 },
+    open: { opacity: 1, scale: 1 },
 };
 
 const FABMenuItem = ({
@@ -75,6 +75,7 @@ const FABMenuItem = ({
   onClick,
   disabled = false,
   tooltip,
+  angle,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -82,34 +83,46 @@ const FABMenuItem = ({
   onClick?: () => void;
   disabled?: boolean;
   tooltip?: string;
+  angle: number;
 }) => {
-  const content = (
-    <motion.div
-      variants={itemVariants}
-      className="flex items-center gap-3 cursor-pointer group"
-      onClick={disabled ? undefined : onClick}
-    >
-      <span className="text-right text-sm font-medium text-muted-foreground group-hover:text-foreground transition-colors">{label}</span>
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted shadow-md border border-border group-hover:bg-primary group-hover:text-primary-foreground group-hover:border-primary transition-all">
-        {icon}
-      </div>
-    </motion.div>
-  );
+    const RADIUS = 80;
+    const x = RADIUS * Math.cos(angle * (Math.PI / 180));
+    const y = RADIUS * Math.sin(angle * (Math.PI / 180));
 
-  const button = disabled && tooltip ? (
-     <TooltipProvider>
-        <Tooltip>
-            <TooltipTrigger asChild>
-                <div className="opacity-50 cursor-not-allowed">{content}</div>
-            </TooltipTrigger>
-            <TooltipContent><p>{tooltip}</p></TooltipContent>
-        </Tooltip>
-     </TooltipProvider>
-  ) : (
-    content
-  );
-
-  return href && !disabled ? <Link href={href}>{button}</Link> : button;
+    const content = (
+         <motion.div
+            variants={menuItemVariants}
+            style={{ x, y }}
+            className="absolute"
+        >
+            <TooltipProvider>
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                         <Button
+                            asChild={!disabled && !!href}
+                            size="icon"
+                            className={cn(
+                                "h-12 w-12 rounded-full shadow-lg border",
+                                disabled ? "bg-muted text-muted-foreground cursor-not-allowed opacity-60" : "bg-card text-card-foreground hover:bg-primary hover:text-primary-foreground"
+                            )}
+                            onClick={disabled ? undefined : onClick}
+                        >
+                            {href && !disabled ? (
+                                <Link href={href}>{icon}</Link>
+                            ) : (
+                                <span>{icon}</span>
+                            )}
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent side="left">
+                        <p>{disabled ? tooltip : label}</p>
+                    </TooltipContent>
+                </Tooltip>
+            </TooltipProvider>
+        </motion.div>
+    );
+  
+  return content;
 };
 
 
@@ -279,39 +292,26 @@ export default function Header() {
             onHoverStart={() => setIsFabMenuOpen(true)}
             onHoverEnd={() => setIsFabMenuOpen(false)}
         >
-            <AnimatePresence>
+             <AnimatePresence>
                 {isFabMenuOpen && (
                     <motion.div
-                        variants={menuVariants}
-                        className="absolute bottom-full right-0 mb-4 flex flex-col items-end gap-4"
+                        variants={menuContainerVariants}
+                        className="absolute bottom-0 right-0"
                     >
-                        <FABMenuItem
-                            icon={<HelpCircle size={24} />}
-                            label="Guide"
-                            onClick={() => setIsGuideOpen(true)}
-                        />
-                         <FABMenuItem
-                            icon={<Users size={24} />}
-                            label="Parrainage"
-                            href="/referral"
-                        />
-                         <FABMenuItem
-                            icon={<LifeBuoy size={24} />}
-                            label="Support Premium"
-                            href="/support"
-                            disabled={!canAccessSupport}
-                            tooltip="Réservé au forfait Mois"
-                        />
+                        <FABMenuItem icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} angle={-150}/>
+                        <FABMenuItem icon={<Users size={24} />} label="Parrainage" href="/referral" angle={-120}/>
+                        <FABMenuItem icon={<LifeBuoy size={24} />} label="Support Premium" href="/support" disabled={!canAccessSupport} tooltip="Réservé au forfait Mois" angle={-90}/>
                     </motion.div>
                 )}
             </AnimatePresence>
+
             <motion.button
                 variants={fabVariants}
                 className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
                 whileTap={{ scale: 0.9 }}
                 onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
             >
-                <Plus size={28} />
+                <motion.div animate={{ rotate: isFabMenuOpen ? 45 : 0 }}><Compass size={28} /></motion.div>
             </motion.button>
         </motion.div>
       </div>
