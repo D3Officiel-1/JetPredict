@@ -277,7 +277,7 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
                     }]
                 });
             } else {
-                 navigator.media-session.metadata = new MediaMetadata({
+                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: 'Aucune prédiction à venir',
                     artist: 'JetPredict',
                     album: 'JetPredict',
@@ -1073,6 +1073,3 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
-
-
-    
