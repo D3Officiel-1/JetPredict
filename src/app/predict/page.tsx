@@ -250,7 +250,7 @@ export default function PredictPage() {
 
     const fabItemVariants = {
         open: (i: number) => ({
-            y: -80 * (i + 1),
+            y: -72 * (i + 1),
             opacity: 1,
             transition: {
                 y: { stiffness: 1000, velocity: -100 }
@@ -394,6 +394,20 @@ export default function PredictPage() {
                          </TooltipProvider>
                     </motion.div>
                     <motion.div variants={fabItemVariants} custom={1} className="absolute bottom-0 right-0">
+                         <TooltipProvider>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <a href="https://t.me/Jet_Predict_Bot" target="_blank" rel="noopener noreferrer">
+                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-sky-500 to-blue-500 text-white shadow-lg shadow-blue-500/40">
+                                            <TelegramIcon className="h-7 w-7" />
+                                        </Button>
+                                    </a>
+                                </TooltipTrigger>
+                                <TooltipContent><p>Ouvrir le bot Telegram</p></TooltipContent>
+                            </Tooltip>
+                         </TooltipProvider>
+                    </motion.div>
+                    <motion.div variants={fabItemVariants} custom={0} className="absolute bottom-0 right-0">
                         <TooltipProvider>
                             <Tooltip>
                                 <TooltipTrigger asChild>
@@ -466,20 +480,6 @@ export default function PredictPage() {
                                 <TooltipContent><p>Guide d'utilisation</p></TooltipContent>
                             </Tooltip>
                         </TooltipProvider>
-                    </motion.div>
-                    <motion.div variants={fabItemVariants} custom={0} className="absolute bottom-0 right-0">
-                         <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <a href="https://t.me/Jet_Predict_Bot" target="_blank" rel="noopener noreferrer">
-                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-sky-500 to-blue-500 text-white shadow-lg shadow-blue-500/40">
-                                            <TelegramIcon className="h-7 w-7" />
-                                        </Button>
-                                    </a>
-                                </TooltipTrigger>
-                                <TooltipContent><p>Ouvrir le bot Telegram</p></TooltipContent>
-                            </Tooltip>
-                         </TooltipProvider>
                     </motion.div>
                 </motion.div>
             )}
