@@ -5,7 +5,7 @@ import { useState, useEffect, useTransition, useMemo, Fragment, useRef, useCallb
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app, db } from '@/lib/firebase';
 import { Timestamp, doc, getDoc, collection, query, where, getDocs, orderBy, limit } from "firebase/firestore";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import {
   predictCrashPoint,
   PredictCrashPointInput,
@@ -63,7 +63,6 @@ import {
   TrendingUp,
   LineChart as LineChartIcon
 } from "lucide-react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { cn } from "@/lib/utils";
 import { Alert, AlertDescription } from "./ui/alert";
@@ -134,6 +133,7 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
   const [isFullScreenPredictionOpen, setIsFullScreenPredictionOpen] = useState(false);
   const [fullScreenPredictionData, setFullScreenPredictionData] = useState<SinglePrediction | null>(null);
   const [isOverlayGuideOpen, setIsOverlayGuideOpen] = useState(false);
+  const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>('conservative');
   
   const notifiedPredictions = useRef(new Set());
 
@@ -277,7 +277,7 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
                     }]
                 });
             } else {
-                 navigator.mediaSession.metadata = new MediaMetadata({
+                 navigator.media-session.metadata = new MediaMetadata({
                     title: 'Aucune prédiction à venir',
                     artist: 'JetPredict',
                     album: 'JetPredict',
@@ -1009,28 +1009,50 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                             {fullScreenPredictionData.predictedCrashPoint.toFixed(2)}x
                         </motion.div>
 
-                         <div className="w-full max-w-2xl mt-auto space-y-4">
+                        <div className="w-full max-w-xl mt-auto space-y-4">
                             {isFetchingStrategies ? (
-                                <div className="flex items-center justify-center p-4 text-muted-foreground">
-                                    <Loader2 className="mr-3 h-5 w-5 animate-spin" />
-                                    <span>Analyse des stratégies par l'IA...</span>
+                                <div className="flex h-32 items-center justify-center p-4 text-muted-foreground">
+                                    <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                                    <span className="text-lg">Analyse des stratégies par l'IA...</span>
                                 </div>
                             ) : strategies ? (
-                                <div className="grid md:grid-cols-2 gap-4">
-                                    <div className="bg-background/40 p-5 rounded-xl border border-green-500/20 shadow-inner">
-                                        <h4 className="flex items-center font-semibold mb-2 text-green-400">
-                                            <Shield className="mr-2 h-5 w-5" />
-                                            Stratégie Conservatrice
-                                        </h4>
-                                        <p className="text-sm text-muted-foreground">{strategies.conservativeStrategy}</p>
-                                    </div>
-                                    <div className="bg-background/40 p-5 rounded-xl border border-orange-500/20 shadow-inner">
-                                        <h4 className="flex items-center font-semibold mb-2 text-orange-400">
-                                            <Zap className="mr-2 h-5 w-5" />
-                                            Stratégie Agressive
-                                        </h4>
-                                        <p className="text-sm text-muted-foreground">{strategies.aggressiveStrategy}</p>
-                                    </div>
+                                <div className="bg-background/30 p-4 rounded-xl border border-border/50">
+                                    <LayoutGroup id="strategy-selector">
+                                        <div className="flex justify-center gap-4 mb-4">
+                                            <button
+                                                onClick={() => setSelectedStrategy('conservative')}
+                                                className={cn("relative px-4 py-2 text-sm font-semibold rounded-full transition-colors", selectedStrategy === 'conservative' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                                            >
+                                                {selectedStrategy === 'conservative' && <motion.div layoutId="selector-underline" className="absolute inset-0 bg-green-500/10 rounded-full border border-green-500/30 -z-10" />}
+                                                <div className="flex items-center gap-2">
+                                                    <Shield className={cn("h-5 w-5", selectedStrategy === 'conservative' ? 'text-green-400' : 'text-muted-foreground')} />
+                                                    Conservatrice
+                                                </div>
+                                            </button>
+                                            <button
+                                                onClick={() => setSelectedStrategy('aggressive')}
+                                                className={cn("relative px-4 py-2 text-sm font-semibold rounded-full transition-colors", selectedStrategy === 'aggressive' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                                            >
+                                                {selectedStrategy === 'aggressive' && <motion.div layoutId="selector-underline" className="absolute inset-0 bg-orange-500/10 rounded-full border border-orange-500/30 -z-10" />}
+                                                <div className="flex items-center gap-2">
+                                                     <Zap className={cn("h-5 w-5", selectedStrategy === 'aggressive' ? 'text-orange-400' : 'text-muted-foreground')} />
+                                                    Agressive
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </LayoutGroup>
+                                    <AnimatePresence mode="wait">
+                                        <motion.p
+                                            key={selectedStrategy}
+                                            className="text-sm text-muted-foreground text-center"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            transition={{ duration: 0.2 }}
+                                        >
+                                            {selectedStrategy === 'conservative' ? strategies.conservativeStrategy : strategies.aggressiveStrategy}
+                                        </motion.p>
+                                    </AnimatePresence>
                                 </div>
                             ) : canAccessPremiumFeatures ? (
                                 <p className="text-sm text-muted-foreground">Aucune stratégie disponible.</p>
@@ -1052,3 +1074,5 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
   );
 }
 
+
+    
