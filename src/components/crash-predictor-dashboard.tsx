@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useTransition, useMemo, Fragment, useRef, useCallback } from "react";
@@ -59,6 +58,10 @@ import {
   PictureInPicture,
   X,
   Lock,
+  Flame,
+  Bomb,
+  TrendingUp,
+  LineChart as LineChartIcon
 } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "./ui/table";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
@@ -70,7 +73,13 @@ import { TooltipProvider, TooltipTrigger, TooltipContent } from "./ui/tooltip";
 
 
 const INITIAL_HISTORY: number[] = [];
-const RISK_LEVELS = ["Faible", "Modéré", "Élevé", "Très élevé"];
+
+const RISK_LEVELS = [
+    { id: "Faible", name: "Faible", icon: <Shield className="w-6 h-6" />, description: "Cotes basses, intervalles courts. Idéal pour des gains réguliers et sécurisés." },
+    { id: "Modéré", name: "Modéré", icon: <TrendingUp className="w-6 h-6" />, description: "Bon équilibre entre risque et récompense. Pour les joueurs patients." },
+    { id: "Élevé", name: "Élevé", icon: <Flame className="w-6 h-6" />, description: "Cotes élevées, gains potentiels importants, mais plus risqué." },
+    { id: "Très élevé", name: "Très élevé", icon: <Bomb className="w-6 h-6" />, description: "Pour les chasseurs de jackpots. Cotes massives, risque maximal." },
+];
 
 const PLAN_RISK_LEVELS: Record<PlanId, string[]> = {
     hourly: ["Faible"],
@@ -725,64 +734,75 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
   return (
       <div className="flex flex-1 flex-col gap-4 md:gap-8">
-        <Card>
+        <Card className="bg-card/50 border-border/30 backdrop-blur-md">
           <CardHeader>
-            <CardTitle>Contrôle de Prédiction</CardTitle>
+            <CardTitle>Contrôle de Prédiction IA</CardTitle>
             <CardDescription>
-              Collez l'historique des crashs et choisissez votre niveau de risque pour obtenir une prédiction.
+              Lancez une analyse pour obtenir des prédictions de cotes basées sur votre niveau de risque.
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-4">
-            <div className="space-y-2">
-              <Label>Niveau de risque</Label>
-              <RadioGroup
+          <CardContent className="grid gap-6">
+             <RadioGroup
                 value={riskLevel}
                 onValueChange={handleRiskLevelChange}
-                className="grid grid-cols-2 gap-2"
+                className="grid grid-cols-2 lg:grid-cols-4 gap-4"
               >
                 {RISK_LEVELS.map((level) => {
-                  const isAllowed = allowedRiskLevels.includes(level);
+                  const isAllowed = allowedRiskLevels.includes(level.id);
                   return (
-                    <Label
-                        key={level}
-                        htmlFor={`risk-${level}`}
+                      <Label
+                        key={level.id}
+                        htmlFor={`risk-${level.id}`}
                         className={cn(
-                            "relative flex cursor-pointer items-center justify-center rounded-md border-2 bg-transparent p-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                            riskLevel === level && isAllowed ? "border-primary bg-primary/10 text-primary" : "border-muted",
-                            !isAllowed && "cursor-not-allowed opacity-50"
+                            "relative flex flex-col items-start gap-2 cursor-pointer rounded-lg border-2 p-4 transition-all",
+                            riskLevel === level.id && isAllowed ? "border-primary bg-primary/10 shadow-[0_0_15px_hsl(var(--primary)/0.2)]" : "border-muted/50 bg-muted/20 hover:bg-muted/40",
+                            !isAllowed && "cursor-not-allowed opacity-60 bg-muted/10 hover:bg-muted/10"
                         )}
                     >
-                        <RadioGroupItem value={level} id={`risk-${level}`} className="sr-only" disabled={!isAllowed} />
-                        {level}
-                        {!isAllowed && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/60 rounded-md">
-                            <Lock className="h-5 w-5 text-yellow-400" />
+                      <RadioGroupItem value={level.id} id={`risk-${level.id}`} className="sr-only" disabled={!isAllowed} />
+                      <div className={cn("rounded-full p-2", riskLevel === level.id && isAllowed ? "bg-primary/20 text-primary" : "bg-foreground/10 text-muted-foreground")}>
+                        {level.icon}
+                      </div>
+                      <h4 className="font-bold text-foreground">{level.name}</h4>
+                      <p className="text-xs text-muted-foreground">{level.description}</p>
+                      {!isAllowed && (
+                          <div className="absolute top-2 right-2 flex items-center justify-center bg-background/80 rounded-full p-1.5 border border-border">
+                            <Lock className="h-4 w-4 text-yellow-400" />
                           </div>
                         )}
                     </Label>
                   )
                 })}
               </RadioGroup>
+
+            <div className="grid lg:grid-cols-[1fr_auto] gap-4 items-end">
+              <div className="space-y-2">
+                <Label htmlFor="history-input" className="flex items-center gap-2">
+                    <LineChartIcon className="h-4 w-4" />
+                    Historique des crashs (séparé par des espaces)
+                </Label>
+                <Textarea
+                  id="history-input"
+                  value={historyInput}
+                  onChange={(e) => setHistoryInput(e.target.value)}
+                  placeholder="Ex: 1.23x 4.56 2.01 10.42..."
+                  className="min-h-[80px] font-code bg-muted/30 border-dashed"
+                  disabled={isPredicting || hasFuturePredictions}
+                />
+              </div>
+              <Button
+                onClick={handlePrediction}
+                disabled={isPredicting || hasFuturePredictions || !historyInput.trim()}
+                className="w-full lg:w-auto h-20 lg:h-full text-lg"
+              >
+                {isPredicting ? (
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                  <Zap className="mr-2 h-5 w-5" />
+                )}
+                Prédire
+              </Button>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="history-input">Historique des crashs</Label>
-              <Textarea
-                id="history-input"
-                value={historyInput}
-                onChange={(e) => setHistoryInput(e.target.value)}
-                placeholder="Ex: 1.23x, 4.56x, 2.01x, 10.42x..."
-                className="min-h-[80px] font-code"
-                disabled={isPredicting || hasFuturePredictions}
-              />
-            </div>
-            <Button
-              onClick={handlePrediction}
-              disabled={isPredicting || hasFuturePredictions}
-              className="w-full"
-            >
-              {isPredicting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Prédire les prochains crashs
-            </Button>
             {hasFuturePredictions && (
               <Alert>
                 <Info className="h-4 w-4" />
