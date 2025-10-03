@@ -34,7 +34,8 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import {
   LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -886,46 +887,74 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
             </Card>
 
 
-          <Card className="bg-card/50 border-border/30 backdrop-blur-md">
-            <CardHeader className="p-4 sm:p-6">
-              <CardTitle>Graphique des Prédictions</CardTitle>
-              <CardDescription>
-                Vue d'ensemble des prédictions à venir.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-2 sm:p-4">
+         <div className="bg-card/50 border-border/30 backdrop-blur-md rounded-lg flex flex-col p-4 sm:p-6">
+              <div className="mb-4">
+                  <h3 className="text-lg font-bold text-foreground">Graphique des Prédictions</h3>
+                  <p className="text-sm text-muted-foreground">Vue d'ensemble des prédictions à venir.</p>
+              </div>
               {canAccessChart ? (
-                <ChartContainer config={chartConfig} className="h-[250px] w-full">
-                  <LineChart data={chartData}>
+                <ChartContainer config={chartConfig} className="h-[250px] w-full flex-1">
+                  <AreaChart
+                    data={chartData}
+                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                  >
+                    <defs>
+                        <linearGradient id="fillCrash" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
+                            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
+                        </linearGradient>
+                    </defs>
                     <CartesianGrid
                       vertical={false}
                       strokeDasharray="3 3"
-                      stroke="hsl(var(--border) / 0.5)"
+                      stroke="hsl(var(--border) / 0.3)"
                     />
-                    <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={8} fontSize={12} />
+                    <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={8} fontSize={12} stroke="hsl(var(--muted-foreground))" />
                     <YAxis
                       tickLine={false}
                       axisLine={false}
                       tickMargin={8}
                       fontSize={12}
                       domain={yAxisDomain}
+                      stroke="hsl(var(--muted-foreground))"
                     />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-                    <Line
+                    <ChartTooltip 
+                        cursor={{ stroke: "hsl(var(--primary))", strokeWidth: 1, strokeDasharray: "3 3" }} 
+                        content={({ active, payload }) => {
+                          if (active && payload && payload.length) {
+                            return (
+                              <div className="rounded-lg border bg-background/90 p-2.5 shadow-sm backdrop-blur-sm">
+                                <div className="grid grid-cols-2 gap-2">
+                                  <div className="flex flex-col">
+                                    <span className="text-[0.70rem] uppercase text-muted-foreground">Heure</span>
+                                    <span className="font-bold text-foreground">{payload[0].payload.name}</span>
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-[0.70rem] uppercase text-muted-foreground">Cote</span>
+                                    <span className="font-bold text-primary">{payload[0].value?.toFixed(2)}x</span>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          }
+                          return null;
+                        }} 
+                    />
+                    <Area
                       dataKey="crash"
                       type="monotone"
                       stroke="hsl(var(--primary))"
                       strokeWidth={2}
-                      dot={false}
+                      fill="url(#fillCrash)"
                     />
                     {highestPrediction && (
                       <ReferenceLine
                         y={highestPrediction.predictedCrashPoint}
-                        stroke="hsl(var(--accent))"
+                        stroke="hsl(var(--primary))"
                         strokeDasharray="4 4"
-                        strokeWidth={2}
+                        strokeWidth={1}
                       >
-                        <Label value={`Max: ${highestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideTopLeft" fill="hsl(var(--accent))" fontSize={12} />
+                        <Label value={`Max: ${highestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideTopLeft" fill="hsl(var(--primary))" fontSize={12} />
                       </ReferenceLine>
                     )}
                     {lowestPrediction && (
@@ -933,12 +962,12 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         y={lowestPrediction.predictedCrashPoint}
                         stroke="hsl(var(--muted-foreground))"
                         strokeDasharray="4 4"
-                        strokeWidth={2}
+                        strokeWidth={1}
                       >
                         <Label value={`Min: ${lowestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideBottomLeft" fill="hsl(var(--muted-foreground))" fontSize={12} />
                       </ReferenceLine>
                     )}
-                  </LineChart>
+                  </AreaChart>
                 </ChartContainer>
               ) : (
                 <div className="h-[250px] w-full flex flex-col items-center justify-center bg-muted/50 rounded-lg p-4 text-center">
@@ -948,8 +977,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                     <Button size="sm" onClick={() => router.push('/pricing')}>Voir les forfaits</Button>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
         </div>
 
         <Dialog open={isOverlayGuideOpen} onOpenChange={setIsOverlayGuideOpen}>
@@ -993,7 +1021,6 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-                        onClick={(e) => e.stopPropagation()}
                     >
                          {/* Background Elements */}
                         <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
@@ -1078,22 +1105,23 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                                 </div>
                             )}
                         </div>
+                         <motion.button
+                            className="absolute top-4 right-4 h-10 w-10 rounded-full bg-black/20 text-muted-foreground hover:text-foreground hover:bg-black/30 border border-white/10 backdrop-blur-sm flex items-center justify-center"
+                            onClick={() => setIsFullScreenPredictionOpen(false)}
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1, transition: { delay: 0.2 } }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                        >
+                            <X />
+                        </motion.button>
                     </motion.div>
-                    <motion.button
-                        className="mt-6 flex-shrink-0 h-14 w-14 rounded-full bg-black/20 text-muted-foreground hover:text-foreground hover:bg-black/30 border border-white/10 backdrop-blur-sm flex items-center justify-center"
-                        onClick={() => setIsFullScreenPredictionOpen(false)}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
-                        exit={{ opacity: 0, y: 20 }}
-                    >
-                        <X />
-                    </motion.button>
                 </div>
             )}
         </AnimatePresence>
       </div>
   );
 }
+
 
 
 
