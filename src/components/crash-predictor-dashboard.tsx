@@ -979,15 +979,16 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
         <AnimatePresence>
             {isFullScreenPredictionOpen && fullScreenPredictionData && (
-                <motion.div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={() => setIsFullScreenPredictionOpen(false)}
-                >
+                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4">
                     <motion.div
-                        className="relative w-[95vw] h-[95vh] max-w-4xl max-h-[800px] bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden"
+                        className="fixed inset-0 bg-black/80"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        onClick={() => setIsFullScreenPredictionOpen(false)}
+                    />
+                    <motion.div
+                        className="relative w-full h-full max-w-4xl max-h-[90vh] sm:max-h-[800px] bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
@@ -1000,10 +1001,6 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-primary/10 to-transparent -z-10"></div>
                         <div className="absolute inset-0 border-[6px] border-primary/20 rounded-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
 
-                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 h-10 w-10 rounded-full bg-black/20 text-muted-foreground hover:text-foreground hover:bg-black/30 border border-white/10 backdrop-blur-sm" onClick={() => setIsFullScreenPredictionOpen(false)}>
-                            <X />
-                        </Button>
-                        
                         <div className="flex-shrink-0">
                             <p className="text-muted-foreground mb-1">Prédiction pour</p>
                             <div className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
@@ -1082,11 +1079,21 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                             )}
                         </div>
                     </motion.div>
-                </motion.div>
+                    <motion.button
+                        className="mt-6 flex-shrink-0 h-14 w-14 rounded-full bg-black/20 text-muted-foreground hover:text-foreground hover:bg-black/30 border border-white/10 backdrop-blur-sm flex items-center justify-center"
+                        onClick={() => setIsFullScreenPredictionOpen(false)}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+                        exit={{ opacity: 0, y: 20 }}
+                    >
+                        <X />
+                    </motion.button>
+                </div>
             )}
         </AnimatePresence>
       </div>
   );
 }
+
 
 
