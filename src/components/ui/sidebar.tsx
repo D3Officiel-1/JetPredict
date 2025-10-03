@@ -73,7 +73,7 @@ const menuItemVariants = {
     closed: { opacity: 0, scale: 0.5, x: 0, y: 0 },
     open: (index: number) => {
         const angle = 90 + (index * 45); 
-        const radius = 80;
+        const radius = 90;
         return {
             x: radius * Math.cos(angle * (Math.PI / 180)),
             y: -radius * Math.sin(angle * (Math.PI / 180)),
@@ -315,9 +315,9 @@ export default function Header() {
                           animate="open"
                           exit="closed"
                         >
-                            <FABMenuItem index={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
-                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
                             <FABMenuItem index={0} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
+                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
+                            <FABMenuItem index={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                         </motion.div>
                     )}
                 </AnimatePresence>
