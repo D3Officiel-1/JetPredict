@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useTransition, useMemo, Fragment, useRef, useCallback } from "react";
@@ -976,40 +977,55 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
             </DialogContent>
         </Dialog>
 
-
         <AnimatePresence>
             {isFullScreenPredictionOpen && fullScreenPredictionData && (
-                 <motion.div
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm"
+                <motion.div
+                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={() => setIsFullScreenPredictionOpen(false)}
-                 >
+                >
                     <motion.div
-                        className="relative w-[95vw] h-[95vh] max-w-4xl max-h-[800px] bg-card/80 border border-primary/20 rounded-2xl flex flex-col items-center justify-center p-8 text-center"
-                        initial={{ scale: 0.9, opacity: 0 }}
+                        className="relative w-[95vw] h-[95vh] max-w-4xl max-h-[800px] bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden"
+                        initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.9, opacity: 0 }}
-                        transition={{ type: 'spring', damping: 20, stiffness: 200 }}
+                        exit={{ scale: 0.8, opacity: 0 }}
+                        transition={{ type: 'spring', damping: 25, stiffness: 250 }}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <Button variant="ghost" size="icon" className="absolute top-4 right-4" onClick={() => setIsFullScreenPredictionOpen(false)}>
+                         {/* Background Elements */}
+                        <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
+                        <div className="absolute inset-x-0 top-0 h-[30%] bg-gradient-to-b from-primary/10 to-transparent -z-10"></div>
+                        <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-primary/10 to-transparent -z-10"></div>
+                        <div className="absolute inset-0 border-[6px] border-primary/20 rounded-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
+
+                        <Button variant="ghost" size="icon" className="absolute top-4 right-4 text-muted-foreground hover:text-foreground" onClick={() => setIsFullScreenPredictionOpen(false)}>
                             <X />
                         </Button>
-                        <p className="absolute top-8 left-8 text-lg font-mono text-muted-foreground">{currentTime.toLocaleTimeString('fr-FR')}</p>
-                        <p className="text-2xl text-muted-foreground mb-4">Prédiction pour</p>
-                        <h2 className="text-8xl font-bold text-primary mb-8" style={{ textShadow: "0 0 20px hsl(var(--primary) / 0.5)" }}>{fullScreenPredictionData.time}</h2>
                         
-                        <motion.div 
-                            className="text-9xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-cyan-300 mb-12"
-                            animate={{ scale: [1, 1.05, 1]}}
-                            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut'}}
-                        >
-                            {fullScreenPredictionData.predictedCrashPoint.toFixed(2)}x
-                        </motion.div>
-
-                        <div className="w-full max-w-xl mt-auto space-y-4">
+                        <div className="flex-shrink-0">
+                            <p className="text-muted-foreground mb-1">Prédiction pour</p>
+                            <div className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
+                                <h2 className="text-2xl sm:text-4xl font-bold text-primary font-code">{fullScreenPredictionData.time}</h2>
+                            </div>
+                        </div>
+                        
+                        <div className="flex-grow flex flex-col items-center justify-center">
+                             <motion.div 
+                                className="text-[15vw] sm:text-9xl md:text-[180px] lg:text-[220px] font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-primary via-blue-300 to-cyan-200"
+                                style={{
+                                    textShadow: "0 0 10px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.2)",
+                                    WebkitTextStroke: "1px hsl(var(--primary) / 0.2)"
+                                }}
+                                animate={{ scale: [1, 1.03, 1]}}
+                                transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut'}}
+                            >
+                                {fullScreenPredictionData.predictedCrashPoint.toFixed(2)}x
+                            </motion.div>
+                        </div>
+                       
+                        <div className="w-full max-w-xl flex-shrink-0">
                             {isFetchingStrategies ? (
                                 <div className="flex h-32 items-center justify-center p-4 text-muted-foreground">
                                     <Loader2 className="mr-3 h-6 w-6 animate-spin" />
@@ -1065,7 +1081,6 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                                 </div>
                             )}
                         </div>
-
                     </motion.div>
                 </motion.div>
             )}
@@ -1073,3 +1088,4 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
+
