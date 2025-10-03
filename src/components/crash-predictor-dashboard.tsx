@@ -925,7 +925,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         strokeDasharray="4 4"
                         strokeWidth={2}
                       >
-                        <Label value="Prédiction Max" position="insideTopLeft" fill="hsl(var(--accent))" fontSize={12} />
+                        <Label value={`Max: ${highestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideTopLeft" fill="hsl(var(--accent))" fontSize={12} />
                       </ReferenceLine>
                     )}
                     {lowestPrediction && (
@@ -935,7 +935,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         strokeDasharray="4 4"
                         strokeWidth={2}
                       >
-                        <Label value="Prédiction Min" position="insideBottomLeft" fill="hsl(var(--muted-foreground))" fontSize={12} />
+                        <Label value={`Min: ${lowestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideBottomLeft" fill="hsl(var(--muted-foreground))" fontSize={12} />
                       </ReferenceLine>
                     )}
                   </LineChart>
@@ -1094,6 +1094,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
+
 
 
 
