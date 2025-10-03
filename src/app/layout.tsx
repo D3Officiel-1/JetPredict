@@ -4,7 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "next-themes";
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jetpredict.vercel.app';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://jet-predict.vercel.app/login';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
