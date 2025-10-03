@@ -398,8 +398,8 @@ export default function PredictPage() {
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <a href="https://t.me/Jet_Predict_Bot" target="_blank" rel="noopener noreferrer">
-                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-sky-500 to-blue-500 text-white shadow-lg shadow-blue-500/40">
-                                            <TelegramIcon className="h-7 w-7" />
+                                        <Button className="h-14 w-14 rounded-full bg-gradient-to-br from-sky-500 to-blue-500 text-white shadow-lg shadow-blue-500/40 flex items-center justify-center">
+                                            <Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={32} height={32} />
                                         </Button>
                                     </a>
                                 </TooltipTrigger>
@@ -501,3 +501,4 @@ export default function PredictPage() {
     </div>
   );
 }
+
