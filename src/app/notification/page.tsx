@@ -329,7 +329,7 @@ export default function NotificationPage() {
           </div>
         
           <AnimatePresence>
-            {selectionMode ? (
+            {selectionMode && (
                 <motion.div 
                     className="mb-6 flex justify-between items-center gap-2 bg-muted/50 p-3 rounded-lg border border-border/50"
                     initial={{ opacity: 0, y: -20 }}
@@ -359,41 +359,8 @@ export default function NotificationPage() {
                         </div>
                     )}
                 </motion.div>
-            ) : (
-                <div className="mb-6 flex justify-end gap-2">
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button variant="outline" size="icon" onClick={handleMarkAllAsRead} disabled={unreadCount === 0}>
-                                    <CheckCheck className="h-5 w-5" />
-                                    <span className="sr-only">Tout marquer comme lu</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent><p>Tout marquer comme lu</p></TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button variant="outline" size="icon" onClick={() => handleDeleteAll('read')} disabled={personalNotifications.filter(n => n.isRead).length === 0}>
-                                    <Trash2 className="h-5 w-5 text-muted-foreground" />
-                                    <span className="sr-only">Supprimer les notifications lues</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent><p>Supprimer les notifications lues</p></TooltipContent>
-                        </Tooltip>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button variant="destructive" size="icon" onClick={() => handleDeleteAll('all')} disabled={personalNotifications.length === 0}>
-                                    <Trash2 className="h-5 w-5" />
-                                    <span className="sr-only">Tout supprimer</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent><p>Tout supprimer</p></TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
-                </div>
             )}
-        </AnimatePresence>
-
+          </AnimatePresence>
       
           {allNotifications.length > 0 ? (
                 <motion.div
