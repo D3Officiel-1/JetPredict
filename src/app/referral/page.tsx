@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -262,120 +261,123 @@ Merci de traiter ma demande.`;
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header />
-      <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 space-y-8">
-        <Card className="relative bg-card/70 backdrop-blur-sm border-border/50 overflow-hidden shadow-2xl shadow-primary/10">
-            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] -z-10"></div>
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 to-transparent -z-10"></div>
+      <main className="w-full max-w-7xl mx-auto p-4 sm:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <Card className="relative bg-card/70 backdrop-blur-sm border-border/50 overflow-hidden shadow-2xl shadow-primary/10">
+              <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] -z-10"></div>
+              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 to-transparent -z-10"></div>
 
-             <CardContent className="p-6 space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-center text-center md:text-left">
-                    <div>
-                        <p className="text-sm text-muted-foreground">Solde de parrainage</p>
-                        <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300 drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]">
-                            {balance.toLocaleString('fr-FR')} <span className="text-3xl text-muted-foreground">FCFA</span>
-                        </p>
-                    </div>
-                    <div className="relative flex justify-center items-center h-24 w-24 mx-auto md:mx-0">
-                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-                        <div className="relative bg-primary/10 text-primary rounded-full h-24 w-24 flex items-center justify-center border-2 border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
-                            <Gift className="w-12 h-12" />
-                            <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full border-2 border-background">
-                                20%
-                            </div>
-                        </div>
-                    </div>
-                </div>
+              <CardContent className="p-6 space-y-8">
+                  <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-center text-center md:text-left">
+                      <div>
+                          <p className="text-sm text-muted-foreground">Solde de parrainage</p>
+                          <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300 drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]">
+                              {balance.toLocaleString('fr-FR')} <span className="text-3xl text-muted-foreground">FCFA</span>
+                          </p>
+                      </div>
+                      <div className="relative flex justify-center items-center h-24 w-24 mx-auto md:mx-0">
+                          <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+                          <div className="relative bg-primary/10 text-primary rounded-full h-24 w-24 flex items-center justify-center border-2 border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
+                              <Gift className="w-12 h-12" />
+                              <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full border-2 border-background">
+                                  20%
+                              </div>
+                          </div>
+                      </div>
+                  </div>
 
-                <div className="text-center bg-muted/30 p-4 rounded-lg border border-border/30">
-                    <p className="text-muted-foreground text-sm">
-                        Partagez votre code. Pour chaque forfait acheté par vos filleuls, vous recevez 20% de commission.
-                    </p>
-                </div>
-                
-                <div className="space-y-4">
-                    <Label className="text-sm text-muted-foreground text-center block">Votre Code de Parrainage</Label>
-                    <div className="relative flex items-stretch gap-2 group">
-                        <div className="absolute -inset-px bg-gradient-to-r from-primary/50 to-cyan-500/50 rounded-lg blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
-                        <div className="relative flex-1 text-center text-2xl font-bold tracking-widest bg-muted text-primary rounded-lg px-6 py-3 border border-dashed border-primary/50 flex items-center justify-center">
-                            {referralCode || <Loader2 className="w-5 h-5 animate-spin mx-auto"/>}
-                        </div>
-                        <Button onClick={handleCopyCode} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode}>
-                            {isCopied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
-                        </Button>
-                    </div>
-                </div>
+                  <div className="text-center bg-muted/30 p-4 rounded-lg border border-border/30">
+                      <p className="text-muted-foreground text-sm">
+                          Partagez votre code. Pour chaque forfait acheté par vos filleuls, vous recevez 20% de commission.
+                      </p>
+                  </div>
+                  
+                  <div className="space-y-4">
+                      <Label className="text-sm text-muted-foreground text-center block">Votre Code de Parrainage</Label>
+                      <div className="relative flex items-stretch gap-2 group">
+                          <div className="absolute -inset-px bg-gradient-to-r from-primary/50 to-cyan-500/50 rounded-lg blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+                          <div className="relative flex-1 text-center text-2xl font-bold tracking-widest bg-muted text-primary rounded-lg px-6 py-3 border border-dashed border-primary/50 flex items-center justify-center">
+                              {referralCode || <Loader2 className="w-5 h-5 animate-spin mx-auto"/>}
+                          </div>
+                          <Button onClick={handleCopyCode} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode}>
+                              {isCopied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
+                          </Button>
+                      </div>
+                  </div>
 
-                <div className="pt-2">
-                    <Button onClick={openWithdrawDialog} disabled={balance < 1000} className="w-full h-12 text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
-                        <Download className="mr-2 h-5 w-5" />
-                        Retirer mes gains
-                    </Button>
-                </div>
-            </CardContent>
-        </Card>
+                  <div className="pt-2">
+                      <Button onClick={openWithdrawDialog} disabled={balance < 1000} className="w-full h-12 text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
+                          <Download className="mr-2 h-5 w-5" />
+                          Retirer mes gains
+                      </Button>
+                  </div>
+              </CardContent>
+          </Card>
+          
+          <Card className="bg-card/70 backdrop-blur-sm border-border/50">
+              <CardHeader>
+                  <div className="flex items-center gap-3">
+                      <div className="p-2 bg-primary/10 border border-primary/20 rounded-lg text-primary">
+                          <Users className="h-6 w-6" />
+                      </div>
+                      <div>
+                          <CardTitle>Réseau de Filleuls ({referredUsers.length})</CardTitle>
+                          <CardDescription>
+                              Votre équipe d'affiliés et les commissions générées.
+                          </CardDescription>
+                      </div>
+                  </div>
+              </CardHeader>
+              <CardContent>
+                  {referredUsers.length > 0 ? (
+                      <div className="flow-root">
+                          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                              <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                  <div className="space-y-2">
+                                      <div className="grid grid-cols-3 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground bg-muted/50 rounded-t-lg">
+                                          <div>Utilisateur</div>
+                                          <div className="text-center">Date d'inscription</div>
+                                          <div className="text-right">Commissions</div>
+                                      </div>
+                                      {referredUsers.map((refUser) => (
+                                          <div key={refUser.id} className="grid grid-cols-3 gap-4 items-center px-4 py-3 bg-muted/20 hover:bg-muted/40 rounded-lg transition-colors">
+                                              <div className="flex items-center gap-3 truncate">
+                                                  <Avatar className="h-9 w-9">
+                                                      <AvatarImage src={refUser.photoURL} />
+                                                      <AvatarFallback>{refUser.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                                  </Avatar>
+                                                  <span className="font-medium truncate">{refUser.username}</span>
+                                              </div>
+                                              <div className="font-mono text-center text-sm text-muted-foreground">{refUser.joinDate}</div>
+                                              <div className="text-right font-bold text-green-400">
+                                                  {refUser.totalCommissions > 0 ? `+${refUser.totalCommissions.toLocaleString('fr-FR')} FCFA` : '0 FCFA'}
+                                              </div>
+                                          </div>
+                                      ))}
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  ) : (
+                      <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-6 bg-muted/30 rounded-lg">
+                          <div className="relative flex items-center justify-center">
+                              <div className="absolute h-16 w-16 bg-primary/10 rounded-full animate-pulse"></div>
+                              <Users className="w-16 h-16 text-primary/70"/>
+                          </div>
+                          <div className="space-y-1">
+                              <h3 className="text-lg font-semibold text-foreground">Construisez votre réseau</h3>
+                              <p className="text-sm max-w-xs mx-auto">Partagez votre code pour recruter des filleuls et commencer à gagner des commissions.</p>
+                          </div>
+                          <Button onClick={handleShareCode} variant="outline" disabled={!referralCode}>
+                              <Share2 className="mr-2 h-4 w-4" />
+                              Partager mon code
+                          </Button>
+                      </div>
+                  )}
+              </CardContent>
+          </Card>
+        </div>
 
-        <Card className="bg-card/70 backdrop-blur-sm border-border/50">
-            <CardHeader>
-                <div className="flex items-center gap-3">
-                    <div className="p-2 bg-primary/10 border border-primary/20 rounded-lg text-primary">
-                        <Users className="h-6 w-6" />
-                    </div>
-                    <div>
-                        <CardTitle>Réseau de Filleuls ({referredUsers.length})</CardTitle>
-                        <CardDescription>
-                            Votre équipe d'affiliés et les commissions générées.
-                        </CardDescription>
-                    </div>
-                </div>
-            </CardHeader>
-            <CardContent>
-                {referredUsers.length > 0 ? (
-                    <div className="flow-root">
-                        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                                <div className="space-y-2">
-                                    <div className="grid grid-cols-3 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground bg-muted/50 rounded-t-lg">
-                                        <div>Utilisateur</div>
-                                        <div className="text-center">Date d'inscription</div>
-                                        <div className="text-right">Commissions</div>
-                                    </div>
-                                    {referredUsers.map((refUser) => (
-                                        <div key={refUser.id} className="grid grid-cols-3 gap-4 items-center px-4 py-3 bg-muted/20 hover:bg-muted/40 rounded-lg transition-colors">
-                                            <div className="flex items-center gap-3 truncate">
-                                                <Avatar className="h-9 w-9">
-                                                    <AvatarImage src={refUser.photoURL} />
-                                                    <AvatarFallback>{refUser.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                                                </Avatar>
-                                                <span className="font-medium truncate">{refUser.username}</span>
-                                            </div>
-                                            <div className="font-mono text-center text-sm text-muted-foreground">{refUser.joinDate}</div>
-                                            <div className="text-right font-bold text-green-400">
-                                                {refUser.totalCommissions > 0 ? `+${refUser.totalCommissions.toLocaleString('fr-FR')} FCFA` : '0 FCFA'}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-6 bg-muted/30 rounded-lg">
-                        <div className="relative flex items-center justify-center">
-                            <div className="absolute h-16 w-16 bg-primary/10 rounded-full animate-pulse"></div>
-                            <Users className="w-16 h-16 text-primary/70"/>
-                        </div>
-                        <div className="space-y-1">
-                            <h3 className="text-lg font-semibold text-foreground">Construisez votre réseau</h3>
-                            <p className="text-sm max-w-xs mx-auto">Partagez votre code pour recruter des filleuls et commencer à gagner des commissions.</p>
-                        </div>
-                         <Button onClick={handleShareCode} variant="outline" disabled={!referralCode}>
-                            <Share2 className="mr-2 h-4 w-4" />
-                            Partager mon code
-                        </Button>
-                    </div>
-                )}
-            </CardContent>
-        </Card>
 
         <Dialog open={isWithdrawDialogOpen} onOpenChange={setIsWithdrawDialogOpen}>
             <DialogContent>
