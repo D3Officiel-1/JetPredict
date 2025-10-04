@@ -298,13 +298,13 @@ export default function NotificationPage() {
           <AnimatePresence>
             {selectionMode && (
                 <motion.div 
-                    className="mb-6 flex justify-between items-center gap-2 bg-muted/50 p-3 rounded-lg border border-border/50"
+                    className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-muted/50 p-3 rounded-lg border border-border/50"
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                 >
                     <div className="flex items-center gap-2">
-                         <Button variant="outline" size="sm" onClick={() => setSelectionMode(false)}>
+                         <Button variant="outline" size="sm" onClick={() => { setSelectionMode(false); setSelectedIds(new Set()); }}>
                             <X className="h-4 w-4 mr-2" />
                             Annuler
                         </Button>
@@ -314,12 +314,12 @@ export default function NotificationPage() {
                         </Button>
                     </div>
                     {selectedIds.size >= 2 && (
-                        <div className="flex items-center gap-2">
-                             <Button variant="secondary" size="sm" onClick={() => handleBulkAction('read')}>
+                        <div className="flex flex-col sm:flex-row items-center gap-2 mt-2 sm:mt-0">
+                             <Button variant="secondary" size="sm" onClick={() => handleBulkAction('read')} className="w-full sm:w-auto">
                                 <CheckCheck className="h-4 w-4 mr-2" />
                                 Marquer comme lu
                             </Button>
-                            <Button variant="destructive" size="sm" onClick={() => handleBulkAction('delete')}>
+                            <Button variant="destructive" size="sm" onClick={() => handleBulkAction('delete')} className="w-full sm:w-auto">
                                 <Trash2 className="h-4 w-4 mr-2" />
                                 Supprimer
                             </Button>
