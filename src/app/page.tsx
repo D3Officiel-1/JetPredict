@@ -431,22 +431,56 @@ export default function LandingPage() {
 
         {/* About Section */}
         <section id="about" className="py-20 relative overflow-hidden">
-             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_400px,#313b5c33,transparent)]"></div>
-            <div className="container mx-auto grid lg:grid-cols-2 gap-16 items-center">
-                <div className="text-center lg:text-left">
-                    <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">La puissance de l'IA pour vos paris sportifs</h2>
-                    <p className="text-muted-foreground text-lg">
-                        Jet Predict a été créé avec une mission simple : fournir aux parieurs les outils nécessaires pour prendre des décisions plus intelligentes. Nous combinons des modèles statistiques avancés et une intelligence artificielle pour vous offrir des prédictions claires, simples et surtout, utiles pour vos paris.
-                    </p>
-                </div>
-                 <div className="flex justify-center">
-                    <div className="relative w-72 h-72">
-                         <div className="absolute inset-0 bg-primary/10 rounded-full blur-2xl"></div>
-                        <Globe className="w-full h-full text-primary opacity-40 animate-[spin_20s_linear_infinite]"/>
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_50%,#313b5c33,transparent)]"></div>
+            <div className="container mx-auto text-center px-4">
+                <motion.div 
+                    className="relative w-full max-w-[400px] h-[400px] mx-auto mb-8"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.8, ease: "easeOut" }}
+                    viewport={{ once: true }}
+                >
+                    <motion.div 
+                        className="absolute inset-0 rounded-full border-2 border-dashed border-primary/30"
+                        animate={{ rotate: 360 }}
+                        transition={{ duration: 50, repeat: Infinity, ease: 'linear' }}
+                    />
+                    <motion.div 
+                        className="absolute inset-4 rounded-full border-2 border-dashed border-primary/20"
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
+                    />
+                    <motion.div 
+                        className="absolute inset-8 bg-primary/10 rounded-full blur-2xl"
+                        animate={{ scale: [1, 1.05, 1] }}
+                        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <BrainCircuit className="w-1/2 h-1/2 text-primary opacity-50"/>
                     </div>
-                </div>
+                </motion.div>
+
+                <motion.h2 
+                    className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-300"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
+                    viewport={{ once: true }}
+                >
+                    L'IA au service de votre intuition
+                </motion.h2>
+                <motion.p 
+                    className="text-muted-foreground text-lg max-w-2xl mx-auto"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: 0.4 }}
+                    viewport={{ once: true }}
+                >
+                    Jet Predict a été conçu pour amplifier vos stratégies de pari. Nous fusionnons l'analyse de données à grande échelle avec l'intelligence artificielle pour transformer des millions de points de données brutes en prédictions claires et exploitables, vous donnant un avantage décisif.
+                </motion.p>
             </div>
         </section>
+
 
         {/* Features Section */}
         <section id="features" className="py-20 bg-muted/50">
@@ -801,9 +835,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
