@@ -7,7 +7,7 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone } from 'lucide-react';
+import { ArrowLeft, Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, getDocs, where, Timestamp } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
@@ -127,6 +127,7 @@ export default function NotificationPage() {
               timestamp: data.createdAt,
               targetUsers: data.targetUsers || [],
               mediaUrl: data.mediaUrl || null,
+              link: data.link || null,
             } as Notification & { targetUsers: string[] };
           }).filter(n => {
               return n.targetUsers.length === 0 || n.targetUsers.includes(userPlan);
@@ -155,11 +156,12 @@ export default function NotificationPage() {
     if (!user || notification.isRead || notification.type === 'global') return;
     const notificationRef = doc(db, 'users', user.uid, 'notifications', notification.id);
     await updateDoc(notificationRef, { isRead: true });
-    
-    if (notification.link) {
-      router.push(notification.link);
-    }
   };
+  
+  const handleLinkClick = (e: React.MouseEvent, link: string) => {
+    e.stopPropagation();
+    router.push(link);
+  }
 
   const handleMarkAllAsRead = async () => {
     if (!user) return;
@@ -268,7 +270,6 @@ export default function NotificationPage() {
                               className={cn(
                                   "flex-1 -mt-1 p-5 rounded-xl border transition-all duration-300 w-full",
                                   !notif.isRead ? "bg-primary/5 border-primary/20 hover:border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.1),inset_0_1px_1px_hsl(var(--primary)/0.2)] cursor-pointer" : "bg-muted/30 border-border/30 hover:bg-muted/50",
-                                  notif.type === 'global' && !notif.isRead && "bg-purple-500/5 border-purple-500/20 hover:border-purple-500/40 shadow-[0_0_15px_hsl(var(--primary)/0.1),inset_0_1px_1px_hsl(var(--primary)/0.2)]",
                                   notif.type === 'global' && "border-purple-500/30",
                               )}
                               onClick={() => handleNotificationClick(notif)}
@@ -290,6 +291,19 @@ export default function NotificationPage() {
                                       )}
                                   </div>
                               )}
+                              {notif.link && (
+                                <div className="mt-4">
+                                  <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="bg-primary/10 text-primary hover:bg-primary/20 hover:text-primary"
+                                      onClick={(e) => handleLinkClick(e, notif.link!)}
+                                  >
+                                      <ExternalLink className="mr-2 h-4 w-4" />
+                                      Voir
+                                  </Button>
+                                </div>
+                              )}
                           </motion.div>
                       </motion.div>
                   ))}
@@ -308,5 +322,3 @@ export default function NotificationPage() {
     </div>
   );
 }
-
-    
