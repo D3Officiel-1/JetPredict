@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -220,18 +219,17 @@ export default function ProfilePage() {
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header />
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 space-y-8">
-        <div className="relative w-full h-48 md:h-64 rounded-2xl overflow-hidden bg-card/70 border border-border/50">
+        <div className="relative w-full h-48 md:h-64 rounded-2xl bg-card/70 border border-border/50">
             <Image 
                 src="https://picsum.photos/seed/profilebg/1200/400" 
                 alt="Banner" 
-                layout="fill" 
-                objectFit="cover" 
-                className="opacity-20"
+                fill
+                className="object-cover opacity-20 rounded-2xl"
                 data-ai-hint="futuristic abstract"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent rounded-2xl"></div>
             
-            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 md:left-12 md:-translate-x-0 w-full md:w-auto px-4 md:px-0">
+            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 md:left-12 md:-translate-x-0 w-full md:w-auto px-4 md:px-0 z-10">
                 <div className="relative w-36 h-36 mx-auto md:mx-0">
                     <Avatar className="w-full h-full border-4 border-background ring-4 ring-primary/50">
                         <AvatarImage src={user.photoURL || ''} alt={userData.username || 'Avatar'} />
@@ -241,7 +239,7 @@ export default function ProfilePage() {
                 </div>
             </div>
 
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-4 right-4 z-10">
                 <Button asChild variant="outline" size="icon" className="bg-background/50 backdrop-blur-sm">
                     <Link href="/profile/edit">
                         <Edit className="h-5 w-5"/>
@@ -332,5 +330,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    
