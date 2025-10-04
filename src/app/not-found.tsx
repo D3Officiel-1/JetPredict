@@ -4,9 +4,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-export default function Premium404() {
-  const particles = Array.from({ length: 25 });
+export default function NotFoundPage() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isClient, setIsClient] = useState(false);
 
@@ -16,122 +16,158 @@ export default function Premium404() {
 
   useEffect(() => {
     if (isClient && audioRef.current) {
-      audioRef.current.volume = 0.2;
+      audioRef.current.volume = 0.15;
       audioRef.current.play().catch(() => {
-        // Some browsers block autoplay, fallback handled silently
+        // Autoplay might be blocked by the browser.
       });
     }
   }, [isClient]);
 
   const ParticleEffects = () => {
-      const [initialPositions, setInitialPositions] = useState<any[]>([]);
+    const [initialPositions, setInitialPositions] = useState<any[]>([]);
 
-      useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setInitialPositions(
-                Array.from({ length: 25 }).map(() => ({
-                    x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight,
-                    left: Math.random() * 100 + "%",
-                    duration: 6 + Math.random() * 4,
-                    delay: Math.random() * 5,
-                }))
-            );
-        }
-      }, []);
+    useEffect(() => {
+      if (typeof window !== 'undefined') {
+        setInitialPositions(
+          Array.from({ length: 30 }).map(() => ({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            duration: 8 + Math.random() * 8,
+            delay: Math.random() * 10,
+            size: Math.random() * 2 + 1,
+          }))
+        );
+      }
+    }, []);
 
-      if (initialPositions.length === 0) return null;
+    if (initialPositions.length === 0) return null;
 
-      return (
-        <>
-            {initialPositions.map((props, i) => (
-                <motion.span
-                key={i}
-                className="absolute w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_hsl(var(--primary))]"
-                initial={{
-                    x: props.x,
-                    y: props.y,
-                    opacity: 0,
-                    scale: 0,
-                }}
-                animate={{
-                    y: [null, -50],
-                    opacity: [0, 1, 0],
-                    scale: [0, 1, 0],
-                }}
-                transition={{
-                    duration: props.duration,
-                    repeat: Infinity,
-                    delay: props.delay,
-                }}
-                style={{ left: props.left }}
-                />
-            ))}
-        </>
-      );
-  }
+    return (
+      <>
+        {initialPositions.map((props, i) => (
+          <motion.div
+            key={i}
+            className="absolute rounded-full bg-primary/80 shadow-[0_0_10px_hsl(var(--primary))]"
+            initial={{ 
+              x: props.x, 
+              y: props.y, 
+              opacity: 0, 
+              scale: 0.5 
+            }}
+            animate={{
+              y: props.y - (100 + Math.random() * 100),
+              opacity: [0, 1, 1, 0],
+              scale: [0.5, 1, 0.5],
+            }}
+            transition={{
+              duration: props.duration,
+              repeat: Infinity,
+              delay: props.delay,
+              ease: "easeInOut",
+            }}
+            style={{
+              width: `${props.size}px`,
+              height: `${props.size}px`,
+            }}
+          />
+        ))}
+      </>
+    );
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-card to-background p-6 relative overflow-hidden">
-      {/* Ambient futuristic sound */}
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-6 text-center text-foreground">
       {isClient && (
-          <audio ref={audioRef} loop>
-            <source src="/sounds/futuristic-hum.mp3" type="audio/mpeg" />
-            <source src="/sounds/futuristic-hum.ogg" type="audio/ogg" />
-          </audio>
+        <audio ref={audioRef} loop>
+          <source src="/sounds/futuristic-hum.mp3" type="audio/mpeg" />
+          <source src="/sounds/futuristic-hum.ogg" type="audio/ogg" />
+        </audio>
       )}
 
-      {/* Animated futuristic orbs */}
+      {/* Background elements */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-br from-[#0A0F1E] to-[#121832]"></div>
+      <div className="absolute inset-0 z-10 bg-grid-pattern opacity-5"></div>
+      
       <motion.div
-        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.5, 0.2] }}
-        transition={{ duration: 8, repeat: Infinity }}
-        className="absolute top-10 left-10 w-96 h-96 bg-primary rounded-full filter blur-[120px]"
+        className="absolute top-0 left-0 w-96 h-96 rounded-full bg-primary/10 blur-3xl"
+        animate={{
+          x: [-50, 50, -50],
+          y: [-50, 50, -50],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 30,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
       />
       <motion.div
-        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.6, 0.3] }}
-        transition={{ duration: 10, repeat: Infinity }}
-        className="absolute bottom-10 right-10 w-[32rem] h-[32rem] bg-secondary rounded-full filter blur-[150px]"
+        className="absolute bottom-0 right-0 w-[30rem] h-[30rem] rounded-full bg-blue-500/10 blur-3xl"
+        animate={{
+          x: [50, -50, 50],
+          y: [50, -50, 50],
+          scale: [1, 1.3, 1],
+        }}
+        transition={{
+          duration: 35,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+        }}
       />
-
-      {/* Neon grid background */}
-      <div className="absolute inset-0 opacity-20 bg-[linear-gradient(90deg,hsl(var(--border))_1px,transparent_1px),linear-gradient(180deg,hsl(var(--border))_1px,transparent_1px)] bg-[size:40px_40px]" />
-
-      {/* Floating particles */}
+      
       {isClient && <ParticleEffects />}
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-5xl mx-auto text-center">
+      <div className="relative z-20 flex w-full max-w-4xl flex-col items-center">
         <motion.h1
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8 }}
-          className="text-[12rem] font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent drop-shadow-[0_0_25px_hsl(var(--primary)/0.8)] tracking-widest"
+          className="text-[10rem] font-black tracking-tighter text-transparent sm:text-[15rem] md:text-[20rem]"
+          style={{
+            WebkitTextStroke: "2px hsl(var(--primary))",
+            textStroke: "2px hsl(var(--primary))",
+            textShadow: "0 0 30px hsl(var(--primary) / 0.5)",
+          }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2, ease: "backOut" }}
         >
           404
         </motion.h1>
 
         <motion.p
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 1, delay: 0.3 }}
-          className="mt-6 text-2xl text-foreground tracking-wide drop-shadow-md"
+          className="mt-[-2rem] max-w-lg text-xl font-semibold tracking-wider text-foreground sm:text-2xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.5 }}
         >
-          🚀 Destination inconnue : cette page a disparu dans le futur.
+          VOUS AVEZ ATTEINT UN SECTEUR INCONNU
+        </motion.p>
+        <motion.p
+          className="mt-2 max-w-md text-base text-muted-foreground"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.7 }}
+        >
+          La page que vous cherchez a été perdue dans l'hyper-espace. Tentons un retour aux coordonnées de départ.
         </motion.p>
 
-        {/* Futuristic button */}
         <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
           className="mt-12"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.9 }}
         >
           <Link
             href="/"
-            className="relative inline-flex items-center px-10 py-4 rounded-2xl bg-gradient-to-r from-primary via-secondary to-accent text-primary-foreground font-semibold text-xl shadow-[0_0_20px_hsl(var(--primary)/0.7)] hover:shadow-[0_0_35px_hsl(var(--secondary)/0.8)] hover:scale-105 transition-transform duration-300 overflow-hidden"
+            className={cn(
+              "group relative inline-block rounded-full px-8 py-4 font-bold text-lg text-primary-foreground",
+              "bg-primary shadow-[0_0_25px_hsl(var(--primary)/0.6)]",
+              "transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_hsl(var(--primary)/0.8)]"
+            )}
           >
-            <span className="relative z-10">Retour à l'accueil</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 hover:opacity-20 transition" />
+            <span className="absolute -inset-0.5 rounded-full bg-gradient-to-r from-primary via-cyan-300 to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            <span className="relative">RETOUR À L'ACCUEIL</span>
           </Link>
         </motion.div>
       </div>
