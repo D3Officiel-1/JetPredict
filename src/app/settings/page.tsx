@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -381,7 +382,7 @@ export default function SettingsPage() {
                 </div>
                 <div>
                     <Label className="text-sm font-semibold text-muted-foreground ml-1 mb-2 block">Installer l'Application</Label>
-                    <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-4 border border-border/30">
+                    <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-4 border border-border/30 items-end">
                         <button onClick={handleAndroidInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
                             <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={40} height={40} className={cn("dark:invert-0 invert")}/>
                             <span>Android</span>
