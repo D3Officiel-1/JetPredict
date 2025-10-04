@@ -642,11 +642,14 @@ export default function LandingPage() {
 
         {/* FAQ Section */}
         <section id="faq" className="py-20 relative overflow-hidden">
-            <div className="absolute inset-0 -z-10 bg-muted/50 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_100%,#000_70%,transparent_110%)]"></div>
+            <div className="absolute inset-0 -z-10 bg-background/50">
+                <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+                <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.05),transparent)]"></div>
+            </div>
             <div className="container mx-auto max-w-3xl">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Questions fréquentes</h2>
-                    <p className="text-muted-foreground mt-2">Vous avez des questions ? Nous avons les réponses.</p>
+                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Transmission de données</h2>
+                    <p className="text-muted-foreground mt-2">Les réponses à vos interrogations les plus fréquentes.</p>
                 </div>
                 <Accordion type="single" collapsible className="w-full space-y-4">
                     {faqItems.map((item, index) => (
@@ -654,14 +657,14 @@ export default function LandingPage() {
                             key={index}
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: index * 0.15 }}
+                            transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
                             viewport={{ once: true }}
                         >
-                            <AccordionItem value={`item-${index}`} className="bg-card/50 border border-primary/20 hover:border-primary/50 transition-colors duration-300 rounded-2xl shadow-lg hover:shadow-primary/10">
-                                <AccordionTrigger className="text-lg font-semibold text-left hover:no-underline p-6">
-                                    {item.question}
+                            <AccordionItem value={`item-${index}`} className="group border-b-0">
+                                <AccordionTrigger className="text-lg font-semibold text-left hover:no-underline p-4 bg-card/50 border-l-2 border-primary/30 data-[state=open]:border-primary transition-all rounded-lg shadow-sm hover:bg-card/70 data-[state=open]:bg-card/70 data-[state=open]:shadow-lg data-[state=open]:shadow-primary/10">
+                                    <span className="group-data-[state=open]:text-primary transition-colors">{item.question}</span>
                                 </AccordionTrigger>
-                                <AccordionContent className="text-muted-foreground text-base px-6 pb-6">
+                                <AccordionContent className="text-muted-foreground text-base p-6 bg-card/30 rounded-b-lg border-t-0 border-x-2 border-primary/20 -mt-1">
                                     {item.answer}
                                 </AccordionContent>
                             </AccordionItem>
