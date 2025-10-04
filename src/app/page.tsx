@@ -1,12 +1,11 @@
 
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Rocket, BarChart, ChevronRight, Zap, BrainCircuit, Award, Quote, Users, TrendingUp, PlayCircle, CheckCircle, MoveUpRight, Globe, Loader2, Star, XCircle, ShieldCheck, Crown, Download, HelpCircle, MoreVertical, Share, MonitorDown, Share2, MoreHorizontal, AppWindow, Smartphone } from "lucide-react";
+import { Rocket, BarChart, ChevronRight, Zap, BrainCircuit, Award, Quote, Users, TrendingUp, PlayCircle, CheckCircle, MoveUpRight, Globe, Loader2, Star, XCircle, ShieldCheck, Crown, Download, HelpCircle, MoreVertical, Share, MonitorDown, Share2, MoreHorizontal, AppWindow, Smartphone, LineChart } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -306,71 +305,100 @@ export default function LandingPage() {
       {/* Main Content */}
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative grid lg:grid-cols-2 gap-12 items-center py-20 md:py-32 overflow-hidden">
-            <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[14px_24px]"></div>
-            <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#313b5c22,transparent)] -z-10"></div>
-            <div className="container relative z-10">
-                <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-cyan-300">
-                        Maximisez vos gains sur les paris sportifs !
-                    </h1>
-                    
-                    <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-                        Jet Predict est votre assistant intelligent pour analyser les tendances de jeu et obtenir des prédictions de cotes fiables. Prenez une longueur d'avance avec des analyses de paris basées sur les données.
-                    </p>
-                    <p className="mt-4 max-w-xl text-lg text-primary/90 font-semibold">
-                        Inscrivez-vous sur 1Win avec le code promo <span className="font-bold text-primary">JETPREDICT</span> pour bénéficier de 500% de bonus lors de votre premier rechargement.
-                    </p>
-                    <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-4">
-                        <Link href="/login" passHref>
-                            <Button size="lg" className="font-semibold text-lg py-7 px-8 rounded-full group shadow-lg shadow-primary/30 transition-all duration-300 ease-in-out hover:shadow-primary/50">
-                            Obtenir mes prédictions
-                            <MoveUpRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-45" />
-                            </Button>
-                        </Link>
-                    </div>
-                </div>
-            </div>
+        <section className="relative flex flex-col items-center justify-center text-center min-h-[100vh] py-20 md:py-32 overflow-hidden">
+            {/* Background elements */}
+            <div className="absolute inset-0 -z-20 bg-gradient-to-br from-[#0A0F1E] to-[#121832]"></div>
+            <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-[0.03]"></div>
             
-            <div className="container relative z-10">
+             <motion.div
+                className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 blur-3xl opacity-50"
+                animate={{ x: [-100, 50], y: [-50, 100], scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
+                transition={{ duration: 30, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+            />
+            <motion.div
+                className="absolute bottom-0 right-0 w-[50rem] h-[50rem] rounded-full bg-blue-500/10 blur-3xl opacity-50"
+                animate={{ x: [100, -50], y: [50, -100], scale: [1, 1.2, 1], opacity: [0.4, 0.2, 0.4] }}
+                transition={{ duration: 40, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+            />
+
+            <div className="container relative z-10 flex flex-col items-center">
                  <motion.div
+                    className="relative mb-12 w-full max-w-xl aspect-square"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, ease: "easeOut" }}
-                    className="relative flex justify-center items-center lg:h-[500px]"
+                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                 >
+                     <Image
+                        src="https://res.cloudinary.com/dlxomrluy/image/upload/v1759515534/lpam8x97v127oxebnthn.png"
+                        alt="Holographic Globe"
+                        fill
+                        className="object-contain opacity-70 animate-[spin_60s_linear_infinite]"
+                        priority
+                        data-ai-hint="holographic globe"
+                     />
+                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#121832_80%)]"></div>
+
+                     {/* HUD Elements */}
+                     <motion.div 
+                        className="absolute top-[20%] left-[10%] w-32 h-16 bg-black/30 backdrop-blur-sm border border-primary/20 rounded-lg p-2 text-left"
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5, duration: 0.5 }}
+                    >
+                        <p className="text-xs text-primary/80 font-mono">FIABILITÉ</p>
+                        <p className="text-2xl font-bold text-green-400">99.8%</p>
+                        <div className="w-full bg-green-400/20 h-1 rounded-full mt-1"><div className="w-[99.8%] bg-green-400 h-1 rounded-full"></div></div>
+                    </motion.div>
+
+                     <motion.div 
+                        className="absolute bottom-[15%] right-[5%] w-48 h-20 bg-black/30 backdrop-blur-sm border border-primary/20 rounded-lg p-2 text-left"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7, duration: 0.5 }}
+                    >
+                         <p className="text-xs text-primary/80 font-mono flex items-center gap-1"><LineChart size={14}/> ANALYSE PRÉDICTIVE</p>
+                         <p className="text-3xl font-bold text-primary">x54.72</p>
+                         <p className="text-xs text-muted-foreground">PROCHAIN PIC POTENTIEL</p>
+                    </motion.div>
+                </motion.div>
+                
+                <motion.h1 
+                    className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-tight"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.7, ease: "easeOut" }}
                 >
-                    <div className="relative w-full aspect-square max-w-md lg:max-w-none">
-                         <Image
-                            src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
-                            alt="Tableau de bord Jet Predict"
-                            fill
-                            className="rounded-full shadow-2xl object-cover border-8 border-primary/10"
-                            data-ai-hint="futuristic data"
-                        />
-                        <motion.div 
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.4 }}
-                            className="absolute -top-4 -left-4 w-28 h-28 bg-card/80 backdrop-blur-md rounded-2xl shadow-lg border border-border flex flex-col items-center justify-center"
+                    <span className="block bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-400">Passez au niveau</span>
+                    <span className="block text-primary drop-shadow-[0_0_15px_hsl(var(--primary))]">supérieur.</span>
+                </motion.h1>
+                
+                <motion.p 
+                    className="mt-6 max-w-xl text-lg text-muted-foreground"
+                     initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.4, duration: 0.7, ease: "easeOut" }}
+                >
+                    Jet Predict transforme vos paris en stratégies. Obtenez des prédictions de cotes fiables grâce à notre IA et prenez l'avantage.
+                </motion.p>
+                
+                <motion.div
+                    className="mt-10 flex flex-wrap justify-center gap-4"
+                     initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.6, duration: 0.7, ease: "easeOut" }}
+                >
+                    <Link href="/login" passHref>
+                        <Button
+                            size="lg"
+                            className="font-semibold text-lg py-7 px-8 rounded-full group shadow-[0_0_25px_hsl(var(--primary)/0.4)] transition-all duration-300 ease-in-out hover:shadow-[0_0_40px_hsl(var(--primary)/0.6)] hover:scale-105"
                         >
-                            <div className="text-4xl font-bold text-green-400">99%</div>
-                            <div className="text-xs text-muted-foreground">Fiabilité</div>
-                        </motion.div>
-                        <motion.div 
-                            initial={{ opacity: 0, y: -20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: 0.6 }}
-                            className="absolute -bottom-8 right-0 w-36 h-24 bg-card/80 backdrop-blur-md rounded-2xl shadow-lg border border-border p-3 flex items-center justify-center"
-                        >
-                            <div className="flex items-center gap-2">
-                                <div className="text-primary"><TrendingUp /></div>
-                                <div>
-                                    <div className="font-bold text-2xl">x50.0</div>
-                                    <div className="text-xs text-muted-foreground">Prochaine cote</div>
-                                </div>
-                            </div>
-                        </motion.div>
-                    </div>
+                            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary via-cyan-400 to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
+                            <span className="relative flex items-center">
+                                Activer le Protocole
+                                <MoveUpRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-45" />
+                            </span>
+                        </Button>
+                    </Link>
                 </motion.div>
             </div>
         </section>
@@ -671,17 +699,19 @@ export default function LandingPage() {
                             ></iframe>
                         </div>
                         <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
-                        <div className="flex items-start sm:items-end flex-col sm:flex-row gap-2">
-                            <button onClick={handleAndroidInstallClick} className="cursor-pointer">
-                                <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
-                            </button>
-                            <button onClick={handleIosInstallClick} className="cursor-pointer">
-                                <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={60} height={35} className={cn("dark:invert-0 invert")}/>
-                            </button>
-                             <button onClick={handleWindowsInstallClick} className="cursor-pointer">
-                                <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Download for Windows" width={60} height={35} />
-                            </button>
-                        </div>
+                         <div className="flex items-start flex-col sm:flex-row sm:items-end gap-2">
+                            <div className="flex sm:flex-col gap-2 justify-start items-start">
+                               <button onClick={handleAndroidInstallClick} className="cursor-pointer">
+                                    <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
+                                </button>
+                                <button onClick={handleIosInstallClick} className="cursor-pointer">
+                                    <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={60} height={35} className={cn("dark:invert-0 invert")}/>
+                                </button>
+                                 <button onClick={handleWindowsInstallClick} className="cursor-pointer">
+                                    <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Download for Windows" width={60} height={35} />
+                                </button>
+                            </div>
+                         </div>
                          {deferredPrompt && (
                             <Button onClick={handleAndroidInstallClick} className="mt-2">
                                 <Download className="mr-2 h-4 w-4" />
@@ -783,8 +813,4 @@ export default function LandingPage() {
   );
 }
 
-
-
     
-
-
