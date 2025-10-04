@@ -7,12 +7,13 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink } from 'lucide-react';
+import { ArrowLeft, Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink, MoreVertical, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, getDocs, where, Timestamp } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, getDocs, where, Timestamp, deleteDoc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { BellIcon, MailOpenIcon } from '@/components/icons';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import Header from '@/components/ui/sidebar';
@@ -184,19 +185,39 @@ export default function NotificationPage() {
     await batch.commit();
   };
   
-  const handleDeleteRead = async () => {
-    if (!user) return;
-    const batch = writeBatch(db);
-    const notificationsRef = collection(db, 'users', user.uid, 'notifications');
-    const readQuery = query(notificationsRef, where('isRead', '==', true));
-    const readSnapshot = await getDocs(readQuery);
+  const handleDeleteAll = async (type: 'read' | 'all') => {
+      if (!user) return;
+      const batch = writeBatch(db);
+      const notificationsRef = collection(db, 'users', user.uid, 'notifications');
+      let queryToDelete;
 
-    readSnapshot.docs.forEach(document => {
-        batch.delete(document.ref);
-    });
-
-    await batch.commit();
+      if (type === 'read') {
+          queryToDelete = query(notificationsRef, where('isRead', '==', true));
+      } else {
+          queryToDelete = query(notificationsRef);
+      }
+      
+      const snapshot = await getDocs(queryToDelete);
+      snapshot.docs.forEach(document => {
+          batch.delete(document.ref);
+      });
+      await batch.commit();
   };
+  
+  const handleToggleRead = async (e: React.MouseEvent, notif: Notification) => {
+    e.stopPropagation();
+    if (!user || notif.type === 'global') return;
+    const notifRef = doc(db, 'users', user.uid, 'notifications', notif.id);
+    await updateDoc(notifRef, { isRead: !notif.isRead });
+  };
+
+  const handleDelete = async (e: React.MouseEvent, notifId: string) => {
+    e.stopPropagation();
+    if (!user) return;
+    const notifRef = doc(db, 'users', user.uid, 'notifications', notifId);
+    await deleteDoc(notifRef);
+  };
+
 
   const unreadCount = personalNotifications.filter(n => !n.isRead).length;
 
@@ -248,12 +269,21 @@ export default function NotificationPage() {
                   </Tooltip>
                   <Tooltip>
                       <TooltipTrigger asChild>
-                          <Button variant="destructive" size="icon" onClick={handleDeleteRead} disabled={personalNotifications.filter(n => n.isRead).length === 0}>
-                              <Trash2 className="h-5 w-5" />
+                          <Button variant="outline" size="icon" onClick={() => handleDeleteAll('read')} disabled={personalNotifications.filter(n => n.isRead).length === 0}>
+                              <Trash2 className="h-5 w-5 text-muted-foreground" />
                               <span className="sr-only">Supprimer les notifications lues</span>
                           </Button>
                       </TooltipTrigger>
                       <TooltipContent><p>Supprimer les notifications lues</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                      <TooltipTrigger asChild>
+                          <Button variant="destructive" size="icon" onClick={() => handleDeleteAll('all')} disabled={personalNotifications.length === 0}>
+                              <Trash2 className="h-5 w-5" />
+                              <span className="sr-only">Tout supprimer</span>
+                          </Button>
+                      </TooltipTrigger>
+                      <TooltipContent><p>Tout supprimer</p></TooltipContent>
                   </Tooltip>
               </TooltipProvider>
           </div>
@@ -293,6 +323,27 @@ export default function NotificationPage() {
                                   </p>
                               </div>
                               <p className="text-sm text-muted-foreground mb-3">{notif.message}</p>
+                              
+                              {notif.type !== 'global' && (
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground opacity-50 group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
+                                            <MoreVertical size={18} />
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                                        <DropdownMenuItem onClick={(e) => handleToggleRead(e, notif)}>
+                                            {notif.isRead ? <Eye className="mr-2 h-4 w-4" /> : <EyeOff className="mr-2 h-4 w-4" />}
+                                            <span>Marquer comme {notif.isRead ? 'non lu' : 'lu'}</span>
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem onClick={(e) => handleDelete(e, notif.id)} className="text-destructive focus:text-destructive">
+                                            <Trash2 className="mr-2 h-4 w-4" />
+                                            <span>Supprimer</span>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                              )}
+
                               {notif.mediaUrl && (
                                   <div className="mt-3 rounded-lg overflow-hidden border border-border/50">
                                       {isVideo(notif.mediaUrl) ? (
@@ -333,3 +384,4 @@ export default function NotificationPage() {
     </div>
   );
 }
+
