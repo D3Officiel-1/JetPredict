@@ -1,5 +1,5 @@
 
-import type {Metadata} from 'next';
+import type {Metadata, Viewport} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "next-themes";
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: 'Jet Predict',
   description: 'Prédiction de côte',
-  manifest: '/manifest.json',
+  manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -40,6 +40,10 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  themeColor: '#121832',
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -61,8 +65,7 @@ export default function RootLayout({
         <meta name="msapplication-config" content="/browserconfig.xml" />
         <meta name="msapplication-TileColor" content="#121832" />
         <meta name="msapplication-tap-highlight" content="no" />
-        <meta name="theme-color" content="#121832" />
-
+        
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="font-body antialiased">
