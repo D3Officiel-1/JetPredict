@@ -48,15 +48,29 @@ interface PricingData {
   findate?: Timestamp;
 }
 
-const InfoRow = ({ label, value, icon }: { label: string; value: string | React.ReactNode; icon: React.ReactNode }) => (
-    <div className="flex items-center justify-between py-3 border-b border-border/20 last:border-b-0">
-        <dt className="text-sm text-muted-foreground flex items-center gap-3">
-            {icon}
-            {label}
-        </dt>
-        <dd className="text-sm font-medium text-foreground text-right">{value || 'N/A'}</dd>
-    </div>
+const InfoRow = ({ label, value, icon, index = 0 }: { label: string; value: string | React.ReactNode; icon: React.ReactNode, index?: number }) => (
+    <motion.div
+      className="relative flex flex-col gap-2 bg-muted/30 p-4 rounded-lg border border-border/20 overflow-hidden"
+      variants={{
+        hidden: { opacity: 0, y: 20 },
+        visible: { opacity: 1, y: 0 }
+      }}
+      transition={{ delay: index * 0.1 }}
+    >
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent"></div>
+      <div className="flex items-center gap-3">
+        <div className="relative w-8 h-8 flex items-center justify-center">
+            <svg className="absolute w-full h-full text-primary/20" viewBox="0 0 100 100">
+                <polygon points="50,0 93,25 93,75 50,100 7,75 7,25" stroke="currentColor" strokeWidth="3" fill="none"/>
+            </svg>
+            <div className="text-primary">{icon}</div>
+        </div>
+        <dt className="text-sm font-semibold text-muted-foreground">{label}</dt>
+      </div>
+      <dd className="text-lg font-bold text-foreground text-left truncate">{value || 'N/A'}</dd>
+    </motion.div>
 );
+
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -334,14 +348,21 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Card className="bg-card/70 backdrop-blur-sm border-border/50">
                 <CardHeader>
-                    <CardTitle className="flex items-center gap-3"><UserIcon/>Informations</CardTitle>
+                    <CardTitle className="flex items-center gap-3"><UserIcon/>Dossier Personnel</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                    <dl>
-                        <InfoRow icon={<UserIcon size={16}/>} label="Nom" value={`${userData.firstName} ${userData.lastName}`} />
-                        <InfoRow icon={<Smartphone size={16}/>} label="Téléphone" value={userData.phone} />
-                        <InfoRow icon={<Clock size={16}/>} label="Membre depuis" value={formatDate(userData.createdAt)} />
-                    </dl>
+                    <motion.div
+                      className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                      initial="hidden"
+                      animate="visible"
+                      variants={{
+                        visible: { transition: { staggerChildren: 0.1 } }
+                      }}
+                    >
+                        <InfoRow icon={<UserIcon size={16}/>} label="Nom Complet" value={`${userData.firstName} ${userData.lastName}`} index={0} />
+                        <InfoRow icon={<Smartphone size={16}/>} label="Téléphone" value={userData.phone} index={1} />
+                        <InfoRow icon={<Clock size={16}/>} label="Membre Depuis" value={formatDate(userData.createdAt)} index={2} />
+                    </motion.div>
                 </CardContent>
             </Card>
             
@@ -350,11 +371,18 @@ export default function ProfilePage() {
                     <CardTitle className="flex items-center gap-3"><ShieldCheck/>Abonnement</CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                    <dl>
-                        <InfoRow icon={<ShieldCheck size={16}/>} label="Plan Actif" value={<span className="font-bold text-primary">{getPlanName()}</span>} />
-                        <InfoRow icon={<CalendarIcon size={16}/>} label="Date de fin" value={formatDate(pricingData?.findate)} />
-                        <InfoRow icon={<Wallet size={16}/>} label="Solde parrainage" value={<span className="font-bold text-green-400">{`${(userData.solde_referral || 0).toLocaleString('fr-FR')} FCFA`}</span>} />
-                    </dl>
+                     <motion.div
+                        className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+                        initial="hidden"
+                        animate="visible"
+                        variants={{
+                            visible: { transition: { staggerChildren: 0.1, delay: 0.3 } }
+                        }}
+                    >
+                        <InfoRow icon={<ShieldCheck size={16}/>} label="Plan Actif" value={<span className="font-bold text-primary">{getPlanName()}</span>} index={0} />
+                        <InfoRow icon={<CalendarIcon size={16}/>} label="Date de fin" value={formatDate(pricingData?.findate)} index={1} />
+                        <InfoRow icon={<Wallet size={16}/>} label="Solde parrainage" value={<span className="font-bold text-green-400">{`${(userData.solde_referral || 0).toLocaleString('fr-FR')} FCFA`}</span>} index={2} />
+                    </motion.div>
                 </CardContent>
             </Card>
         </div>
@@ -364,11 +392,18 @@ export default function ProfilePage() {
                 <CardTitle className="flex items-center gap-3"><Gamepad2 />Préférences & Codes</CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-                 <dl>
-                    <InfoRow icon={<Gamepad2 size={16}/>} label="Jeu favori" value={userData.favoriteGame} />
-                    <InfoRow icon={<Gift size={16}/>} label="Code parrainage utilisé" value={userData.referralCode || "Aucun"} />
-                    <InfoRow icon={<Gift size={16}/>} label="Code promo utilisé" value={userData.pronosticCode || "Aucun"} />
-                 </dl>
+                <motion.div
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                        visible: { transition: { staggerChildren: 0.1, delay: 0.6 } }
+                    }}
+                >
+                    <InfoRow icon={<Gamepad2 size={16}/>} label="Jeu favori" value={userData.favoriteGame} index={0} />
+                    <InfoRow icon={<Gift size={16}/>} label="Code parrainage utilisé" value={userData.referralCode || "Aucun"} index={1} />
+                    <InfoRow icon={<Gift size={16}/>} label="Code promo utilisé" value={userData.pronosticCode || "Aucun"} index={2} />
+                 </motion.div>
             </CardContent>
         </Card>
 
@@ -376,3 +411,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
