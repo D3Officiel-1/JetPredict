@@ -299,7 +299,7 @@ Merci de m'indiquer la procédure à suivre.`;
     const renderPlanButton = (plan: Plan) => {
       if (isLandingPage) {
         return (
-          <Button asChild size="lg" className="w-full font-semibold text-lg py-6 rounded-xl shadow-[0_8px_20px_rgba(0,191,255,0.25)]">
+          <Button asChild size="lg" className="w-full font-semibold text-lg py-6 rounded-xl shadow-lg shadow-primary/30 transition-all duration-300 ease-in-out hover:shadow-primary/50 hover:scale-105">
             <Link href="/login">{plan.cta}</Link>
           </Button>
         );
@@ -307,7 +307,7 @@ Merci de m'indiquer la procédure à suivre.`;
       return (
         <Button 
           size="lg" 
-          className="w-full font-semibold text-lg py-6 rounded-xl shadow-[0_8px_20px_rgba(0,191,255,0.25)]"
+          className="w-full font-semibold text-lg py-6 rounded-xl shadow-lg shadow-primary/30 transition-all duration-300 ease-in-out hover:shadow-primary/50 hover:scale-105"
           onClick={() => handleChoosePlan(plan)}
         >
           {plan.cta}
@@ -335,10 +335,16 @@ Merci de m'indiquer la procédure à suivre.`;
 
     return (
         <>
-            <div className="text-center mb-12">
-               <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Des tarifs simples et transparents</h2>
+            <motion.div
+                className="text-center mb-16"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+            >
+               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Des tarifs simples et transparents</h2>
               <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Choisissez le plan qui vous convient et commencez à gagner dès aujourd'hui.</p>
-            </div>
+            </motion.div>
             {isLoading ? (
                 <div className="flex justify-center items-center py-20">
                     <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -350,55 +356,58 @@ Merci de m'indiquer la procédure à suivre.`;
                         key={plan.id}
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: index * 0.15 }}
+                        transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
                         viewport={{ once: true }}
                     >
-                        <Card
-                        key={plan.id}
-                        className={cn(
-                            "flex flex-col h-full bg-card/80 border shadow-lg transition-transform hover:-translate-y-2",
-                            plan.popular ? "border-primary shadow-primary/20" : "border-border"
-                        )}
-                        >
-                        <CardHeader className="p-6">
-                            {plan.popular && (
-                            <div className="flex justify-center mb-2">
-                                <div className="inline-flex items-center gap-2 text-sm font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
-                                <Star size={16} /> Le plus populaire
-                                </div>
-                            </div>
+                        <div
+                            className={cn(
+                                "relative flex flex-col h-full bg-card/50 backdrop-blur-lg border p-1 rounded-2xl transition-all duration-300",
+                                plan.popular ? "border-primary/50 shadow-2xl shadow-primary/10" : "border-border/20"
                             )}
-                            <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
-                                {plan.id === 'monthly' && <Crown className="text-accent" />} {plan.name}
-                            </CardTitle>
-                            <CardDescription className="text-center">
-                                {renderPrice(plan)}
-                                <span className="text-base font-normal text-muted-foreground">/ {plan.name.toLowerCase()}</span>
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex-grow p-6 pt-0">
-                        <ul className="space-y-3 text-left">
-                            {[...plan.features, ...plan.missingFeatures].map((feature, i) => {
-                                const isIncluded = plan.features.includes(feature);
-                                return (
-                                <li key={i} className="flex items-start">
-                                    {isIncluded ? (
-                                    <CheckCircle className="h-5 w-5 text-green-500 mr-2 shrink-0 mt-0.5" />
-                                    ) : (
-                                    <XCircle className="h-5 w-5 text-destructive mr-2 shrink-0 mt-0.5" />
+                        >
+                            <div className="flex flex-col h-full bg-card/80 rounded-[15px] p-6">
+                                <CardHeader className="p-0 text-center">
+                                    {plan.popular && (
+                                    <div className="flex justify-center mb-4">
+                                        <div className="inline-flex items-center gap-2 text-sm font-semibold bg-primary/10 text-primary px-3 py-1.5 rounded-full border border-primary/20">
+                                        <Star size={16} /> Le plus populaire
+                                        </div>
+                                    </div>
                                     )}
-                                    <span className={cn("text-muted-foreground", !isIncluded && "line-through")}>
-                                    {feature}
-                                    </span>
-                                </li>
-                                );
-                            })}
-                        </ul>
-                        </CardContent>
-                        <CardFooter className="p-6">
-                        {renderPlanButton(plan)}
-                        </CardFooter>
-                        </Card>
+                                    <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
+                                        {plan.id === 'monthly' && <Crown className="text-yellow-400" />} {plan.name}
+                                    </CardTitle>
+                                    <CardDescription className="text-center">
+                                        {renderPrice(plan)}
+                                        <span className="text-base font-normal text-muted-foreground">/ {plan.name.toLowerCase()}</span>
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent className="flex-grow pt-8">
+                                    <ul className="space-y-4 text-left">
+                                        {[...plan.features, ...plan.missingFeatures].map((feature, i) => {
+                                            const isIncluded = plan.features.includes(feature);
+                                            return (
+                                            <li key={i} className="flex items-start gap-3">
+                                                <div>
+                                                {isIncluded ? (
+                                                <CheckCircle className="h-5 w-5 text-green-400 shrink-0 mt-0.5" />
+                                                ) : (
+                                                <XCircle className="h-5 w-5 text-muted-foreground/50 shrink-0 mt-0.5" />
+                                                )}
+                                                </div>
+                                                <span className={cn("text-muted-foreground", isIncluded && "text-foreground", !isIncluded && "line-through")}>
+                                                {feature}
+                                                </span>
+                                            </li>
+                                            );
+                                        })}
+                                    </ul>
+                                </CardContent>
+                                <CardFooter className="p-0 pt-8 mt-auto">
+                                    {renderPlanButton(plan)}
+                                </CardFooter>
+                            </div>
+                        </div>
                     </motion.div>
                 ))}
                 </div>
@@ -492,3 +501,5 @@ Merci de m'indiquer la procédure à suivre.`;
         </>
     );
 }
+
+    
