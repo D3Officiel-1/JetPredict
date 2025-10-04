@@ -283,27 +283,25 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden">
-      {/* Borders */}
-      <div className="fixed top-0 left-0 h-full w-4 border-r border-border/10 z-50 pointer-events-none"></div>
-      <div className="fixed top-0 right-0 h-full w-4 border-l border-border/10 z-50 pointer-events-none"></div>
-
-      {/* Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto max-w-screen-2xl flex h-16 items-center justify-between px-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md sm:h-9" style={{ height: 'auto' }} />
-            <span className="text-xl sm:text-2xl font-bold text-primary">Jet Predict</span>
-          </Link>
-           <div className="flex items-center gap-2">
-                <Link href="/login" passHref>
-                    <Button size="sm" className="rounded-full shadow-lg shadow-primary/20 sm:size-lg">
-                        Commencer
-                        <ChevronRight size={18} className="ml-1" />
-                    </Button>
+        {/* Header */}
+        <header className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm">
+            <div className="relative h-14 flex items-center justify-between px-3 rounded-2xl bg-black/20 backdrop-blur-lg border border-white/10 shadow-2xl shadow-primary/20">
+                <div className="absolute inset-0 rounded-2xl border-t border-white/20 pointer-events-none"></div>
+                <Link href="/" className="flex items-center gap-2.5">
+                    <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md" />
+                    <span className="text-lg font-bold text-primary">Jet Predict</span>
                 </Link>
-           </div>
-        </div>
-      </header>
+                <div className="flex items-center gap-2">
+                    <Link href="/login" passHref>
+                        <Button size="sm" className="rounded-full shadow-lg shadow-primary/20 h-9 px-5">
+                            Commencer
+                            <ChevronRight size={16} className="ml-1" />
+                        </Button>
+                    </Link>
+                </div>
+            </div>
+        </header>
+
 
       {/* Main Content */}
       <main className="flex-grow">
