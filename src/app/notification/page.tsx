@@ -313,7 +313,7 @@ export default function NotificationPage() {
                            Tout Sél.
                         </Button>
                     </div>
-                    {selectedIds.size >= 1 && (
+                    {selectedIds.size >= 2 && (
                         <div className="flex items-center gap-2">
                              <Button variant="secondary" size="sm" onClick={() => handleBulkAction('read')}>
                                 <CheckCheck className="h-4 w-4 mr-2" />
