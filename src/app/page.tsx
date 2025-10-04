@@ -505,8 +505,8 @@ export default function LandingPage() {
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.1),transparent)]"></div>
             <div className="container mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Pourquoi choisir Jet Predict ?</h2>
-                    <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Des outils de pointe pour une expérience de pari inégalée.</p>
+                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Un Arsenal d'Outils à votre Service</h2>
+                    <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Chaque fonctionnalité est conçue pour vous donner une longueur d'avance.</p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
                     {features.map((feature, index) => (
@@ -590,39 +590,48 @@ export default function LandingPage() {
         
         {/* Testimonials Section */}
         <section id="testimonials" className="py-20 relative">
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_400px,hsl(var(--primary)/0.08),transparent)]"></div>
+          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_400px,hsl(var(--primary)/0.08),transparent)]"></div>
             <div className="container mx-auto">
-                <div className="text-center mb-12">
+                <div className="text-center mb-16">
                     <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Ils nous font confiance</h2>
                     <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Découvrez ce que nos utilisateurs disent de nos prédictions de paris.</p>
                 </div>
-                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     {testimonials.map((testimonial, index) => (
                         <motion.div
                             key={index}
+                            className="relative group"
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.15 }}
                             viewport={{ once: true }}
                         >
-                            <Card className="bg-card/50 p-6 rounded-2xl border-primary/20 hover:border-primary/50 transition-colors duration-300 shadow-lg hover:shadow-primary/10 h-full">
-                                <CardContent className="p-0">
+                            <div className="absolute -inset-0.5 bg-gradient-to-r from-primary to-blue-500 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200 animate-tilt"></div>
+                            <Card className="relative bg-card/80 backdrop-blur-lg p-6 rounded-2xl border border-border/20 group-hover:border-primary/30 transition-colors duration-300 h-full flex flex-col">
+                                <CardContent className="p-0 flex-grow flex flex-col">
                                     <div className="flex items-center gap-4 mb-4">
+                                        <Avatar className="w-12 h-12 border-2 border-primary/50">
+                                            <AvatarImage src={`https://i.pravatar.cc/150?u=${testimonial.name}`} />
+                                            <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
+                                        </Avatar>
                                         <div>
-                                            <CardTitle className="text-lg">{testimonial.name}</CardTitle>
-                                            <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                                            <p className="font-bold text-lg text-foreground">{testimonial.name}</p>
+                                            <p className="text-sm text-primary">{testimonial.role}</p>
                                         </div>
                                     </div>
-                                    <div className="flex mb-4">
+                                    
+                                    <div className="flex-grow my-4 relative">
+                                        <Quote className="absolute -top-2 left-0 w-16 h-16 text-primary/5 opacity-50" />
+                                        <blockquote className="text-muted-foreground text-base italic relative z-10 pl-6">
+                                            {testimonial.quote}
+                                        </blockquote>
+                                    </div>
+
+                                    <div className="flex justify-end mt-auto pt-4">
                                         {[...Array(5)].map((_, i) => (
-                                            <svg key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400' : 'text-gray-600'}`} fill="currentColor" viewBox="0 0 20 20">
-                                                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.96a1 1 0 00.95.69h4.162c.969 0 1.371 1.24.588 1.81l-3.368 2.448a1 1 0 00-.364 1.118l1.287 3.96c.3.921-.755 1.688-1.54 1.118l-3.368-2.448a1 1 0 00-1.176 0l-3.368-2.448c-.784.57-1.838-.197-1.54-1.118l1.287-3.96a1 1 0 00-.364-1.118L2.35 9.387c-.783-.57-.38-1.81.588-1.81h4.162a1 1 0 00.95-.69l1.286-3.96z" />
-                                            </svg>
+                                            <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`} />
                                         ))}
                                     </div>
-                                    <blockquote className="text-muted-foreground text-base italic border-l-2 border-primary pl-4">
-                                        {testimonial.quote}
-                                    </blockquote>
                                 </CardContent>
                             </Card>
                         </motion.div>
