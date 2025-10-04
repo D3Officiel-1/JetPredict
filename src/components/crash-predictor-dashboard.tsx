@@ -1034,13 +1034,13 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         onClick={() => setIsFullScreenPredictionOpen(false)}
                     />
                     <motion.div
-                        className="relative w-full h-full max-w-4xl max-h-[90vh] sm:max-h-[800px] flex flex-col"
+                        className="relative w-full max-w-4xl flex flex-col items-center"
                         initial={{ scale: 0.8, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0.8, opacity: 0 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 250 }}
                     >
-                         <div className="relative flex-1 bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden">
+                         <div className="relative w-full h-full max-h-[80vh] sm:max-h-[700px] flex-1 bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden">
                             {/* Background Elements */}
                             <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
                             <div className="absolute inset-x-0 top-0 h-[30%] bg-gradient-to-b from-primary/10 to-transparent -z-10"></div>
@@ -1125,15 +1125,17 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                                 )}
                             </div>
                          </div>
-                         <motion.button
-                            className="mt-4 h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
-                            onClick={() => setIsFullScreenPredictionOpen(false)}
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
-                            exit={{ opacity: 0, y: 20 }}
-                        >
-                            <X />
-                        </motion.button>
+                         <div className="flex justify-center">
+                            <motion.button
+                                className="mt-4 h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
+                                onClick={() => setIsFullScreenPredictionOpen(false)}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+                                exit={{ opacity: 0, y: 20 }}
+                            >
+                                <X />
+                            </motion.button>
+                         </div>
                     </motion.div>
                 </div>
             )}
