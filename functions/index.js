@@ -9,9 +9,7 @@ const db = admin.firestore();
 exports.sendPredictionAlerts = functions.pubsub.schedule("every 1 minutes").onRun(async (context) => {
   const now = new Date();
   const nextMinuteStart = new Date(now.getTime() + 60 * 1000);
-  const thirtySecondsFromNow = new Date(now.getTime() + 30 * 1000);
-  const thirtyOneSecondsFromNow = new Date(now.getTime() + 31 * 1000);
-
+  
   console.log(`[${now.toISOString()}] Running job. Checking for predictions in the next minute.`);
 
   try {
@@ -61,11 +59,13 @@ exports.sendPredictionAlerts = functions.pubsub.schedule("every 1 minutes").onRu
         const today = new Date();
         const predictionTime = new Date(today.getFullYear(), today.getMonth(), today.getDate(), hours, minutes, 0);
         
-        if (predictionTime >= thirtySecondsFromNow && predictionTime < thirtyOneSecondsFromNow) {
+        if (predictionTime > now && predictionTime <= nextMinuteStart) {
+          const secondsUntil = Math.round((predictionTime.getTime() - now.getTime()) / 1000);
+          
           const message = {
             notification: {
               title: "🚀 Alerte Prédiction !",
-              body: `La cote de ${p.predictedCrashPoint.toFixed(2)}x est prévue dans 30 secondes (${p.time}). Préparez-vous !`,
+              body: `La cote de ${p.predictedCrashPoint.toFixed(2)}x est prévue dans moins d'une minute (${p.time}). Préparez-vous !`,
             },
             token: fcmToken,
             webpush: {
@@ -84,7 +84,7 @@ exports.sendPredictionAlerts = functions.pubsub.schedule("every 1 minutes").onRu
             },
           };
 
-          console.log(`Sending notification to user ${userId} for prediction at ${p.time}`);
+          console.log(`Sending notification to user ${userId} for prediction in ${secondsUntil} seconds at ${p.time}`);
           notificationPromises.push(admin.messaging().send(message));
         }
       }

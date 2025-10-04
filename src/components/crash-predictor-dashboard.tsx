@@ -145,7 +145,6 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
   const [isOverlayGuideOpen, setIsOverlayGuideOpen] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>('conservative');
   
-  const notifiedPredictions = useRef(new Set());
   const pipCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const starsRef = useRef<Star[]>([]);
 
@@ -177,45 +176,11 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
         }
     });
 
-    const handleCheckPredictions = () => {
-        if (!prediction || !prediction.predictions || notificationSettings?.alertsEnabled === false) return;
-
-        prediction.predictions.forEach((p) => {
-            const [hours, minutes] = p.time.split(':').map(Number);
-            const predictionDate = new Date(currentTime);
-            predictionDate.setHours(hours, minutes, 0, 0);
-
-            const diffInSeconds = (predictionDate.getTime() - currentTime.getTime()) / 1000;
-
-            if (diffInSeconds > 29.5 && diffInSeconds < 30.5 && !notifiedPredictions.current.has(p.time)) {
-                toast({
-                    title: "🚀 Alerte Prédiction imminente !",
-                    description: `La cote de ${p.predictedCrashPoint.toFixed(2)}x arrive dans 30 secondes (${p.time}).`,
-                    variant: "success",
-                });
-                
-                if (notificationSettings?.soundEnabled !== false) {
-                    const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/07/04/audio_a32bdcf6c0.mp3?filename=new-notification-024-370048.mp3');
-                    audio.play().catch(e => console.error("Erreur de lecture audio:", e));
-                }
-
-                if (notificationSettings?.vibrationEnabled !== false && 'vibrate' in navigator) {
-                    navigator.vibrate(200);
-                }
-
-                notifiedPredictions.current.add(p.time);
-            }
-        });
-    };
-
-    window.addEventListener('checkPredictions', handleCheckPredictions);
-
     return () => {
       clearInterval(timer);
       unsubscribeAuth();
-      window.removeEventListener('checkPredictions', handleCheckPredictions);
     };
-  }, [auth, prediction, currentTime, toast, notificationSettings]);
+  }, [auth]);
 
 
   useEffect(() => {
@@ -368,7 +333,6 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
       try {
         const predResult = await predictCrashPoint(predictionInput);
         setPrediction(predResult);
-        notifiedPredictions.current.clear();
 
       } catch (error) {
         console.error("La prédiction a échoué:", error);
@@ -1154,3 +1118,4 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
 
     
+
