@@ -193,5 +193,8 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-      {
-        protocol: 'https'
+    ],
+  },
+};
+
+module.exports = withPWA(nextConfig);
