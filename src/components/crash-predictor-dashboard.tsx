@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useTransition, useMemo, Fragment, useRef, useCallback } from "react";
@@ -1027,6 +1028,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
             {isFullScreenPredictionOpen && fullScreenPredictionData && (
                 <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4">
                     <motion.div
+                        key="backdrop"
                         className="fixed inset-0 bg-black/80"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
