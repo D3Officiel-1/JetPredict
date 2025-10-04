@@ -1026,110 +1026,111 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
         <AnimatePresence>
             {isFullScreenPredictionOpen && fullScreenPredictionData && (
-                <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4">
+                 <>
                     <motion.div
-                        key="backdrop"
-                        className="fixed inset-0 bg-black/80"
+                        className="fixed inset-0 bg-black/80 z-50"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         onClick={() => setIsFullScreenPredictionOpen(false)}
                     />
-                    <motion.div
-                        className="relative w-full max-w-4xl flex flex-col items-center"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.8, opacity: 0 }}
-                        transition={{ type: 'spring', damping: 25, stiffness: 250 }}
-                    >
-                         <div className="relative w-full h-full max-h-[80vh] sm:max-h-[700px] flex-1 bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden">
-                            {/* Background Elements */}
-                            <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
-                            <div className="absolute inset-x-0 top-0 h-[30%] bg-gradient-to-b from-primary/10 to-transparent -z-10"></div>
-                            <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-primary/10 to-transparent -z-10"></div>
-                            <div className="absolute inset-0 border-[6px] border-primary/20 rounded-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
+                    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4">
+                        <motion.div
+                            className="relative w-full max-w-4xl flex flex-col items-center"
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+                        >
+                            <div className="relative w-full h-full max-h-[80vh] sm:max-h-[700px] flex-1 bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden">
+                                {/* Background Elements */}
+                                <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
+                                <div className="absolute inset-x-0 top-0 h-[30%] bg-gradient-to-b from-primary/10 to-transparent -z-10"></div>
+                                <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-primary/10 to-transparent -z-10"></div>
+                                <div className="absolute inset-0 border-[6px] border-primary/20 rounded-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
 
-                            <div className="flex-shrink-0">
-                                <p className="text-muted-foreground mb-1">Prédiction pour</p>
-                                <div className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
-                                    <h2 className="text-2xl sm:text-4xl font-bold text-primary font-code">{fullScreenPredictionData.time}</h2>
+                                <div className="flex-shrink-0">
+                                    <p className="text-muted-foreground mb-1">Prédiction pour</p>
+                                    <div className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
+                                        <h2 className="text-2xl sm:text-4xl font-bold text-primary font-code">{fullScreenPredictionData.time}</h2>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex-grow flex flex-col items-center justify-center">
+                                    <motion.div 
+                                        className="text-[15vw] sm:text-9xl md:text-[180px] lg:text-[220px] font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-primary via-blue-300 to-cyan-200"
+                                        style={{
+                                            textShadow: "0 0 10px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.2)",
+                                            WebkitTextStroke: "1px hsl(var(--primary) / 0.2)"
+                                        }}
+                                        animate={{ scale: [1, 1.03, 1]}}
+                                        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut'}}
+                                    >
+                                        {fullScreenPredictionData.predictedCrashPoint.toFixed(2)}x
+                                    </motion.div>
+                                </div>
+                            
+                                <div className="w-full max-w-xl flex-shrink-0">
+                                    {isFetchingStrategies ? (
+                                        <div className="flex h-32 items-center justify-center p-4 text-muted-foreground">
+                                            <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                                            <span className="text-lg">Analyse des stratégies par l'IA...</span>
+                                        </div>
+                                    ) : strategies ? (
+                                        <div className="bg-background/30 p-4 rounded-xl border border-border/50">
+                                            <LayoutGroup id="strategy-selector">
+                                                <div className="flex justify-center gap-4 mb-4">
+                                                    <button
+                                                        onClick={() => setSelectedStrategy('conservative')}
+                                                        className={cn("relative px-4 py-2 text-sm font-semibold rounded-full transition-colors", selectedStrategy === 'conservative' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                                                    >
+                                                        {selectedStrategy === 'conservative' && <motion.div layoutId="selector-underline" className="absolute inset-0 bg-green-500/10 rounded-full border border-green-500/30 -z-10" />}
+                                                        <div className="flex items-center gap-2">
+                                                            <Shield className={cn("h-5 w-5", selectedStrategy === 'conservative' ? 'text-green-400' : 'text-muted-foreground')} />
+                                                            Conservatrice
+                                                        </div>
+                                                    </button>
+                                                    <button
+                                                        onClick={() => setSelectedStrategy('aggressive')}
+                                                        className={cn("relative px-4 py-2 text-sm font-semibold rounded-full transition-colors", selectedStrategy === 'aggressive' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
+                                                    >
+                                                        {selectedStrategy === 'aggressive' && <motion.div layoutId="selector-underline" className="absolute inset-0 bg-orange-500/10 rounded-full border border-orange-500/30 -z-10" />}
+                                                        <div className="flex items-center gap-2">
+                                                            <Zap className={cn("h-5 w-5", selectedStrategy === 'aggressive' ? 'text-orange-400' : 'text-muted-foreground')} />
+                                                            Agressive
+                                                        </div>
+                                                    </button>
+                                                </div>
+                                            </LayoutGroup>
+                                            <AnimatePresence mode="wait">
+                                                <motion.p
+                                                    key={selectedStrategy}
+                                                    className="text-sm text-muted-foreground text-center"
+                                                    initial={{ opacity: 0, y: 10 }}
+                                                    animate={{ opacity: 1, y: 0 }}
+                                                    exit={{ opacity: 0, y: -10 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    {selectedStrategy === 'conservative' ? strategies.conservativeStrategy : strategies.aggressiveStrategy}
+                                                </motion.p>
+                                            </AnimatePresence>
+                                        </div>
+                                    ) : canAccessPremiumFeatures ? (
+                                        <p className="text-sm text-muted-foreground">Aucune stratégie disponible.</p>
+                                    ) : (
+                                        <div className="w-full flex flex-col items-center justify-center bg-muted/50 rounded-lg p-4 text-center">
+                                            <Lock className="h-10 w-10 text-primary/50 mb-4" />
+                                            <h3 className="font-semibold text-foreground">Fonctionnalité Premium</h3>
+                                            <p className="text-sm text-muted-foreground mb-4">Passez au forfait "Semaine" ou "Mois" pour débloquer les stratégies de l'IA.</p>
+                                            <Button size="sm" onClick={() => router.push('/pricing')}>Voir les forfaits</Button>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
-                            
-                            <div className="flex-grow flex flex-col items-center justify-center">
-                                <motion.div 
-                                    className="text-[15vw] sm:text-9xl md:text-[180px] lg:text-[220px] font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-primary via-blue-300 to-cyan-200"
-                                    style={{
-                                        textShadow: "0 0 10px hsl(var(--primary) / 0.3), 0 0 40px hsl(var(--primary) / 0.2)",
-                                        WebkitTextStroke: "1px hsl(var(--primary) / 0.2)"
-                                    }}
-                                    animate={{ scale: [1, 1.03, 1]}}
-                                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut'}}
-                                >
-                                    {fullScreenPredictionData.predictedCrashPoint.toFixed(2)}x
-                                </motion.div>
-                            </div>
-                        
-                            <div className="w-full max-w-xl flex-shrink-0">
-                                {isFetchingStrategies ? (
-                                    <div className="flex h-32 items-center justify-center p-4 text-muted-foreground">
-                                        <Loader2 className="mr-3 h-6 w-6 animate-spin" />
-                                        <span className="text-lg">Analyse des stratégies par l'IA...</span>
-                                    </div>
-                                ) : strategies ? (
-                                    <div className="bg-background/30 p-4 rounded-xl border border-border/50">
-                                        <LayoutGroup id="strategy-selector">
-                                            <div className="flex justify-center gap-4 mb-4">
-                                                <button
-                                                    onClick={() => setSelectedStrategy('conservative')}
-                                                    className={cn("relative px-4 py-2 text-sm font-semibold rounded-full transition-colors", selectedStrategy === 'conservative' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
-                                                >
-                                                    {selectedStrategy === 'conservative' && <motion.div layoutId="selector-underline" className="absolute inset-0 bg-green-500/10 rounded-full border border-green-500/30 -z-10" />}
-                                                    <div className="flex items-center gap-2">
-                                                        <Shield className={cn("h-5 w-5", selectedStrategy === 'conservative' ? 'text-green-400' : 'text-muted-foreground')} />
-                                                        Conservatrice
-                                                    </div>
-                                                </button>
-                                                <button
-                                                    onClick={() => setSelectedStrategy('aggressive')}
-                                                    className={cn("relative px-4 py-2 text-sm font-semibold rounded-full transition-colors", selectedStrategy === 'aggressive' ? 'text-foreground' : 'text-muted-foreground hover:text-foreground')}
-                                                >
-                                                    {selectedStrategy === 'aggressive' && <motion.div layoutId="selector-underline" className="absolute inset-0 bg-orange-500/10 rounded-full border border-orange-500/30 -z-10" />}
-                                                    <div className="flex items-center gap-2">
-                                                        <Zap className={cn("h-5 w-5", selectedStrategy === 'aggressive' ? 'text-orange-400' : 'text-muted-foreground')} />
-                                                        Agressive
-                                                    </div>
-                                                </button>
-                                            </div>
-                                        </LayoutGroup>
-                                        <AnimatePresence mode="wait">
-                                            <motion.p
-                                                key={selectedStrategy}
-                                                className="text-sm text-muted-foreground text-center"
-                                                initial={{ opacity: 0, y: 10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: -10 }}
-                                                transition={{ duration: 0.2 }}
-                                            >
-                                                {selectedStrategy === 'conservative' ? strategies.conservativeStrategy : strategies.aggressiveStrategy}
-                                            </motion.p>
-                                        </AnimatePresence>
-                                    </div>
-                                ) : canAccessPremiumFeatures ? (
-                                    <p className="text-sm text-muted-foreground">Aucune stratégie disponible.</p>
-                                ) : (
-                                    <div className="w-full flex flex-col items-center justify-center bg-muted/50 rounded-lg p-4 text-center">
-                                        <Lock className="h-10 w-10 text-primary/50 mb-4" />
-                                        <h3 className="font-semibold text-foreground">Fonctionnalité Premium</h3>
-                                        <p className="text-sm text-muted-foreground mb-4">Passez au forfait "Semaine" ou "Mois" pour débloquer les stratégies de l'IA.</p>
-                                        <Button size="sm" onClick={() => router.push('/pricing')}>Voir les forfaits</Button>
-                                    </div>
-                                )}
-                            </div>
-                         </div>
-                         <div className="flex justify-center">
+                        </motion.div>
+                        <div className="flex justify-center flex-shrink-0 mt-4">
                             <motion.button
-                                className="mt-4 h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
+                                className="h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
                                 onClick={() => setIsFullScreenPredictionOpen(false)}
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
@@ -1137,11 +1138,12 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                             >
                                 <X />
                             </motion.button>
-                         </div>
-                    </motion.div>
-                </div>
+                        </div>
+                    </div>
+                 </>
             )}
         </AnimatePresence>
       </div>
   );
 }
+
