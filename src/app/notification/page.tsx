@@ -2,20 +2,21 @@
 
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink, MoreVertical, Eye, EyeOff } from 'lucide-react';
+import { Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink, MoreVertical, Eye, EyeOff, X, CheckSquare, Square } from 'lucide-react';
 import Link from 'next/link';
 import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, getDocs, where, Timestamp, deleteDoc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { MailOpenIcon } from '@/components/icons';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/ui/sidebar';
 
 interface Notification {
@@ -61,8 +62,74 @@ export default function NotificationPage() {
   const [personalNotifications, setPersonalNotifications] = useState<Notification[]>([]);
   const [globalNotifications, setGlobalNotifications] = useState<Notification[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+
   const auth = getAuth(app);
   const router = useRouter();
+
+  const longPressTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const startSelectionMode = (notifId: string) => {
+    setSelectionMode(true);
+    setSelectedIds(new Set([notifId]));
+  };
+
+  const handleTouchStart = (notifId: string) => {
+    longPressTimeoutRef.current = setTimeout(() => {
+        startSelectionMode(notifId);
+    }, 700);
+  };
+  
+  const handleTouchEnd = () => {
+    if (longPressTimeoutRef.current) {
+        clearTimeout(longPressTimeoutRef.current);
+    }
+  };
+
+  const handleContextMenu = (e: React.MouseEvent, notifId: string) => {
+    e.preventDefault();
+    startSelectionMode(notifId);
+  }
+
+  const handleSelectionChange = (notifId: string) => {
+    if (!selectionMode) return;
+    setSelectedIds(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(notifId)) {
+            newSet.delete(notifId);
+        } else {
+            newSet.add(notifId);
+        }
+        return newSet;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedIds.size === personalNotifications.length) {
+        setSelectedIds(new Set());
+    } else {
+        setSelectedIds(new Set(personalNotifications.map(n => n.id)));
+    }
+  };
+
+  const handleBulkAction = async (action: 'read' | 'delete') => {
+    if (!user || selectedIds.size === 0) return;
+    
+    const batch = writeBatch(db);
+    selectedIds.forEach(id => {
+        const notifRef = doc(db, 'users', user.uid, 'notifications', id);
+        if (action === 'read') {
+            batch.update(notifRef, { isRead: true });
+        } else if (action === 'delete') {
+            batch.delete(notifRef);
+        }
+    });
+
+    await batch.commit();
+    setSelectionMode(false);
+    setSelectedIds(new Set());
+  };
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
@@ -160,6 +227,11 @@ export default function NotificationPage() {
   }, [personalNotifications, globalNotifications]);
 
  const handleNotificationClick = async (notification: Notification) => {
+    if (selectionMode) {
+        handleSelectionChange(notification.id);
+        return;
+    }
+
     if (!user || notification.isRead || notification.type === 'global') return;
     
     const notificationRef = doc(db, 'users', user.uid, 'notifications', notification.id);
@@ -255,38 +327,73 @@ export default function NotificationPage() {
               {unreadCount > 0 ? `Vous avez ${unreadCount} notification(s) non lue(s).` : 'Vous êtes à jour.'}
             </p>
           </div>
+        
+          <AnimatePresence>
+            {selectionMode ? (
+                <motion.div 
+                    className="mb-6 flex justify-between items-center gap-2 bg-muted/50 p-3 rounded-lg border border-border/50"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                >
+                    <div className="flex items-center gap-2">
+                         <Button variant="outline" size="sm" onClick={() => setSelectionMode(false)}>
+                            <X className="h-4 w-4 mr-2" />
+                            Annuler
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={handleSelectAll}>
+                           {selectedIds.size === personalNotifications.length ? <CheckSquare className="h-4 w-4 mr-2" /> : <Square className="h-4 w-4 mr-2" />}
+                           Tout Sél.
+                        </Button>
+                    </div>
+                    {selectedIds.size > 0 && (
+                        <div className="flex items-center gap-2">
+                             <Button variant="secondary" size="sm" onClick={() => handleBulkAction('read')}>
+                                <CheckCheck className="h-4 w-4 mr-2" />
+                                Marquer comme lu
+                            </Button>
+                            <Button variant="destructive" size="sm" onClick={() => handleBulkAction('delete')}>
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Supprimer
+                            </Button>
+                        </div>
+                    )}
+                </motion.div>
+            ) : (
+                <div className="mb-6 flex justify-end gap-2">
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="outline" size="icon" onClick={handleMarkAllAsRead} disabled={unreadCount === 0}>
+                                    <CheckCheck className="h-5 w-5" />
+                                    <span className="sr-only">Tout marquer comme lu</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent><p>Tout marquer comme lu</p></TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="outline" size="icon" onClick={() => handleDeleteAll('read')} disabled={personalNotifications.filter(n => n.isRead).length === 0}>
+                                    <Trash2 className="h-5 w-5 text-muted-foreground" />
+                                    <span className="sr-only">Supprimer les notifications lues</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent><p>Supprimer les notifications lues</p></TooltipContent>
+                        </Tooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button variant="destructive" size="icon" onClick={() => handleDeleteAll('all')} disabled={personalNotifications.length === 0}>
+                                    <Trash2 className="h-5 w-5" />
+                                    <span className="sr-only">Tout supprimer</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent><p>Tout supprimer</p></TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
+            )}
+        </AnimatePresence>
 
-          <div className="mb-6 flex justify-end gap-2">
-             <TooltipProvider>
-                  <Tooltip>
-                      <TooltipTrigger asChild>
-                          <Button variant="outline" size="icon" onClick={handleMarkAllAsRead} disabled={unreadCount === 0}>
-                              <CheckCheck className="h-5 w-5" />
-                              <span className="sr-only">Tout marquer comme lu</span>
-                          </Button>
-                      </TooltipTrigger>
-                      <TooltipContent><p>Tout marquer comme lu</p></TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                      <TooltipTrigger asChild>
-                          <Button variant="outline" size="icon" onClick={() => handleDeleteAll('read')} disabled={personalNotifications.filter(n => n.isRead).length === 0}>
-                              <Trash2 className="h-5 w-5 text-muted-foreground" />
-                              <span className="sr-only">Supprimer les notifications lues</span>
-                          </Button>
-                      </TooltipTrigger>
-                      <TooltipContent><p>Supprimer les notifications lues</p></TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                      <TooltipTrigger asChild>
-                          <Button variant="destructive" size="icon" onClick={() => handleDeleteAll('all')} disabled={personalNotifications.length === 0}>
-                              <Trash2 className="h-5 w-5" />
-                              <span className="sr-only">Tout supprimer</span>
-                          </Button>
-                      </TooltipTrigger>
-                      <TooltipContent><p>Tout supprimer</p></TooltipContent>
-                  </Tooltip>
-              </TooltipProvider>
-          </div>
       
           {allNotifications.length > 0 ? (
                 <motion.div
@@ -302,16 +409,38 @@ export default function NotificationPage() {
                           className="relative flex items-start gap-4 sm:gap-6"
                           variants={itemVariants}
                       >
+                           <AnimatePresence>
+                            {selectionMode && notif.type !== 'global' && (
+                                <motion.div 
+                                    className="z-20"
+                                    initial={{ scale: 0.5, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.5, opacity: 0 }}
+                                >
+                                    <Checkbox
+                                        checked={selectedIds.has(notif.id)}
+                                        onCheckedChange={() => handleSelectionChange(notif.id)}
+                                        className="h-5 w-5 mt-3"
+                                    />
+                                </motion.div>
+                            )}
+                            </AnimatePresence>
+
                           <NotificationIcon type={notif.type} isRead={notif.isRead} />
                           <motion.div
                               className={cn(
                                 "relative flex-1 -mt-1 p-5 rounded-lg border backdrop-blur-md transition-all duration-300 w-full overflow-hidden group",
                                 "before:absolute before:inset-0 before:-z-10 before:bg-gradient-to-br before:opacity-50",
-                                !notif.isRead ? "border-primary/30 before:from-primary/10 before:to-transparent shadow-[0_0_25px_hsl(var(--primary)/0.1)] cursor-pointer" : "border-border/30 before:from-muted/20 before:to-transparent",
+                                !notif.isRead ? "border-primary/30 before:from-primary/10 before:to-transparent shadow-[0_0_25px_hsl(var(--primary)/0.1)]" : "border-border/30 before:from-muted/20 before:to-transparent",
                                 notif.type === 'global' && "border-purple-500/30 before:from-purple-500/10",
-                                "hover:-translate-y-1 hover:shadow-lg"
+                                selectionMode ? "cursor-pointer" : "hover:-translate-y-1 hover:shadow-lg",
+                                selectedIds.has(notif.id) && "border-primary bg-primary/10"
                               )}
                               onClick={() => handleNotificationClick(notif)}
+                              onContextMenu={(e) => notif.type !== 'global' && handleContextMenu(e, notif.id)}
+                              onTouchStart={() => notif.type !== 'global' && handleTouchStart(notif.id)}
+                              onTouchEnd={handleTouchEnd}
+                              onTouchMove={handleTouchEnd}
                               style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)' }}
                           >
                             <div className="absolute inset-0 bg-[linear-gradient(45deg,hsla(0,0%,100%,.03)_25%,transparent_25%,transparent_50%,hsla(0,0%,100%,.03)_50%,hsla(0,0%,100%,.03)_75%,transparent_75%,transparent)] bg-[length:60px_60px] opacity-50 -z-10"></div>
@@ -322,7 +451,7 @@ export default function NotificationPage() {
                                     <p className="text-xs text-muted-foreground whitespace-nowrap">
                                         {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                                     </p>
-                                      {notif.type !== 'global' && (
+                                      {notif.type !== 'global' && !selectionMode && (
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-foreground opacity-50 group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
@@ -385,4 +514,3 @@ export default function NotificationPage() {
     </div>
   );
 }
-
