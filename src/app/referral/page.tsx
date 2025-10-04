@@ -315,64 +315,66 @@ Merci de traiter ma demande.`;
         </Card>
 
         <Card className="bg-card/70 backdrop-blur-sm border-border/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-                <Users className="text-primary"/>
-                Mes Filleuls ({referredUsers.length})
-            </CardTitle>
-            <CardDescription>
-              Voici la liste des utilisateurs qui se sont inscrits avec votre code.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            {referredUsers.length > 0 ? (
-                <div className="overflow-x-auto">
-                    <Table>
-                        <TableHeader>
-                        <TableRow>
-                            <TableHead>Utilisateur</TableHead>
-                            <TableHead>Date d'inscription</TableHead>
-                            <TableHead className="text-right">Commissions générées</TableHead>
-                        </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                        {referredUsers.map((refUser) => (
-                            <TableRow key={refUser.id}>
-                            <TableCell>
-                                <div className="flex items-center gap-3">
-                                    <Avatar className="h-9 w-9">
-                                        <AvatarImage src={refUser.photoURL} />
-                                        <AvatarFallback>{refUser.username.substring(0, 2).toUpperCase()}</AvatarFallback>
-                                    </Avatar>
-                                    <span className="font-medium">{refUser.username}</span>
+            <CardHeader>
+                <div className="flex items-center gap-3">
+                    <div className="p-2 bg-primary/10 border border-primary/20 rounded-lg text-primary">
+                        <Users className="h-6 w-6" />
+                    </div>
+                    <div>
+                        <CardTitle>Réseau de Filleuls ({referredUsers.length})</CardTitle>
+                        <CardDescription>
+                            Votre équipe d'affiliés et les commissions générées.
+                        </CardDescription>
+                    </div>
+                </div>
+            </CardHeader>
+            <CardContent>
+                {referredUsers.length > 0 ? (
+                    <div className="flow-root">
+                        <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                                <div className="space-y-2">
+                                    <div className="grid grid-cols-3 gap-4 px-4 py-2 text-xs font-medium text-muted-foreground bg-muted/50 rounded-t-lg">
+                                        <div>Utilisateur</div>
+                                        <div className="text-center">Date d'inscription</div>
+                                        <div className="text-right">Commissions</div>
+                                    </div>
+                                    {referredUsers.map((refUser) => (
+                                        <div key={refUser.id} className="grid grid-cols-3 gap-4 items-center px-4 py-3 bg-muted/20 hover:bg-muted/40 rounded-lg transition-colors">
+                                            <div className="flex items-center gap-3 truncate">
+                                                <Avatar className="h-9 w-9">
+                                                    <AvatarImage src={refUser.photoURL} />
+                                                    <AvatarFallback>{refUser.username.substring(0, 2).toUpperCase()}</AvatarFallback>
+                                                </Avatar>
+                                                <span className="font-medium truncate">{refUser.username}</span>
+                                            </div>
+                                            <div className="font-mono text-center text-sm text-muted-foreground">{refUser.joinDate}</div>
+                                            <div className="text-right font-bold text-green-400">
+                                                {refUser.totalCommissions > 0 ? `+${refUser.totalCommissions.toLocaleString('fr-FR')} FCFA` : '0 FCFA'}
+                                            </div>
+                                        </div>
+                                    ))}
                                 </div>
-                            </TableCell>
-                            <TableCell className="font-mono">{refUser.joinDate}</TableCell>
-                            <TableCell className="text-right font-bold text-green-400">
-                                {refUser.totalCommissions > 0 ? `+${refUser.totalCommissions.toLocaleString('fr-FR')} FCFA` : '0 FCFA'}
-                            </TableCell>
-                            </TableRow>
-                        ))}
-                        </TableBody>
-                  </Table>
-                </div>
-            ) : (
-                <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-6 bg-muted/30 rounded-lg">
-                    <div className="relative flex items-center justify-center">
-                        <div className="absolute h-16 w-16 bg-primary/10 rounded-full animate-pulse"></div>
-                        <Users className="w-16 h-16 text-primary/70"/>
+                            </div>
+                        </div>
                     </div>
-                    <div className="space-y-1">
-                        <h3 className="text-lg font-semibold text-foreground">Invitez vos amis et gagnez ensemble !</h3>
-                        <p className="text-sm max-w-xs mx-auto">Partagez votre code de parrainage pour commencer à construire votre réseau.</p>
+                ) : (
+                    <div className="text-center py-12 text-muted-foreground flex flex-col items-center gap-6 bg-muted/30 rounded-lg">
+                        <div className="relative flex items-center justify-center">
+                            <div className="absolute h-16 w-16 bg-primary/10 rounded-full animate-pulse"></div>
+                            <Users className="w-16 h-16 text-primary/70"/>
+                        </div>
+                        <div className="space-y-1">
+                            <h3 className="text-lg font-semibold text-foreground">Construisez votre réseau</h3>
+                            <p className="text-sm max-w-xs mx-auto">Partagez votre code pour recruter des filleuls et commencer à gagner des commissions.</p>
+                        </div>
+                         <Button onClick={handleShareCode} variant="outline" disabled={!referralCode}>
+                            <Share2 className="mr-2 h-4 w-4" />
+                            Partager mon code
+                        </Button>
                     </div>
-                     <Button onClick={handleShareCode} variant="outline" disabled={!referralCode}>
-                        <Share2 className="mr-2 h-4 w-4" />
-                        Partager mon code
-                    </Button>
-                </div>
-            )}
-          </CardContent>
+                )}
+            </CardContent>
         </Card>
 
         <Dialog open={isWithdrawDialogOpen} onOpenChange={setIsWithdrawDialogOpen}>
@@ -449,4 +451,3 @@ Merci de traiter ma demande.`;
     </div>
   );
 }
-
