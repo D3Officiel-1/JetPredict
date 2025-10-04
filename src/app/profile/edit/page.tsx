@@ -13,10 +13,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Loader2, CheckCircle, XCircle, User as UserIcon } from 'lucide-react';
+import { ArrowLeft, Loader2, CheckCircle, XCircle, User as UserIcon, Phone, Gamepad2 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import Header from '@/components/ui/sidebar';
+import { AnimatePresence, motion } from 'framer-motion';
 
 interface UserData {
   firstName: string;
@@ -25,6 +26,19 @@ interface UserData {
   phone: string;
   favoriteGame: string;
 }
+
+const FormRow = ({ icon, label, children }: { icon: React.ReactNode, label: string, children: React.ReactNode }) => (
+    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-3 w-full sm:w-1/3 shrink-0">
+            <div className="text-primary">{icon}</div>
+            <Label className="text-base sm:text-sm font-semibold whitespace-nowrap">{label}</Label>
+        </div>
+        <div className="w-full sm:w-2/3">
+            {children}
+        </div>
+    </div>
+);
+
 
 export default function EditProfilePage() {
   const [user, setUser] = useState<User | null>(null);
@@ -68,7 +82,7 @@ export default function EditProfilePage() {
             favoriteGame: data.favoriteGame || '',
           });
           setInitialUsername(data.username || '');
-          setUsernameStatus('valid');
+          if (data.username) setUsernameStatus('valid');
         }
         setIsLoading(false);
       });
@@ -136,7 +150,6 @@ export default function EditProfilePage() {
         const batch = writeBatch(db);
         const userDocRef = doc(db, "users", user.uid);
 
-        // Si le nom d'utilisateur a changé, mettez à jour les codes de parrainage des filleuls
         const usernameChanged = formData.username !== initialUsername;
         if (usernameChanged && initialUsername) {
             const referralsQuery = query(collection(db, "users"), where("referralCode", "==", initialUsername));
@@ -147,10 +160,8 @@ export default function EditProfilePage() {
             });
         }
         
-        // Mettre à jour le profil de l'utilisateur
         batch.update(userDocRef, { ...formData });
 
-        // Valider toutes les écritures
         await batch.commit();
 
         toast({
@@ -172,18 +183,31 @@ export default function EditProfilePage() {
   };
   
   const renderUsernameFeedback = () => {
-    switch (usernameStatus) {
-        case 'checking':
-            return <p className="text-sm text-muted-foreground flex items-center"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Vérification...</p>;
-        case 'valid':
-            return <p className="text-sm text-green-500 flex items-center"><CheckCircle className="mr-2 h-4 w-4" /> Pseudo disponible !</p>;
-        case 'invalid':
-            return <p className="text-sm text-destructive flex items-center"><XCircle className="mr-2 h-4 w-4" /> Les emojis et espaces sont interdits.</p>;
-        case 'taken':
-            return <p className="text-sm text-destructive flex items-center"><XCircle className="mr-2 h-4 w-4" /> Ce pseudo est déjà pris.</p>;
-        default:
-            return <p className="text-sm text-muted-foreground">Doit être unique et sans espaces/emojis.</p>;
-    }
+    const messages = {
+        checking: { icon: <Loader2 className="animate-spin" />, text: 'Vérification...', color: 'text-muted-foreground' },
+        valid: { icon: <CheckCircle />, text: 'Disponible', color: 'text-green-500' },
+        invalid: { icon: <XCircle />, text: 'Caractères non valides', color: 'text-destructive' },
+        taken: { icon: <XCircle />, text: 'Déjà pris', color: 'text-destructive' },
+        idle: { icon: null, text: '', color: ''},
+    };
+    
+    const currentStatus = formData.username.length < 3 ? 'idle' : usernameStatus;
+    const { icon, text, color } = messages[currentStatus] || messages.idle;
+
+    return (
+        <AnimatePresence mode="wait">
+            <motion.div
+                key={currentStatus}
+                className={`flex items-center gap-1 text-xs ${color}`}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+            >
+                {icon} {text}
+            </motion.div>
+        </AnimatePresence>
+    );
   };
 
   if (isLoading) {
@@ -198,60 +222,68 @@ export default function EditProfilePage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header />
-      <main className="w-full max-w-lg mx-auto p-4 sm:p-8">
-        <Card className="bg-card/70 backdrop-blur-sm border-border/50">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-2xl"><UserIcon />Modifier le Profil</CardTitle>
-            <CardDescription>Mettez à jour vos informations personnelles ici.</CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSave}>
-            <CardContent className="space-y-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Prénom</Label>
-                  <Input id="firstName" value={formData.firstName} onChange={handleChange} />
+      <main className="w-full max-w-2xl mx-auto p-4 sm:p-8">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <form onSubmit={handleSave} className="relative bg-card/70 backdrop-blur-sm border border-border/50 rounded-xl overflow-hidden shadow-lg">
+                 <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] -z-10"></div>
+                 <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 to-transparent -z-10"></div>
+
+                <div className="p-6 border-b border-border/50">
+                    <h2 className="text-2xl font-bold text-foreground flex items-center gap-3"><UserIcon />Modifier le Profil</h2>
+                    <p className="text-muted-foreground text-sm mt-1">Mettez à jour vos informations personnelles ici.</p>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Nom</Label>
-                  <Input id="lastName" value={formData.lastName} onChange={handleChange} />
+                
+                <div className="p-6 space-y-8">
+                    <FormRow icon={<UserIcon size={20} />} label="Nom Complet">
+                       <div className="grid grid-cols-2 gap-4">
+                          <Input id="firstName" value={formData.firstName} onChange={handleChange} placeholder="Prénom" className="bg-background/50"/>
+                          <Input id="lastName" value={formData.lastName} onChange={handleChange} placeholder="Nom" className="bg-background/50"/>
+                       </div>
+                    </FormRow>
+                    
+                    <FormRow icon={<UserIcon size={20} />} label="Pseudo">
+                       <div className="flex items-center gap-2">
+                         <Input id="username" value={formData.username} onChange={handleChange} placeholder="Votre pseudo unique" className="bg-background/50"/>
+                         <div className="w-32 text-right">{renderUsernameFeedback()}</div>
+                       </div>
+                       <p className="text-xs text-muted-foreground mt-1.5 pl-1">Sera utilisé comme code de parrainage. Sans espaces/emojis.</p>
+                    </FormRow>
+
+                    <FormRow icon={<Phone size={20} />} label="Téléphone">
+                        <Input id="phone" value={formData.phone} onChange={handleChange} placeholder="+XXX..." className="bg-background/50"/>
+                    </FormRow>
+
+                    <FormRow icon={<Gamepad2 size={20} />} label="Jeu Préféré">
+                        <Select value={formData.favoriteGame} onValueChange={handleSelectChange}>
+                            <SelectTrigger className="bg-background/50">
+                                <SelectValue placeholder="Sélectionnez un jeu" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="aviator">Aviator</SelectItem>
+                                <SelectItem value="luckyjet">Lucky Jet</SelectItem>
+                                <SelectItem value="paris-sportifs">Paris Sportifs</SelectItem>
+                                <SelectItem value="autre">Autre</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </FormRow>
                 </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="username">Nom d'utilisateur</Label>
-                <Input id="username" value={formData.username} onChange={handleChange} />
-                <div className="h-5 mt-1">{renderUsernameFeedback()}</div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone">Numéro de téléphone</Label>
-                <Input id="phone" value={formData.phone} onChange={handleChange} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="favoriteGame">Jeu Préféré</Label>
-                <Select value={formData.favoriteGame} onValueChange={handleSelectChange}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Sélectionnez un jeu" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="aviator">Aviator</SelectItem>
-                        <SelectItem value="luckyjet">Lucky Jet</SelectItem>
-                        <SelectItem value="paris-sportifs">Paris Sportifs</SelectItem>
-                        <SelectItem value="autre">Autre</SelectItem>
-                    </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-            <CardFooter className="flex-col gap-4">
-              <Button className="w-full" type="submit" disabled={isSaving || usernameStatus !== 'valid'}>
-                {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Enregistrer les modifications'}
-              </Button>
-               <Button asChild variant="ghost" className="w-full">
-                <Link href="/profile">
-                    Annuler
-                </Link>
-                </Button>
-            </CardFooter>
-          </form>
-        </Card>
+                
+                <div className="flex flex-col gap-4 p-6 bg-muted/20 border-t border-border/50">
+                  <Button size="lg" className="w-full" type="submit" disabled={isSaving || usernameStatus !== 'valid'}>
+                    {isSaving ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : 'Enregistrer les modifications'}
+                  </Button>
+                   <Button asChild variant="ghost" className="w-full">
+                    <Link href="/profile">
+                        Annuler
+                    </Link>
+                    </Button>
+                </div>
+            </form>
+        </motion.div>
       </main>
     </div>
   );
