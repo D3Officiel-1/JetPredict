@@ -10,7 +10,7 @@ export default function CGVPage() {
         <div className="space-y-6 text-muted-foreground">
             <div className="space-y-2">
                 <h2 className="text-xl font-semibold text-foreground">Article 1 - Objet</h2>
-                <p>Les présentes conditions générales de vente (CGV) s'appliquent, sans restriction ni réserve à l'ensemble des ventes conclues par JetPredict (« le Vendeur ») auprès de consommateurs et d'acheteurs non professionnels (« Les Clients ou le Client »), désirant acquérir les services proposés à la vente par le Vendeur sur le site JetPredict (« Les Services »).</p>
+                <p>Les présentes conditions générales de vente (CGV) s'appliquent, sans restriction ni réserve à l'ensemble des ventes conclues par Jet Predict (« le Vendeur ») auprès de consommateurs et d'acheteurs non professionnels (« Les Clients ou le Client »), désirant acquérir les services proposés à la vente par le Vendeur sur le site Jet Predict (« Les Services »).</p>
             </div>
 
             <div className="space-y-2">
@@ -32,7 +32,7 @@ export default function CGVPage() {
             <div className="space-y-2">
                 <h2 className="text-xl font-semibold text-foreground">Article 5 - Droit de rétractation et Remboursement</h2>
                 <p>Conformément à l'article L221-28 du Code de la consommation, le droit de rétractation ne peut être exercé pour les contrats de fourniture d'un contenu numérique non fourni sur un support matériel dont l'exécution a commencé après accord préalable exprès du consommateur et renoncement exprès à son droit de rétractation.</p>
-                <p>En souscrivant à nos services, vous acceptez que l'accès au service soit immédiat et vous renoncez expressément à votre droit de rétractation. Par conséquent, aucun remboursement ne sera effectué une fois le service activé, sauf en cas de défaut de service majeur imputable à JetPredict.</p>
+                <p>En souscrivant à nos services, vous acceptez que l'accès au service soit immédiat et vous renoncez expressément à votre droit de rétractation. Par conséquent, aucun remboursement ne sera effectué une fois le service activé, sauf en cas de défaut de service majeur imputable à Jet Predict.</p>
             </div>
 
             <div className="space-y-2">

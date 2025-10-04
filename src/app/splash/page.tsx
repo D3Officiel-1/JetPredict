@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -119,7 +120,7 @@ export default function SplashPage() {
                         
                             <Image
                                 src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png"
-                                alt="JetPredict Logo"
+                                alt="Jet Predict Logo"
                                 width={128}
                                 height={128}
                                 className="rounded-md shadow-2xl shadow-primary/20"
@@ -131,7 +132,7 @@ export default function SplashPage() {
                             className="text-5xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-cyan-300"
                             variants={itemVariants}
                         >
-                            JetPredict
+                            Jet Predict
                         </motion.h1>
 
                         <motion.p className="text-lg text-muted-foreground" variants={itemVariants}>
@@ -151,12 +152,10 @@ export default function SplashPage() {
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5, ease: 'easeIn' }}
                 >
-                    © {new Date().getFullYear()} 2025 JetPredict — #D3 Officiel
+                    © {new Date().getFullYear()} 2025 Jet Predict — #D3 Officiel
                 </motion.footer>
             )}
         </AnimatePresence>
     </div>
   );
 }
-
-    

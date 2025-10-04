@@ -68,7 +68,7 @@ export default function OpenFilePage() {
                     ) : (
                          <div className="flex flex-col items-center justify-center h-48 gap-2">
                              <p className="text-muted-foreground">Aucun fichier n'a été fourni au lancement.</p>
-                             <p className="text-sm text-center text-muted-foreground/80">Pour tester, faites un clic droit sur un fichier `.txt` et choisissez "Ouvrir avec JetPredict".</p>
+                             <p className="text-sm text-center text-muted-foreground/80">Pour tester, faites un clic droit sur un fichier `.txt` et choisissez "Ouvrir avec Jet Predict".</p>
                         </div>
                     )}
                 </CardContent>
@@ -76,5 +76,3 @@ export default function OpenFilePage() {
         </div>
     );
 }
-
-    

@@ -281,7 +281,7 @@ export default function Header() {
         
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
              <Link href="/predict" className="group">
-                 <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={40} height={40} className="h-10 w-auto rounded-md transition-transform duration-300 group-hover:scale-110" />
+                 <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={40} height={40} className="h-10 w-auto rounded-md transition-transform duration-300 group-hover:scale-110" />
             </Link>
         </div>
 

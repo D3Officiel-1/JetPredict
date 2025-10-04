@@ -666,7 +666,7 @@ export default function RegisterPage() {
                 {step === 0 && (
                     <div className="text-center space-y-6">
                          <div className="mb-8 text-center">
-                            <h1 className="text-3xl font-bold tracking-tight">Rejoignez JetPredict 🚀</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Rejoignez Jet Predict 🚀</h1>
                             <p className="text-muted-foreground mt-2">Créez votre compte pour commencer.</p>
                         </div>
                         <div className="space-y-4">

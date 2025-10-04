@@ -303,8 +303,8 @@ export default function LoginPage() {
         <form onSubmit={handleLogin}>
           <div className="text-center mb-8">
              <Link href="/" className="flex justify-center mb-4 items-center gap-2">
-                <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} priority />
-                <span className="text-2xl font-bold text-primary">JetPredict</span>
+                <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} priority />
+                <span className="text-2xl font-bold text-primary">Jet Predict</span>
             </Link>
             <h1 className="text-3xl font-bold text-foreground">Connexion</h1>
             <p className="text-muted-foreground mt-2">

@@ -422,7 +422,7 @@ const MultiplierDisplay: FC<{ multiplier: number; gameState: GameState; crashPoi
         return (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                 <p className="text-xl text-white/50">En attente du prochain tour...</p>
-                <Image src="https://1play.gamedev-tech.cc/lucky_grm/assets/media/c544881eb170e73349e4c92d1706a96c.svg" alt="Loading..." width={80} height={80} className="animate-pulse mt-2" />
+                <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={80} height={80} className="animate-pulse mt-2" />
             </div>
         );
     }
@@ -826,7 +826,7 @@ export default function SimulationPage() {
   if (!user) {
     return (
       <div className="flex min-h-screen w-full flex-col bg-[#1a203c] items-center justify-center">
-        <Image src="https://1play.gamedev-tech.cc/lucky_grm/assets/media/c544881eb170e73349e4c92d1706a96c.svg" alt="Loading..." width={100} height={100} className="animate-pulse" />
+        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="animate-pulse" />
       </div>
     );
   }
@@ -943,8 +943,8 @@ const ChatPanel = () => (
         </div>
         <div className="flex-1 flex justify-center">
             <Link href="/predict" className="flex items-center gap-2 group">
-                <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={24} height={24} className="h-6 w-auto rounded-md transition-transform duration-300 group-hover:scale-110" />
-                <span className="text-lg font-bold text-primary transition-colors group-hover:text-cyan-300">JetPredict</span>
+                <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={24} height={24} className="h-6 w-auto rounded-md transition-transform duration-300 group-hover:scale-110" />
+                <span className="text-lg font-bold text-primary transition-colors group-hover:text-cyan-300">Jet Predict</span>
             </Link>
         </div>
         <div className="flex items-center gap-4">

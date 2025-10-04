@@ -9,7 +9,7 @@ export default function CGUPage() {
 
         <div className="space-y-6 text-muted-foreground">
             <p>
-                Les présentes conditions générales d'utilisation (dites « CGU ») ont pour objet l'encadrement juridique des modalités de mise à disposition du site et des services par JetPredict et de définir les conditions d’accès et d’utilisation des services par « l'Utilisateur ».
+                Les présentes conditions générales d'utilisation (dites « CGU ») ont pour objet l'encadrement juridique des modalités de mise à disposition du site et des services par Jet Predict et de définir les conditions d’accès et d’utilisation des services par « l'Utilisateur ».
             </p>
 
             <div className="space-y-2">
@@ -45,7 +45,7 @@ export default function CGUPage() {
                     La responsabilité de l'éditeur ne peut être engagée en cas de défaillance, panne, difficulté ou interruption de fonctionnement, empêchant l'accès au site ou à une de ses fonctionnalités. Le matériel de connexion au site que vous utilisez est sous votre entière responsabilité.
                 </p>
                 <p className="p-4 rounded-lg border border-destructive/50 bg-destructive/10 text-destructive-foreground/80">
-                    <strong>Important :</strong> JetPredict est un outil d'aide à la décision basé sur des analyses statistiques et ne garantit aucun gain à 100%. L'Utilisateur est seul responsable de ses décisions et des éventuelles pertes financières qui pourraient en résulter. Le jeu comporte des risques : endettement, isolement, dépendance.
+                    <strong>Important :</strong> Jet Predict est un outil d'aide à la décision basé sur des analyses statistiques et ne garantit aucun gain à 100%. L'Utilisateur est seul responsable de ses décisions et des éventuelles pertes financières qui pourraient en résulter. Le jeu comporte des risques : endettement, isolement, dépendance.
                 </p>
             </div>
 

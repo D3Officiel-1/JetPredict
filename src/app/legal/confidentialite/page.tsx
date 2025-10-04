@@ -9,7 +9,7 @@ export default function ConfidentialitePage() {
 
         <div className="space-y-6 text-muted-foreground">
             <p>
-                Predict Inc. ("nous", "notre" ou "nos") s'engage à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous utilisez notre site web JetPredict (le "Service").
+                Predict Inc. ("nous", "notre" ou "nos") s'engage à protéger votre vie privée. Cette politique de confidentialité explique comment nous collectons, utilisons, divulguons et protégeons vos informations lorsque vous utilisez notre site web Jet Predict (le "Service").
             </p>
 
             <div className="space-y-2">

@@ -44,7 +44,7 @@ const testimonials = [
         name: "Moussa K.",
         role: "Utilisateur VIP",
         rating: 5,
-        quote: "JetPredict a changé ma façon de parier. Les prédictions pour les matchs de foot sont incroyablement précises. L'indice de fiabilité est un vrai plus !",
+        quote: "Jet Predict a changé ma façon de parier. Les prédictions pour les matchs de foot sont incroyablement précises. L'indice de fiabilité est un vrai plus !",
     },
     {
         name: "Awa T.",
@@ -76,12 +76,12 @@ const stats = [
 
 const faqItems = [
     {
-        question: "Qu'est-ce que JetPredict exactement ?",
-        answer: "JetPredict est un outil d'aide à la décision pour les paris sportifs et les jeux de crash. Il utilise des modèles statistiques et une IA pour analyser les tendances et vous fournir des cotes de retrait suggérées afin de vous aider à prendre des décisions plus éclairées et à augmenter vos chances de gains."
+        question: "Qu'est-ce que Jet Predict exactement ?",
+        answer: "Jet Predict est un outil d'aide à la décision pour les paris sportifs et les jeux de crash. Il utilise des modèles statistiques et une IA pour analyser les tendances et vous fournir des cotes de retrait suggérées afin de vous aider à prendre des décisions plus éclairées et à augmenter vos chances de gains."
     },
     {
         question: "Les prédictions sont-elles garanties à 100% ?",
-        answer: "Non. JetPredict est un outil statistique puissant conçu pour vous donner un avantage en identifiant des tendances probables. Cependant, comme pour tout jeu de hasard, le risque zéro n'existe pas. Jouez toujours de manière responsable."
+        answer: "Non. Jet Predict est un outil statistique puissant conçu pour vous donner un avantage en identifiant des tendances probables. Cependant, comme pour tout jeu de hasard, le risque zéro n'existe pas. Jouez toujours de manière responsable."
     },
     {
         question: "Comment fonctionne l'abonnement ?",
@@ -291,8 +291,8 @@ export default function LandingPage() {
       <header className="sticky top-0 z-40 w-full border-b border-border/40 bg-background/95 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto max-w-screen-2xl flex h-16 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2">
-            <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={32} height={32} className="h-8 w-auto rounded-md sm:h-9" style={{ height: 'auto' }} />
-            <span className="text-xl sm:text-2xl font-bold text-primary">JetPredict</span>
+            <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md sm:h-9" style={{ height: 'auto' }} />
+            <span className="text-xl sm:text-2xl font-bold text-primary">Jet Predict</span>
           </Link>
            <div className="flex items-center gap-2">
                 <Link href="/login" passHref>
@@ -318,7 +318,7 @@ export default function LandingPage() {
                     </h1>
                     
                     <p className="mt-6 max-w-xl text-lg text-muted-foreground">
-                        JetPredict est votre assistant intelligent pour analyser les tendances de jeu et obtenir des prédictions de cotes fiables. Prenez une longueur d'avance avec des analyses de paris basées sur les données.
+                        Jet Predict est votre assistant intelligent pour analyser les tendances de jeu et obtenir des prédictions de cotes fiables. Prenez une longueur d'avance avec des analyses de paris basées sur les données.
                     </p>
                     <p className="mt-4 max-w-xl text-lg text-primary/90 font-semibold">
                         Inscrivez-vous sur 1Win avec le code promo <span className="font-bold text-primary">JETPREDICT</span> pour bénéficier de 500% de bonus lors de votre premier rechargement.
@@ -346,7 +346,7 @@ export default function LandingPage() {
                     >
                          <Image
                         src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
-                        alt="Tableau de bord JetPredict"
+                        alt="Tableau de bord Jet Predict"
                         width={700}
                         height={700}
                         className="rounded-full shadow-2xl object-cover border-8 border-primary/10"
@@ -424,7 +424,7 @@ export default function LandingPage() {
                 <div className="text-center lg:text-left">
                     <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">La puissance de l'IA pour vos paris sportifs</h2>
                     <p className="text-muted-foreground text-lg">
-                        JetPredict a été créé avec une mission simple : fournir aux parieurs les outils nécessaires pour prendre des décisions plus intelligentes. Nous combinons des modèles statistiques avancés et une intelligence artificielle pour vous offrir des prédictions claires, simples et surtout, utiles pour vos paris.
+                        Jet Predict a été créé avec une mission simple : fournir aux parieurs les outils nécessaires pour prendre des décisions plus intelligentes. Nous combinons des modèles statistiques avancés et une intelligence artificielle pour vous offrir des prédictions claires, simples et surtout, utiles pour vos paris.
                     </p>
                 </div>
                  <div className="flex justify-center">
@@ -440,7 +440,7 @@ export default function LandingPage() {
         <section id="features" className="py-20 bg-muted/50">
             <div className="container mx-auto">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Pourquoi choisir JetPredict ?</h2>
+                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Pourquoi choisir Jet Predict ?</h2>
                     <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Tout ce dont vous avez besoin pour prendre une longueur d'avance et maximiser vos gains sur les paris sportifs.</p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
@@ -472,7 +472,7 @@ export default function LandingPage() {
             <div className="container mx-auto text-center">
                  <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Compatible avec vos plateformes de paris préférées</h2>
                 <p className="text-muted-foreground text-lg mb-12 max-w-2xl mx-auto">
-                    Utilisez les prédictions de JetPredict sur les sites de jeux les plus populaires pour placer vos paris.
+                    Utilisez les prédictions de Jet Predict sur les sites de jeux les plus populaires pour placer vos paris.
                 </p>
             </div>
             <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]">
@@ -627,8 +627,8 @@ export default function LandingPage() {
                     {/* Brand Section */}
                     <div className="flex flex-col gap-4 items-start col-span-1 md:col-span-2 lg:col-span-1">
                          <Link href="/" className="flex items-center gap-2">
-                            <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} />
-                            <span className="text-xl font-bold text-primary">JetPredict</span>
+                            <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} />
+                            <span className="text-xl font-bold text-primary">Jet Predict</span>
                         </Link>
                         <p className="text-sm text-muted-foreground">Prenez une longueur d'avance avec des analyses de paris basées sur les données.</p>
                     </div>
@@ -698,7 +698,7 @@ export default function LandingPage() {
 
                 <div className="mt-8 border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
                      <p className="text-sm text-muted-foreground text-center md:text-left">
-                        © {new Date().getFullYear()} JetPredict — #D3 Officiel
+                        © {new Date().getFullYear()} Jet Predict — #D3 Officiel
                     </p>
                     <div className="flex items-center gap-2">
                         <Image src="https://dam.begmedia.com/front/tactics/icons/light/age_restriction.f38d38a8.svg" width={20} height={20} alt="18+" />
@@ -727,7 +727,7 @@ export default function LandingPage() {
                      <InstallStep 
                         numIcon={<Download />}
                         instruction={<>Sélectionnez <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Installer l'application</span></>}
-                        detail="Cette option ajoutera JetPredict à votre écran d'accueil."
+                        detail="Cette option ajoutera Jet Predict à votre écran d'accueil."
                     />
                 </div>
             </DialogContent>
@@ -780,14 +780,10 @@ export default function LandingPage() {
                         instruction={<>Cliquez sur <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Installer</span></>}
                         detail="Confirmez l'installation lorsque la fenêtre pop-up apparaît."
                     />
-                    <p className="text-xs text-muted-foreground pt-2">Alternativement, vous pouvez ouvrir le menu du navigateur (⋮) et sélectionner "Installer JetPredict".</p>
+                    <p className="text-xs text-muted-foreground pt-2">Alternativement, vous pouvez ouvrir le menu du navigateur (⋮) et sélectionner "Installer Jet Predict".</p>
                 </div>
             </DialogContent>
         </Dialog>
     </div>
   );
 }
-
-    
-
-    
