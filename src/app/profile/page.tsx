@@ -74,21 +74,48 @@ const characterVariants = {
   visible: { opacity: 1, y: 0 },
 };
 
-const ScrambleText = ({ text }: { text: string }) => {
-  return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="flex"
-    >
-      {text.split('').map((char, index) => (
-        <motion.span key={index} variants={characterVariants}>
-          {char}
-        </motion.span>
-      ))}
-    </motion.div>
-  );
+const ScrambleText = ({ text, isVisible }: { text: string, isVisible: boolean }) => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789$*#?/%&';
+    const [displayedText, setDisplayedText] = useState(text.split('').map(() => '•').join(''));
+
+    useEffect(() => {
+        if (isVisible) {
+            let interval: NodeJS.Timeout;
+            let iterations = 0;
+            const targetText = text;
+
+            interval = setInterval(() => {
+                const newText = targetText.split('').map((char, index) => {
+                    if (index < iterations) {
+                        return targetText[index];
+                    }
+                    return characters[Math.floor(Math.random() * characters.length)];
+                }).join('');
+                
+                setDisplayedText(newText);
+                
+                if (iterations >= targetText.length) {
+                    clearInterval(interval);
+                }
+                iterations += 1;
+            }, 50);
+
+            return () => clearInterval(interval);
+        } else {
+            setDisplayedText('•'.repeat(text.length));
+        }
+    }, [isVisible, text]);
+
+    return (
+        <motion.div
+          className="flex font-mono tracking-wider"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          {displayedText}
+        </motion.div>
+    );
 };
 
 
@@ -254,41 +281,55 @@ export default function ProfilePage() {
         </div>
 
 
-        <Card className="bg-card/70 backdrop-blur-sm border-border/50">
-          <CardContent className="p-6">
-            <div className="flex items-start gap-4">
-              <div className="hidden sm:block mt-1">
-                 <Bot className="h-8 w-8 text-primary" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-foreground">Liaison Telegram</h3>
-                <p className="text-sm text-muted-foreground mb-4">Copiez la commande et envoyez-la au bot Telegram pour lier votre compte.</p>
-                <div className="flex items-stretch gap-2">
-                    <div className="flex-1 text-center text-sm sm:text-base font-mono tracking-wider bg-muted text-foreground rounded-lg px-4 py-3 border border-dashed border-border flex items-center justify-center truncate">
-                        <span className="text-primary mr-2">/link</span>
-                        <AnimatePresence mode="wait">
-                          {isTokenVisible ? (
-                            <ScrambleText text={userData.telegramLinkToken || 'Génération...'} />
-                          ) : (
-                            <motion.span
-                                initial={{opacity: 0.5}}
-                                animate={{opacity: [0.5, 1, 0.5]}}
-                                transition={{duration: 2, repeat: Infinity, ease: 'easeInOut'}}
-                                exit={{opacity: 0}}
-                            >
-                              ••••••••••••••••••••••••
-                            </motion.span>
-                          )}
-                        </AnimatePresence>
-                    </div>
-                    <Button onClick={handleCopyToken} variant="outline" className="px-4 h-auto" disabled={!userData.telegramLinkToken}>
-                        {isCopied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
-                    </Button>
-                </div>
-              </div>
+        <div className="relative p-6 bg-card/70 backdrop-blur-sm border border-primary/20 rounded-2xl overflow-hidden shadow-lg shadow-primary/10">
+          <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] -z-10"></div>
+          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 to-transparent -z-10"></div>
+          
+          <div className="flex flex-col sm:flex-row items-start gap-4">
+            <div className="p-2 bg-primary/10 border border-primary/20 rounded-lg text-primary">
+              <Bot className="h-8 w-8" />
             </div>
-          </CardContent>
-        </Card>
+            <div className="flex-1">
+              <h3 className="font-bold text-lg text-foreground">Liaison de Compte Telegram</h3>
+              <p className="text-sm text-muted-foreground mt-1">Copiez cette commande et envoyez-la à notre bot Telegram pour synchroniser votre compte.</p>
+            </div>
+          </div>
+          
+          <div className="mt-4 relative group">
+            <div className="absolute -inset-px bg-gradient-to-r from-primary/50 to-cyan-500/50 rounded-lg blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+            <div className="relative flex items-stretch gap-0 bg-muted/50 border border-border rounded-lg overflow-hidden">
+                <div className="flex-1 text-center font-mono tracking-wider text-foreground px-4 py-3 truncate flex items-center gap-2">
+                    <span className="text-primary opacity-70">/link</span>
+                    <span className="flex-1 text-left text-sm sm:text-base">
+                        <AnimatePresence mode="wait">
+                            <ScrambleText
+                                key={isTokenVisible ? 'visible' : 'hidden'}
+                                text={userData.telegramLinkToken || 'Génération...'}
+                                isVisible={isTokenVisible}
+                            />
+                        </AnimatePresence>
+                    </span>
+                </div>
+                <button 
+                  onClick={handleCopyToken}
+                  disabled={!userData.telegramLinkToken}
+                  className="relative px-4 bg-primary/20 hover:bg-primary/30 text-primary-foreground transition-colors"
+                >
+                  <AnimatePresence mode="wait">
+                    {isCopied ? (
+                       <motion.div key="check" initial={{scale:0.5, opacity:0}} animate={{scale:1, opacity:1}} exit={{scale:0.5, opacity:0}}>
+                          <Check className="h-5 w-5 text-green-400" />
+                       </motion.div>
+                    ) : (
+                       <motion.div key="copy" initial={{scale:0.5, opacity:0}} animate={{scale:1, opacity:1}} exit={{scale:0.5, opacity:0}}>
+                         <Copy className="h-5 w-5" />
+                       </motion.div>
+                    )}
+                  </AnimatePresence>
+                </button>
+            </div>
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Card className="bg-card/70 backdrop-blur-sm border-border/50">
