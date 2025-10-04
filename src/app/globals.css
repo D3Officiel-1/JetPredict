@@ -9,6 +9,12 @@ body {
   user-select: none; /* Standard syntax */
 }
 
+/* Prevent media selection and interaction */
+img, video, audio {
+  pointer-events: none;
+}
+
+
 /* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 5px; /* Make vertical scrollbar thinner */
