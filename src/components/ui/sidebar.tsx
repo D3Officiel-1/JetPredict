@@ -101,26 +101,23 @@ const FABMenuItem = ({
   tooltip?: string;
 }) => {
     
-    const content = (
-         <motion.div variants={menuItemVariants}>
+    const Wrapper = href && !disabled ? Link : 'button';
+    const props = href && !disabled ? { href, target: "_blank", rel: "noopener noreferrer" } : { onClick: disabled ? undefined : onClick };
+    
+    return (
+        <motion.div variants={menuItemVariants}>
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
-                         <Button
-                            asChild={!disabled && !!href}
-                            size="icon"
+                         <Wrapper
+                            {...props}
                             className={cn(
-                                "h-14 w-14 rounded-full shadow-lg border",
-                                disabled ? "bg-muted text-muted-foreground cursor-not-allowed opacity-60" : "bg-card text-card-foreground hover:bg-primary hover:text-primary-foreground"
+                                "h-14 w-14 rounded-full flex items-center justify-center transition-transform hover:scale-110",
+                                disabled ? "cursor-not-allowed opacity-60" : ""
                             )}
-                            onClick={disabled ? undefined : onClick}
                         >
-                            {href && !disabled ? (
-                                <Link href={href} target="_blank" rel="noopener noreferrer">{icon}</Link>
-                            ) : (
-                                <span>{icon}</span>
-                            )}
-                        </Button>
+                           {icon}
+                        </Wrapper>
                     </TooltipTrigger>
                     <TooltipContent side="left">
                         <p>{disabled ? tooltip : label}</p>
@@ -129,9 +126,8 @@ const FABMenuItem = ({
             </TooltipProvider>
         </motion.div>
     );
-  
-  return content;
 };
+
 
 export default function Header() {
   const [user, setUser] = useState<User | null>(null);
@@ -337,9 +333,9 @@ export default function Header() {
                     variants={menuContainerVariants}
                     className="absolute bottom-20 flex flex-col items-center gap-4"
                   >
-                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Blue_Question_Circle.svg" alt="Guide" width={28} height={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
-                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={28} height={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
-                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={28} height={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
+                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Blue_Question_Circle.svg" alt="Guide" width={56} height={56} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
+                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={56} height={56} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
+                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={56} height={56} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                   </motion.div>
                 )}
               </AnimatePresence>
