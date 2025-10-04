@@ -940,10 +940,12 @@ const ChatPanel = () => (
             <Link href="/predict" className="p-2 rounded-md hover:bg-gray-700">
                 <ArrowLeft size={20} />
             </Link>
-            <img src="https://i.postimg.cc/13fR0G45/LUCKYJET.png" alt="LuckyJet" className="w-auto h-5"/>
         </div>
         <div className="flex-1 flex justify-center">
-            <img src="https://i.postimg.cc/44pTkWw0/1win-logo-transparent.png" alt="1win" className="w-auto h-6" />
+            <Link href="/predict" className="flex items-center gap-2 group">
+                <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={24} height={24} className="h-6 w-auto rounded-md transition-transform duration-300 group-hover:scale-110" />
+                <span className="text-lg font-bold text-primary transition-colors group-hover:text-cyan-300">JetPredict</span>
+            </Link>
         </div>
         <div className="flex items-center gap-4">
             <Button variant="ghost" size="icon"><Music size={20}/></Button>
