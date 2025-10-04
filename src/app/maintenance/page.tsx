@@ -76,7 +76,7 @@ export default function MaintenancePage() {
                     initial={{ scale: 0.8 }}
                     animate={{ scale: 1, transition: { delay: 0.2, type: 'spring' }}}
                 >
-                    <Image 
+                    <Image
                         src={mediaUrl} 
                         alt="Maintenance"
                         width={128}

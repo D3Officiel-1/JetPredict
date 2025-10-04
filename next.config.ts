@@ -186,6 +186,11 @@ const nextConfig: NextConfig = {
         hostname: 'www.moov-africa.ci',
         port: '',
         pathname: '/**',
+      },      {
+        protocol: 'https',
+        hostname: 'res.claudinary.com',
+        port: '',
+        pathname: '/**',
       },
       {
         protocol: 'https',
