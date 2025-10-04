@@ -23,8 +23,11 @@ import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 import Header from '@/components/ui/sidebar';
 
-const SettingItem = ({ icon, title, description, action }: { icon: React.ReactNode, title: string, description: string, action: React.ReactNode }) => (
-  <div className="flex items-center justify-between p-4 border-b border-border/20 last:border-b-0">
+const SettingItem = ({ icon, title, description, action, disabled = false }: { icon: React.ReactNode, title: string, description: string, action: React.ReactNode, disabled?: boolean }) => (
+  <div className={cn(
+      "flex items-center justify-between p-4 rounded-lg bg-muted/30 border border-border/30 transition-all duration-300",
+      disabled && "opacity-50 pointer-events-none"
+  )}>
     <div className="flex items-center gap-4">
       <div className="text-primary">{icon}</div>
       <div>
@@ -37,6 +40,7 @@ const SettingItem = ({ icon, title, description, action }: { icon: React.ReactNo
     </div>
   </div>
 );
+
 
 const InstallStep = ({ num, instruction, detail }: { num: number, instruction: React.ReactNode, detail: string }) => (
     <div className="flex items-start gap-4">
@@ -287,7 +291,7 @@ export default function SettingsPage() {
             <CardHeader>
                 <CardTitle>Préférences de Notification</CardTitle>
             </CardHeader>
-            <CardContent className="p-0">
+            <CardContent className="p-4 space-y-2">
                 <SettingItem 
                     icon={<Bell size={24} />} 
                     title="Alertes de prédiction" 
@@ -298,13 +302,15 @@ export default function SettingsPage() {
                     icon={<Music size={24} />} 
                     title="Son des alertes" 
                     description="Activer le son pour les notifications." 
-                    action={<Switch checked={notificationSettings.soundEnabled} onCheckedChange={(c) => handleSettingChange('soundEnabled', c)} disabled={!notificationSettings.alertsEnabled} />} 
+                    action={<Switch checked={notificationSettings.soundEnabled} onCheckedChange={(c) => handleSettingChange('soundEnabled', c)} />} 
+                    disabled={!notificationSettings.alertsEnabled}
                 />
                 <SettingItem 
                     icon={<Vibrate size={24} />} 
                     title="Vibration des alertes" 
                     description="Activer la vibration pour les notifications." 
-                    action={<Switch checked={notificationSettings.vibrationEnabled} onCheckedChange={(c) => handleSettingChange('vibrationEnabled', c)} disabled={!notificationSettings.alertsEnabled} />} 
+                    action={<Switch checked={notificationSettings.vibrationEnabled} onCheckedChange={(c) => handleSettingChange('vibrationEnabled', c)} />} 
+                    disabled={!notificationSettings.alertsEnabled}
                 />
             </CardContent>
         </Card>
@@ -314,18 +320,30 @@ export default function SettingsPage() {
                 <CardTitle>Sécurité du Compte</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-                <SettingItem 
-                    icon={<Mail size={24} />} 
-                    title="Changer d'adresse e-mail" 
-                    description="Mettez à jour l'e-mail de votre compte." 
-                    action={<Button variant="outline" onClick={() => setIsModalOpen('email')}>Modifier</Button>} 
-                />
-                 <SettingItem 
-                    icon={<KeyRound size={24} />} 
-                    title="Changer de mot de passe" 
-                    description="Utilisez un mot de passe fort." 
-                    action={<Button variant="outline" onClick={() => setIsModalOpen('password')}>Modifier</Button>} 
-                />
+                 <div className="flex items-center justify-between p-4 border-b border-border/50">
+                    <div className="flex items-center gap-4">
+                        <div className="text-primary"><Mail size={24} /></div>
+                        <div>
+                            <h3 className="font-semibold text-foreground">Changer d'adresse e-mail</h3>
+                            <p className="text-sm text-muted-foreground">Mettez à jour l'e-mail de votre compte.</p>
+                        </div>
+                    </div>
+                    <div className="pl-4">
+                        <Button variant="outline" onClick={() => setIsModalOpen('email')}>Modifier</Button>
+                    </div>
+                </div>
+                 <div className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-4">
+                        <div className="text-primary"><KeyRound size={24} /></div>
+                        <div>
+                            <h3 className="font-semibold text-foreground">Changer de mot de passe</h3>
+                            <p className="text-sm text-muted-foreground">Utilisez un mot de passe fort.</p>
+                        </div>
+                    </div>
+                    <div className="pl-4">
+                        <Button variant="outline" onClick={() => setIsModalOpen('password')}>Modifier</Button>
+                    </div>
+                </div>
             </CardContent>
         </Card>
 
@@ -334,11 +352,15 @@ export default function SettingsPage() {
                 <CardTitle>Application</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
-                <SettingItem 
-                    icon={<Palette size={24} />} 
-                    title="Thème de l'interface" 
-                    description="Choisissez une apparence." 
-                    action={
+                <div className="flex items-center justify-between p-4 border-b border-border/50">
+                    <div className="flex items-center gap-4">
+                        <div className="text-primary"><Palette size={24} /></div>
+                        <div>
+                            <h3 className="font-semibold text-foreground">Thème de l'interface</h3>
+                            <p className="text-sm text-muted-foreground">Choisissez une apparence.</p>
+                        </div>
+                    </div>
+                    <div className="pl-4">
                         <Select value={theme} onValueChange={setTheme}>
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Changer de thème" />
@@ -349,13 +371,17 @@ export default function SettingsPage() {
                                 <SelectItem value="system">Système</SelectItem>
                             </SelectContent>
                         </Select>
-                    } 
-                />
-                 <SettingItem 
-                    icon={<Download size={24} />} 
-                    title="Installer l'application" 
-                    description="Accès rapide depuis votre bureau/accueil." 
-                    action={
+                    </div>
+                </div>
+                 <div className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-4">
+                        <div className="text-primary"><Download size={24} /></div>
+                        <div>
+                            <h3 className="font-semibold text-foreground">Installer l'application</h3>
+                            <p className="text-sm text-muted-foreground">Accès rapide depuis votre bureau/accueil.</p>
+                        </div>
+                    </div>
+                    <div className="pl-4">
                          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 justify-start">
                             <button onClick={handleAndroidInstallClick} className="cursor-pointer" title="Installer sur Android">
                                 <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={35} height={35} className={cn("dark:invert-0 invert")}/>
@@ -367,8 +393,8 @@ export default function SettingsPage() {
                                 <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Download for Windows" width={35} height={35} />
                             </button>
                         </div>
-                    } 
-                />
+                    </div> 
+                </div>
             </CardContent>
         </Card>
         
@@ -378,17 +404,27 @@ export default function SettingsPage() {
                 <CardDescription>Ces actions sont irréversibles.</CardDescription>
             </CardHeader>
             <CardContent className="p-0">
-                 <SettingItem 
-                    icon={<LogOut size={24} />} 
-                    title="Se déconnecter" 
-                    description="Mettre fin à votre session." 
-                    action={<Button variant="outline" onClick={handleLogout}>Déconnexion</Button>} 
-                />
-                <SettingItem 
-                    icon={<Trash2 size={24} />} 
-                    title="Supprimer mon compte" 
-                    description="Vos données seront effacées." 
-                    action={
+                 <div className="flex items-center justify-between p-4 border-b border-destructive/20">
+                    <div className="flex items-center gap-4">
+                        <div className="text-destructive"><LogOut size={24} /></div>
+                        <div>
+                            <h3 className="font-semibold text-foreground">Se déconnecter</h3>
+                            <p className="text-sm text-muted-foreground">Mettre fin à votre session.</p>
+                        </div>
+                    </div>
+                    <div className="pl-4">
+                        <Button variant="outline" onClick={handleLogout}>Déconnexion</Button>
+                    </div>
+                </div>
+                <div className="flex items-center justify-between p-4">
+                    <div className="flex items-center gap-4">
+                        <div className="text-destructive"><Trash2 size={24} /></div>
+                        <div>
+                            <h3 className="font-semibold text-foreground">Supprimer mon compte</h3>
+                            <p className="text-sm text-muted-foreground">Vos données seront effacées.</p>
+                        </div>
+                    </div>
+                    <div className="pl-4">
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button variant="destructive">Supprimer</Button>
@@ -418,8 +454,8 @@ export default function SettingsPage() {
                                 </AlertDialogFooter>
                             </AlertDialogContent>
                         </AlertDialog>
-                    } 
-                />
+                    </div> 
+                </div>
             </CardContent>
         </Card>
       </main>
@@ -575,3 +611,4 @@ export default function SettingsPage() {
     </div>
   );
 }
+
