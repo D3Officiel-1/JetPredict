@@ -398,109 +398,157 @@ export default function Header() {
                                 />
                             </div>
                         </TabsContent>
-                         <TabsContent value="how-to" className="pt-2">
-                            <div className="space-y-4">
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">1</span>}
-                                    title="1. Comprendre le principe"
-                                    description={`Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x.
+                        <TabsContent value="how-to" className="pt-2 space-y-4">
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">1</span>}
+                                title="1. Comprendre le principe"
+                                description={`Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x.
 Chaque tour commence avec une mise et le multiplicateur augmente jusqu’à ce qu’il "crash" de manière aléatoire.
 Ton objectif est de retirer avant que le multiplicateur s’effondre, sinon tu perds toute ta mise.
 C’est un jeu de hasard pur, mais avec observation et timing, tu peux gérer ton risque.
 Le multiplicateur peut être très bas ou atteindre des valeurs très élevées (>10x).
 Comprendre ce mécanisme est la première étape avant de commencer à miser sérieusement.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">2</span>}
-                                    title="2. Commencer petit"
-                                    description={`Avant de miser gros, teste toujours le jeu avec de petites mises.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">2</span>}
+                                title="2. Commencer petit"
+                                description={`Avant de miser gros, teste toujours le jeu avec de petites mises.
 Exemple : 200–500 FCFA par tour pour un capital initial de 50 000 FCFA.
 Cela te permet de comprendre la vitesse de montée du multiplicateur et le timing optimal du retrait.
 Les petits tours servent aussi à observer les tendances et le comportement du jeu.
 Tu peux noter combien de tours finissent en crash bas et combien atteignent un multiplicateur élevé.
 Commencer petit limite ton risque et t’apprend à jouer intelligemment.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">3</span>}
-                                    title="3. Fixer un capital"
-                                    description={`Détermine exactement combien tu es prêt à jouer pour une session.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">3</span>}
+                                title="3. Fixer un capital"
+                                description={`Détermine exactement combien tu es prêt à jouer pour une session.
 Exemple : capital = 50 000 FCFA pour 1 journée de jeu.
 Ne dépasse jamais ce capital pour éviter de tout perdre sur une mauvaise série.
 Divise ce capital en petites portions pour chaque tour afin de mieux contrôler les mises.
 Cela t’évite de te retrouver à miser tout ton argent en une seule fois par frustration ou excès de confiance.
 Un capital clair permet de suivre tes gains et pertes plus efficacement.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">4</span>}
-                                    title="4. Mise sécurisée"
-                                    description={`Pour sécuriser tes gains, retire toujours à des multiplicateurs bas mais fiables.
+                            />
+                             <StrategyItem
+                                icon={<span className="font-bold text-lg">4</span>}
+                                title="4. Mise sécurisée"
+                                description={`Pour sécuriser tes gains, retire toujours à des multiplicateurs bas mais fiables.
 Exemple : mise 500 FCFA → retirer à 1,8x → gain 900 FCFA.
 Cela permet d’accumuler des profits constants même si les gros multiplicateurs restent rares.
 Cette stratégie est parfaite pour débuter et protéger ton capital.
 Elle réduit le stress, car tu n’as pas à courir après des jackpots risqués.
 Elle te permet aussi de tester différentes tendances sans mettre ton capital en danger.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">5</span>}
-                                    title="5. Retrait moyen"
-                                    description={`Vise un multiplicateur intermédiaire pour un équilibre risque/gain.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">5</span>}
+                                title="5. Retrait moyen"
+                                description={`Vise un multiplicateur intermédiaire pour un équilibre risque/gain.
 Exemple : mise 500 FCFA → retirer à 3x → gain 1 500 FCFA.
 C’est une stratégie pour ceux qui veulent un peu plus de profit sans prendre de gros risques.
 Elle fonctionne mieux si tu observes des tendances dans les multiplicateurs.
 Tu peux combiner ce retrait moyen avec des petites mises sécurisées pour diversifier tes gains.
 C’est une étape intermédiaire avant d’attaquer les multiplicateurs élevés et risqués.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">6</span>}
-                                    title="6. Retrait risqué"
-                                    description={`Viser les multiplicateurs élevés (>5x) peut rapporter gros mais est très dangereux.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">6</span>}
+                                title="6. Retrait risqué"
+                                description={`Viser les multiplicateurs élevés (>5x) peut rapporter gros mais est très dangereux.
 Exemple : mise 500 FCFA → retirer à 10x → gain potentiel 5 000 FCFA.
 Ne mise jamais plus de 5 % de ton capital pour ce type de pari.
 Utilise-le seulement pour des occasions où ton capital principal est déjà sécurisé.
 Cette stratégie doit être ponctuelle et réfléchie, jamais systématique.
 Elle peut transformer une petite mise en jackpot mais peut aussi tout faire disparaître en un tour.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">7</span>}
-                                    title="7. Gestion du capital"
-                                    description={`Ne jamais risquer plus de 1–2 % du capital par tour.
-Si ton capital est de 50 000 FCFA, mise max 500–1 000 FCFA par tour.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">7</span>}
+                                title="7. Gestion du capital"
+                                description={`Ne jamais risquer plus de 1–2 % du capital par tour.
+Si ton capital est de 50 000 FCFA, mise max 500–1 000 FCFA par tour.
 Cela permet de tenir plusieurs tours même en cas de pertes consécutives.
 Divise le capital en mini-pools pour gérer différentes stratégies en parallèle.
 Cette discipline protège ton capital contre l’adrénaline et l’émotion.
 Une bonne gestion du capital est le cœur de toute stratégie efficace.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">8</span>}
-                                    title="8. Martingale classique"
-                                    description={`Martingale = double la mise après chaque perte pour récupérer les pertes précédentes.
-Exemple : tour 1 = 500 FCFA → perte, tour 2 = 1 000 FCFA → perte, tour 3 = 2 000 FCFA → gain.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">8</span>}
+                                title="8. Martingale classique"
+                                description={`Martingale = double la mise après chaque perte pour récupérer les pertes précédentes.
+Exemple : tour 1 = 500 FCFA → perte, tour 2 = 1 000 FCFA → perte, tour 3 = 2 000 FCFA → gain.
 Cette technique peut récupérer rapidement tes pertes si tu as un capital suffisant.
 Mais attention : une longue série de pertes peut rapidement épuiser ton capital.
 C’est une stratégie risquée et à utiliser seulement avec un capital important.
 Elle fonctionne mieux sur des multiplicateurs bas et réguliers.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">9</span>}
-                                    title="9. Martingale modifiée"
-                                    description={`Pour limiter le risque, ne double pas trop vite tes mises.
-Exemple : 500 → 1 000 → 1 500 FCFA au lieu de doubler systématiquement.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">9</span>}
+                                title="9. Martingale modifiée"
+                                description={`Pour limiter le risque, ne double pas trop vite tes mises.
+Exemple : 500 → 1 000 → 1 500 FCFA au lieu de doubler systématiquement.
 Cette méthode permet de récupérer les pertes plus lentement, mais plus sûr.
 Elle te protège contre des crashes consécutifs élevés qui peuvent tout brûler.
 Combine-la avec des retraits sécurisés pour limiter les pertes.
 C’est une version plus prudente et adaptée aux petits capitales.`}
-                                />
-                                <StrategyItem
-                                    icon={<span className="font-bold text-lg">10</span>}
-                                    title="10. Fibonacci"
-                                    description={`Augmente la mise selon la suite de Fibonacci après chaque perte : 500 → 500 → 1 000 → 1 500 → 2 500.
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">10</span>}
+                                title="10. Fibonacci"
+                                description={`Augmente la mise selon la suite de Fibonacci après chaque perte : 500 → 500 → 1 000 → 1 500 → 2 500.
 Après un gain, retourne à la mise initiale pour sécuriser ton capital.
 C’est moins risqué que la martingale classique mais reste efficace pour récupérer des pertes.
 Idéal pour les joueurs qui observent les tendances et veulent une progression contrôlée.
 Tu peux adapter la suite selon ton capital et tes objectifs.
 C’est une stratégie solide pour gérer les séries de pertes.`}
-                                />
-                            </div>
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">11</span>}
+                                title="11. Mise fractionnelle"
+                                description={`Ne joue jamais ton capital entier sur un tour.
+Mise seulement une fraction du gain potentiel que tu veux atteindre.
+Exemple : capital 50 000 FCFA → mise = 10 % du gain visé.
+Cela limite la perte en cas de crash et te permet de jouer plus longtemps.
+C’est parfait pour diversifier tes paris sur plusieurs multiplicateurs.
+Tu gardes ainsi le contrôle de ton capital tout en cherchant de gros gains.`}
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">12</span>}
+                                title="12. Analyse des patterns"
+                                description={`Certains jeux affichent l’historique des multiplicateurs.
+Note les tendances : après plusieurs tours bas, un multiplicateur élevé est plus probable.
+Ne mise pas gros quand le multiplicateur reste constamment bas.
+Cherche les cycles ou répétitions qui peuvent influencer ton timing.
+Ce n’est jamais garanti, mais l’observation augmente tes chances de gains.
+C’est un outil stratégique que beaucoup de joueurs ignorent.`}
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">13</span>}
+                                title="13. Fixer un objectif"
+                                description={`Détermine un objectif clair par session, par exemple 10 000 FCFA de gains.
+Une fois atteint, arrête de jouer pour sécuriser tes profits.
+Cela évite de tout perdre par excès de confiance.
+Tu peux aussi définir des mini-objectifs pour suivre ta progression.
+Cette discipline transforme un jeu aléatoire en session rentable.
+Objectifs = motivation + limite psychologique pour contrôler le jeu.`}
+                            />
+                             <StrategyItem
+                                icon={<span className="font-bold text-lg">14</span>}
+                                title="14. Plafond de perte"
+                                description={`Détermine combien tu es prêt à perdre par session, ex. 20 % du capital.
+Une fois atteint, stop immédiat.
+Évite les pertes cumulées qui peuvent décourager et ruiner ton capital.
+Cela impose une discipline stricte et protège ton capital sur le long terme.
+Combine avec un objectif de gain pour équilibrer risque et profit.
+Ne jamais dépasser ton plafond = règle d’or.`}
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">15</span>}
+                                title="15. Ne pas courir après les pertes"
+                                description={`Perdre plusieurs tours de suite peut déclencher l’adrénaline.
+Ne mise pas plus pour tenter de récupérer tes pertes rapidement.
+C’est la manière la plus rapide de tout perdre.
+Fais une pause ou reprends avec des mises sécurisées.
+Apprendre à accepter les pertes est clé pour un jeu rentable.
+Le contrôle émotionnel est plus important que la stratégie technique.`}
+                            />
                         </TabsContent>
                     </div>
                 </Tabs>
