@@ -26,6 +26,7 @@ interface UserData {
   phone: string;
   countryCode: string;
   favoriteGame: string;
+  otherFavoriteGame: string;
 }
 
 const countries = [
@@ -90,6 +91,7 @@ export default function EditProfilePage() {
     phone: '',
     countryCode: '+225',
     favoriteGame: '',
+    otherFavoriteGame: '',
   });
   const [initialUsername, setInitialUsername] = useState('');
   const [isLoading, setIsLoading] = useState(true);
@@ -125,6 +127,15 @@ export default function EditProfilePage() {
               countryCode = matchedCountry.code;
               phone = fullPhone.substring(matchedCountry.code.length);
           }
+          
+          let favoriteGame = data.favoriteGame || '';
+          let otherFavoriteGame = '';
+          const predefinedGames = ['aviator', 'luckyjet', 'paris-sportifs'];
+          if (favoriteGame && !predefinedGames.includes(favoriteGame)) {
+              otherFavoriteGame = favoriteGame;
+              favoriteGame = 'autre';
+          }
+
 
           setFormData({
             firstName: data.firstName || '',
@@ -132,7 +143,8 @@ export default function EditProfilePage() {
             username: data.username || '',
             phone: phone,
             countryCode: countryCode,
-            favoriteGame: data.favoriteGame || '',
+            favoriteGame: favoriteGame,
+            otherFavoriteGame: otherFavoriteGame,
           });
           setInitialUsername(data.username || '');
           if (data.username) setUsernameStatus('valid');
@@ -204,6 +216,7 @@ export default function EditProfilePage() {
         const userDocRef = doc(db, "users", user.uid);
         
         const fullPhoneNumber = `${formData.countryCode}${formData.phone}`;
+        const finalFavoriteGame = formData.favoriteGame === 'autre' ? formData.otherFavoriteGame : formData.favoriteGame;
 
         const usernameChanged = formData.username !== initialUsername;
         if (usernameChanged && initialUsername) {
@@ -220,7 +233,7 @@ export default function EditProfilePage() {
             lastName: formData.lastName,
             username: formData.username,
             phone: fullPhoneNumber,
-            favoriteGame: formData.favoriteGame
+            favoriteGame: finalFavoriteGame
         });
 
         await batch.commit();
@@ -336,17 +349,31 @@ export default function EditProfilePage() {
                     </FormRow>
 
                     <FormRow icon={<Gamepad2 size={20} />} label="Jeu Préféré">
-                        <Select value={formData.favoriteGame} onValueChange={(value) => handleSelectChange('favoriteGame', value)}>
-                            <SelectTrigger className="bg-background/50">
-                                <SelectValue placeholder="Sélectionnez un jeu" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="aviator">Aviator</SelectItem>
-                                <SelectItem value="luckyjet">Lucky Jet</SelectItem>
-                                <SelectItem value="paris-sportifs">Paris Sportifs</SelectItem>
-                                <SelectItem value="autre">Autre</SelectItem>
-                            </SelectContent>
-                        </Select>
+                        <div className="space-y-2">
+                            <Select value={formData.favoriteGame} onValueChange={(value) => handleSelectChange('favoriteGame', value)}>
+                                <SelectTrigger className="bg-background/50">
+                                    <SelectValue placeholder="Sélectionnez un jeu" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="aviator">Aviator</SelectItem>
+                                    <SelectItem value="luckyjet">Lucky Jet</SelectItem>
+                                    <SelectItem value="paris-sportifs">Paris Sportifs</SelectItem>
+                                    <SelectItem value="autre">Autre</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            {formData.favoriteGame === 'autre' && (
+                                <motion.div initial={{opacity: 0, height: 0}} animate={{opacity: 1, height: 'auto'}} className="relative overflow-hidden">
+                                     <Gamepad2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                                     <Input 
+                                        id="otherFavoriteGame"
+                                        value={formData.otherFavoriteGame}
+                                        onChange={handleChange}
+                                        placeholder="Nom du jeu..." 
+                                        className="pl-10 bg-background/50"
+                                     />
+                                </motion.div>
+                            )}
+                        </div>
                     </FormRow>
                 </div>
                 
@@ -366,3 +393,4 @@ export default function EditProfilePage() {
     </div>
   );
 }
+
