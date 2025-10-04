@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Rocket, BarChart, ChevronRight, Zap, BrainCircuit, Award, Quote, Users, TrendingUp, PlayCircle, CheckCircle, MoveUpRight, Globe, Loader2, Star, XCircle, ShieldCheck, Crown, Download, HelpCircle, MoreVertical, Share, MonitorDown } from "lucide-react";
+import { Rocket, BarChart, ChevronRight, Zap, BrainCircuit, Award, Quote, Users, TrendingUp, PlayCircle, CheckCircle, MoveUpRight, Globe, Loader2, Star, XCircle, ShieldCheck, Crown, Download, HelpCircle, MoreVertical, Share, MonitorDown, Share2, MoreHorizontal, AppWindow, Smartphone } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -159,10 +159,10 @@ const TelegramIcon = (props: any) => (
     </svg>
 )
 
-const InstallStep = ({ num, instruction, detail }: { num: number, instruction: React.ReactNode, detail: string }) => (
+const InstallStep = ({ numIcon, instruction, detail }: { numIcon: React.ReactNode, instruction: React.ReactNode, detail: string }) => (
     <div className="flex items-start gap-4">
-        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold border border-primary/20 shrink-0 mt-1">
-            {num}
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20 shrink-0 mt-1">
+            {numIcon}
         </div>
         <div>
             <div className="font-semibold text-foreground">{instruction}</div>
@@ -711,21 +711,21 @@ export default function LandingPage() {
         </footer>
 
         <Dialog open={isAndroidInstallGuideOpen} onOpenChange={setIsAndroidInstallGuideOpen}>
-            <DialogContent>
+            <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                          <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={24} height={24} className={cn("dark:invert-0 invert")}/>
                         Guide d'installation pour Android
                     </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4 text-sm py-4">
+                <div className="space-y-6 text-sm py-4">
                     <InstallStep 
-                        num={1}
+                        numIcon={<MoreVertical />}
                         instruction={<>Ouvrez le menu du navigateur</>}
                         detail="Appuyez sur l'icône de menu (généralement 3 points) en haut à droite de Chrome."
                     />
                      <InstallStep 
-                        num={2}
+                        numIcon={<Download />}
                         instruction={<>Sélectionnez <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Installer l'application</span></>}
                         detail="Cette option ajoutera JetPredict à votre écran d'accueil."
                     />
@@ -734,26 +734,26 @@ export default function LandingPage() {
         </Dialog>
 
         <Dialog open={isIosInstallGuideOpen} onOpenChange={setIsIosInstallGuideOpen}>
-            <DialogContent>
+            <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
                         <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={24} height={24} className={cn("dark:invert-0 invert")}/>
                         Guide d'installation pour iOS
                     </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-4 text-sm py-4">
+                <div className="space-y-6 text-sm py-4">
                     <InstallStep 
-                        num={1}
+                        numIcon={<Share2 />}
                         instruction={<>Ouvrez le menu de partage</>}
                         detail="Appuyez sur l'icône de Partage (un carré avec une flèche vers le haut) dans Safari."
                     />
                      <InstallStep 
-                        num={2}
+                        numIcon={<Smartphone />}
                         instruction={<>Sélectionnez <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Sur l'écran d'accueil</span></>}
                         detail="Faites défiler la liste des options et appuyez sur ce bouton."
                     />
                     <InstallStep 
-                        num={3}
+                        numIcon={<CheckCircle />}
                         instruction={<>Confirmez l'ajout</>}
                         detail="Appuyez sur 'Ajouter' en haut à droite pour finaliser l'installation."
                     />
@@ -762,21 +762,21 @@ export default function LandingPage() {
         </Dialog>
         
         <Dialog open={isWindowsInstallGuideOpen} onOpenChange={setIsWindowsInstallGuideOpen}>
-            <DialogContent>
+            <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                      <DialogTitle className="flex items-center gap-2">
                         <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Windows" width={24} height={24} />
                         Guide d'installation pour Ordinateur
                     </DialogTitle>
                 </DialogHeader>
-                 <div className="space-y-4 text-sm py-4">
+                 <div className="space-y-6 text-sm py-4">
                     <InstallStep 
-                        num={1}
+                        numIcon={<MonitorDown />}
                         instruction={<>Trouvez l'icône d'installation</>}
                         detail="Cherchez l'icône d'installation (un écran avec une flèche) dans la barre d'adresse de votre navigateur (Chrome, Edge)."
                     />
                      <InstallStep 
-                        num={2}
+                        numIcon={<Download />}
                         instruction={<>Cliquez sur <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Installer</span></>}
                         detail="Confirmez l'installation lorsque la fenêtre pop-up apparaît."
                     />
@@ -791,3 +791,4 @@ export default function LandingPage() {
     
 
     
+
