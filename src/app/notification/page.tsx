@@ -34,7 +34,7 @@ const isVideo = (url: string) => {
     return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
 };
 
-const NotificationIcon = ({ type }: { type: Notification['type'] }) => {
+const NotificationIcon = ({ type, isRead }: { type: Notification['type'], isRead: boolean }) => {
     const icons = {
         referral: <Gift className="h-5 w-5 text-green-400" />,
         subscription: <ShieldCheck className="h-5 w-5 text-blue-400" />,
@@ -44,6 +44,7 @@ const NotificationIcon = ({ type }: { type: Notification['type'] }) => {
     return (
         <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background border border-border">
             {icons[type] || icons.info}
+            {!isRead && <div className="absolute top-0 right-0 h-3 w-3 rounded-full bg-primary border-2 border-background" />}
         </div>
     );
 };
@@ -152,8 +153,13 @@ export default function NotificationPage() {
     });
   }, [personalNotifications, globalNotifications]);
 
-  const handleNotificationClick = async (notification: Notification) => {
+ const handleNotificationClick = async (notification: Notification) => {
     if (!user || notification.isRead || notification.type === 'global') return;
+
+    if (notification.link) {
+      router.push(notification.link);
+    }
+    
     const notificationRef = doc(db, 'users', user.uid, 'notifications', notification.id);
     await updateDoc(notificationRef, { isRead: true });
   };
@@ -265,7 +271,7 @@ export default function NotificationPage() {
                           className="relative flex items-start gap-4"
                           variants={itemVariants}
                       >
-                          <NotificationIcon type={notif.type} />
+                          <NotificationIcon type={notif.type} isRead={notif.isRead} />
                           <motion.div
                               className={cn(
                                   "flex-1 -mt-1 p-5 rounded-xl border transition-all duration-300 w-full",
