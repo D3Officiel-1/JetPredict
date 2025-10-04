@@ -675,23 +675,60 @@ export default function LandingPage() {
         </section>
 
         {/* Final CTA Section */}
-        <section className="py-20 relative">
-             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_50%,hsl(var(--primary)/0.1),transparent)]"></div>
-            <div className="container mx-auto">
-                <div 
-                    className="text-center flex flex-col items-center"
+        <section className="relative py-24 sm:py-32 overflow-hidden">
+            <div className="absolute inset-0 -z-20 bg-[#0A0F1E]"></div>
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_50%,hsl(var(--primary)/0.15),transparent)]"></div>
+            <motion.div
+                className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-24 bg-primary/20 blur-3xl"
+                animate={{
+                    scaleX: [1, 1.5, 1],
+                }}
+                transition={{
+                    duration: 15,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                    ease: "easeInOut",
+                }}
+            />
+
+            <div className="container relative z-10 mx-auto text-center">
+                <motion.h2 
+                    className="text-4xl sm:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-300 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    viewport={{ once: true }}
                 >
-                    <h2 className="text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Prêt à prendre l'avantage ?</h2>
-                    <p className="text-muted-foreground mt-2 mb-8 max-w-xl mx-auto">Rejoignez des milliers de parieurs et commencez à prendre des décisions plus intelligentes dès aujourd'hui.</p>
+                    Prêt à prendre l'avantage ?
+                </motion.h2>
+                <motion.p 
+                    className="text-muted-foreground text-lg max-w-2xl mx-auto mb-10"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    viewport={{ once: true }}
+                >
+                    Rejoignez des milliers de parieurs et commencez à prendre des décisions plus intelligentes dès aujourd'hui.
+                </motion.p>
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ type: "spring", stiffness: 150, damping: 20, delay: 0.2 }}
+                    viewport={{ once: true }}
+                >
                     <Link href="/login" passHref>
-                        <Button size="lg" className="font-semibold text-lg py-7 px-8 rounded-full group shadow-lg shadow-primary/30 transition-all duration-300 ease-in-out hover:shadow-primary/50 hover:scale-105">
-                          Commencez vos paris dès aujourd’hui
-                          <ChevronRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                        <Button
+                            size="lg"
+                            className="font-semibold text-lg py-7 px-10 rounded-full group bg-gradient-to-r from-primary to-cyan-400 text-primary-foreground shadow-[0_10px_30px_hsl(var(--primary)/0.4)] transition-all duration-300 ease-in-out hover:shadow-[0_15px_40px_hsl(var(--primary)/0.6)] hover:scale-105 hover:from-primary/90 hover:to-cyan-400/90"
+                        >
+                            Commencez maintenant
+                            <ChevronRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                         </Button>
                     </Link>
-                </div>
+                </motion.div>
             </div>
         </section>
+
 
       </main>
 
