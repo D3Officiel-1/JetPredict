@@ -471,40 +471,49 @@ export default function SettingsPage() {
       </main>
 
       <Dialog open={isModalOpen === 'password'} onOpenChange={(open) => !open && setIsModalOpen(null)}>
-        <DialogContent>
+        <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
           <DialogHeader>
-            <DialogTitle>Changer de mot de passe</DialogTitle>
+            <DialogTitle className="text-2xl font-bold flex items-center gap-3">
+                <KeyRound className="text-primary"/>
+                Mise à Jour de Sécurité
+            </DialogTitle>
+            <DialogDescription>
+                Créez un nouveau mot de passe pour sécuriser votre compte.
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-6 pt-4">
             <div className="space-y-2">
-              <Label htmlFor="current-password">Mot de passe actuel</Label>
-              <div className="relative">
-                <Input id="current-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10"/>
-                <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
-                    {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+                <Label htmlFor="current-password" className="font-semibold text-muted-foreground">Mot de passe actuel</Label>
+                <div className="relative flex items-center">
+                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                    <Input id="current-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="pl-10 pr-10 bg-background/50" />
+                    <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
+                        {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="new-password">Nouveau mot de passe</Label>
-              <div className="relative">
-                <Input id="new-password" type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="pr-10"/>
-                 <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
-                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
+                <Label htmlFor="new-password" className="font-semibold text-muted-foreground">Nouveau mot de passe</Label>
+                <div className="relative flex items-center">
+                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                    <Input id="new-password" type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Nouveau secret" className="pl-10 pr-10 bg-background/50"/>
+                     <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
+                        {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                    </button>
+                </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="confirm-password">Confirmer le nouveau mot de passe</Label>
-               <div className="relative">
-                <Input id="confirm-password" type={showNewPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="pr-10"/>
-                 <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
-                    {showNewPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                </button>
-              </div>
+                <Label htmlFor="confirm-password" className="font-semibold text-muted-foreground">Confirmer le nouveau mot de passe</Label>
+                <div className="relative flex items-center">
+                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                    <Input id="confirm-password" type={showNewPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirmer le secret" className="pl-10 pr-10 bg-background/50"/>
+                     <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
+                        {showNewPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                    </button>
+                </div>
             </div>
           </div>
-          <DialogFooter>
+          <DialogFooter className="pt-6">
             <Button variant="ghost" onClick={() => setIsModalOpen(null)}>Annuler</Button>
             <Button onClick={handleChangePassword} disabled={isProcessing || !currentPassword || !newPassword || newPassword !== confirmPassword}>
                 {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
