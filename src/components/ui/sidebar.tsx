@@ -46,38 +46,45 @@ const fabVariants = {
 };
 
 const menuContainerVariants = {
-    closed: {
-        opacity: 0,
-        scale: 0.8,
-        transition: {
-            when: "afterChildren",
-            staggerChildren: 0.05,
-            staggerDirection: -1,
-        },
+  closed: {
+    opacity: 0,
+    scale: 0.8,
+    transition: {
+      when: 'afterChildren',
+      staggerChildren: 0.05,
+      staggerDirection: -1,
     },
-    open: {
-        opacity: 1,
-        scale: 1,
-        transition: {
-            when: "beforeChildren",
-            staggerChildren: 0.1,
-            delayChildren: 0.1,
-            type: "spring",
-            stiffness: 300,
-            damping: 20
-        },
+  },
+  open: {
+    opacity: 1,
+    scale: 1,
+    transition: {
+      when: 'beforeChildren',
+      staggerChildren: 0.1,
+      delayChildren: 0.1,
+      type: 'spring',
+      stiffness: 300,
+      damping: 20,
     },
+  },
 };
 
-const menuItemVariants = { closed: { opacity: 0, scale: 0.5, x: 0, y: 0 },
- open: (index: number) => { const angle = 90 + (index * 45);
-   const radius = 90; 
-   return { x: radius * Math.cos(angle * (Math.PI / 180)),
-     y: -radius * Math.sin(angle * (Math.PI / 180)),
-      opacity: 1, 
-      scale: 1, 
-      transition: { type: "spring", stiffness: 400, damping: 15 } } }, };
-
+const menuItemVariants = {
+  closed: { opacity: 0, x: 0, y: 0, scale: 0.5 },
+  open: (index: number) => {
+    const angle = 90 + index * 45; // Spread from 90 to 180 degrees
+    const radius = 90;
+    const xOffset = radius * Math.cos(angle * (Math.PI / 180));
+    const yOffset = radius * Math.sin(angle * (Math.PI / 180));
+    return {
+      x: xOffset,
+      y: yOffset,
+      opacity: 1,
+      scale: 1,
+      transition: { type: 'spring', stiffness: 400, damping: 15 },
+    };
+  },
+};
 
 const FABMenuItem = ({
   icon,
@@ -222,28 +229,23 @@ export default function Header() {
     <>
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-8">
         <div className="flex items-center gap-2">
-          <DropdownMenu>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-                      <Avatar className="h-10 w-10 border-2 border-primary/30">
-                        <AvatarImage src={user.photoURL ?? ''} alt="Avatar" />
-                        <AvatarFallback>{getInitials(user.email)}</AvatarFallback>
-                      </Avatar>
-                      {unreadCount > 0 && <span className="premium-notification-pulse"></span>}
-                      {!isVerified && (
-                        <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-destructive ring-2 ring-background" />
-                      )}
-                    </Button>
-                  </DropdownMenuTrigger>
-                </TooltipTrigger>
-                {unreadCount > 0 && <TooltipContent><p>Vous avez {unreadCount} notification(s) non lue(s)</p></TooltipContent>}
-                {!isVerified && <TooltipContent><p>Veuillez vérifier votre email</p></TooltipContent>}
-              </Tooltip>
-            </TooltipProvider>
-
+           <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <div className="flex items-center gap-3 cursor-pointer group">
+                    <div className="relative">
+                        <Avatar className="h-10 w-10 border-2 border-primary/30 group-hover:border-primary/70 transition-colors">
+                            <AvatarImage src={user.photoURL ?? ''} alt="Avatar" />
+                            <AvatarFallback>{getInitials(user.email)}</AvatarFallback>
+                        </Avatar>
+                         {unreadCount > 0 && <span className="premium-notification-pulse"></span>}
+                         {!isVerified && <span className="absolute bottom-0 right-0 block h-3 w-3 rounded-full bg-destructive ring-2 ring-background" />}
+                    </div>
+                     <div className="hidden sm:flex flex-col items-start">
+                        <span className="font-bold text-sm text-foreground truncate max-w-[120px]">{userData?.username || user.displayName || 'Utilisateur'}</span>
+                        <span className="text-xs text-muted-foreground">Mon Compte</span>
+                    </div>
+                </div>
+            </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="start" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
@@ -272,17 +274,19 @@ export default function Header() {
           </DropdownMenu>
         </div>
         
-        <div className="flex items-center gap-2">
-              <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={32} height={32} className="h-8 w-auto rounded-md" />
-              <h1 className="font-headline text-xl font-bold text-primary hidden sm:block">JetPredict</h1>
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+             <Link href="/predict" className="group">
+                 <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="JetPredict Logo" width={40} height={40} className="h-10 w-auto rounded-md transition-transform duration-300 group-hover:scale-110" />
+            </Link>
         </div>
 
         <div className="flex items-center gap-4">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
-                  <div className="text-right">
-                      <p className="font-bold text-lg text-green-400">{(userData?.solde_referral || 0).toLocaleString('fr-FR')} FCFA</p>
+                  <div className="flex items-center gap-2 bg-muted/50 px-3 py-1.5 rounded-full border border-border/50">
+                     <Wallet className="h-5 w-5 text-green-400" />
+                     <span className="font-bold text-sm text-foreground">{(userData?.solde_referral || 0).toLocaleString('fr-FR')} F</span>
                   </div>
               </TooltipTrigger>
               <TooltipContent><p>Solde Parrainage</p></TooltipContent>
@@ -297,17 +301,17 @@ export default function Header() {
                 initial={false}
                 animate={isFabMenuOpen ? "open" : "closed"}
             >
-                <AnimatePresence>
+                 <AnimatePresence>
                     {isFabMenuOpen && (
                         <motion.div
-                          variants={menuContainerVariants}
-                          className="absolute"
-                          initial="closed"
-                          animate="open"
-                          exit="closed"
+                            variants={menuContainerVariants}
+                            className="absolute"
+                            initial="closed"
+                            animate="open"
+                            exit="closed"
                         >
                             <FABMenuItem index={0} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
-                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x" />
+                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
                             <FABMenuItem index={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                         </motion.div>
                     )}
