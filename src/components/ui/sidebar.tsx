@@ -28,6 +28,7 @@ import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons';
+import { Switch } from '@/components/ui/switch';
 
 const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
     <div className="flex items-start gap-4">
@@ -323,7 +324,7 @@ export default function Header() {
         </div>
       </header>
       
-      {!isFabDisabled && (
+       {!isFabDisabled && (
           <div className="fixed bottom-6 right-6 z-40">
             <motion.div
               className="relative flex flex-col items-center gap-4"
@@ -336,7 +337,7 @@ export default function Header() {
                     variants={menuContainerVariants}
                     className="absolute bottom-20 flex flex-col items-center gap-4"
                   >
-                    <FABMenuItem icon={<HelpCircle size={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
+                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Blue_Question_Circle.svg" alt="Guide" width={28} height={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
                     <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={28} height={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
                     <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={28} height={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                   </motion.div>
