@@ -402,7 +402,7 @@ export default function Header() {
                             <div className="space-y-4">
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">1</span>}
-                                    title="Comprendre le principe"
+                                    title="1. Comprendre le principe"
                                     description={`Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x.
 Chaque tour commence avec une mise et le multiplicateur augmente jusqu’à ce qu’il "crash" de manière aléatoire.
 Ton objectif est de retirer avant que le multiplicateur s’effondre, sinon tu perds toute ta mise.
@@ -412,7 +412,7 @@ Comprendre ce mécanisme est la première étape avant de commencer à miser sé
                                 />
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">2</span>}
-                                    title="Commencer petit"
+                                    title="2. Commencer petit"
                                     description={`Avant de miser gros, teste toujours le jeu avec de petites mises.
 Exemple : 200–500 FCFA par tour pour un capital initial de 50 000 FCFA.
 Cela te permet de comprendre la vitesse de montée du multiplicateur et le timing optimal du retrait.
@@ -422,7 +422,7 @@ Commencer petit limite ton risque et t’apprend à jouer intelligemment.`}
                                 />
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">3</span>}
-                                    title="Fixer un capital"
+                                    title="3. Fixer un capital"
                                     description={`Détermine exactement combien tu es prêt à jouer pour une session.
 Exemple : capital = 50 000 FCFA pour 1 journée de jeu.
 Ne dépasse jamais ce capital pour éviter de tout perdre sur une mauvaise série.
@@ -432,7 +432,7 @@ Un capital clair permet de suivre tes gains et pertes plus efficacement.`}
                                 />
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">4</span>}
-                                    title="Mise sécurisée"
+                                    title="4. Mise sécurisée"
                                     description={`Pour sécuriser tes gains, retire toujours à des multiplicateurs bas mais fiables.
 Exemple : mise 500 FCFA → retirer à 1,8x → gain 900 FCFA.
 Cela permet d’accumuler des profits constants même si les gros multiplicateurs restent rares.
@@ -442,7 +442,7 @@ Elle te permet aussi de tester différentes tendances sans mettre ton capital en
                                 />
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">5</span>}
-                                    title="Retrait moyen"
+                                    title="5. Retrait moyen"
                                     description={`Vise un multiplicateur intermédiaire pour un équilibre risque/gain.
 Exemple : mise 500 FCFA → retirer à 3x → gain 1 500 FCFA.
 C’est une stratégie pour ceux qui veulent un peu plus de profit sans prendre de gros risques.
@@ -452,13 +452,53 @@ C’est une étape intermédiaire avant d’attaquer les multiplicateurs élevé
                                 />
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">6</span>}
-                                    title="Retrait risqué"
+                                    title="6. Retrait risqué"
                                     description={`Viser les multiplicateurs élevés (>5x) peut rapporter gros mais est très dangereux.
 Exemple : mise 500 FCFA → retirer à 10x → gain potentiel 5 000 FCFA.
 Ne mise jamais plus de 5 % de ton capital pour ce type de pari.
 Utilise-le seulement pour des occasions où ton capital principal est déjà sécurisé.
 Cette stratégie doit être ponctuelle et réfléchie, jamais systématique.
 Elle peut transformer une petite mise en jackpot mais peut aussi tout faire disparaître en un tour.`}
+                                />
+                                <StrategyItem
+                                    icon={<span className="font-bold text-lg">7</span>}
+                                    title="7. Gestion du capital"
+                                    description={`Ne jamais risquer plus de 1–2 % du capital par tour.
+Si ton capital est de 50 000 FCFA, mise max 500–1 000 FCFA par tour.
+Cela permet de tenir plusieurs tours même en cas de pertes consécutives.
+Divise le capital en mini-pools pour gérer différentes stratégies en parallèle.
+Cette discipline protège ton capital contre l’adrénaline et l’émotion.
+Une bonne gestion du capital est le cœur de toute stratégie efficace.`}
+                                />
+                                <StrategyItem
+                                    icon={<span className="font-bold text-lg">8</span>}
+                                    title="8. Martingale classique"
+                                    description={`Martingale = double la mise après chaque perte pour récupérer les pertes précédentes.
+Exemple : tour 1 = 500 FCFA → perte, tour 2 = 1 000 FCFA → perte, tour 3 = 2 000 FCFA → gain.
+Cette technique peut récupérer rapidement tes pertes si tu as un capital suffisant.
+Mais attention : une longue série de pertes peut rapidement épuiser ton capital.
+C’est une stratégie risquée et à utiliser seulement avec un capital important.
+Elle fonctionne mieux sur des multiplicateurs bas et réguliers.`}
+                                />
+                                <StrategyItem
+                                    icon={<span className="font-bold text-lg">9</span>}
+                                    title="9. Martingale modifiée"
+                                    description={`Pour limiter le risque, ne double pas trop vite tes mises.
+Exemple : 500 → 1 000 → 1 500 FCFA au lieu de doubler systématiquement.
+Cette méthode permet de récupérer les pertes plus lentement, mais plus sûr.
+Elle te protège contre des crashes consécutifs élevés qui peuvent tout brûler.
+Combine-la avec des retraits sécurisés pour limiter les pertes.
+C’est une version plus prudente et adaptée aux petits capitales.`}
+                                />
+                                <StrategyItem
+                                    icon={<span className="font-bold text-lg">10</span>}
+                                    title="10. Fibonacci"
+                                    description={`Augmente la mise selon la suite de Fibonacci après chaque perte : 500 → 500 → 1 000 → 1 500 → 2 500.
+Après un gain, retourne à la mise initiale pour sécuriser ton capital.
+C’est moins risqué que la martingale classique mais reste efficace pour récupérer des pertes.
+Idéal pour les joueurs qui observent les tendances et veulent une progression contrôlée.
+Tu peux adapter la suite selon ton capital et tes objectifs.
+C’est une stratégie solide pour gérer les séries de pertes.`}
                                 />
                             </div>
                         </TabsContent>
