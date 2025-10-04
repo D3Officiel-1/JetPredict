@@ -445,51 +445,149 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     canvas.width = 300 * dpr;
     canvas.height = 400 * dpr;
     ctx.scale(dpr, dpr);
+    const width = 300;
+    const height = 400;
 
-    // Get CSS variables
-    const style = getComputedStyle(document.body);
-    const bg = style.getPropertyValue('--background').trim();
-    const fg = style.getPropertyValue('--foreground').trim();
-    const primary = style.getPropertyValue('--primary').trim();
-    const border = style.getPropertyValue('--border').trim();
-
-    ctx.fillStyle = `hsl(${bg})`;
-    ctx.fillRect(0, 0, 300, 400);
-
-    ctx.fillStyle = `hsl(${fg})`;
-    ctx.font = 'bold 18px "Space Grotesk", sans-serif';
-    ctx.textAlign = "center";
-    ctx.fillText("JetPredict", 150, 30);
-    
     const now = new Date();
-    ctx.font = '14px "Space Grotesk", sans-serif';
-    ctx.fillText(now.toLocaleTimeString('fr-FR'), 150, 50);
+    const timeString = now.toLocaleTimeString('fr-FR');
+    
+    // --- Styles ---
+    const primaryColor = 'hsl(195, 100%, 50%)';
+    const fgColor = 'hsl(240, 27%, 93%)';
+    const mutedColor = 'hsl(240, 19%, 72%)';
+    const bgColor = 'hsl(233, 38%, 14%)';
 
+    // --- Background ---
+    const bgGradient = ctx.createLinearGradient(0, 0, 0, height);
+    bgGradient.addColorStop(0, '#121832');
+    bgGradient.addColorStop(1, '#0c1023');
+    ctx.fillStyle = bgGradient;
+    ctx.fillRect(0, 0, width, height);
+
+    // --- Grid ---
+    ctx.strokeStyle = 'hsla(195, 100%, 50%, 0.1)';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i < width; i += 20) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, height);
+        ctx.stroke();
+    }
+    for (let i = 0; i < height; i += 20) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(width, i);
+        ctx.stroke();
+    }
+    
+    // --- Scanline effect ---
+    const scanlineY = (Date.now() % 3000) / 3000 * height;
+    const scanlineGradient = ctx.createLinearGradient(0, scanlineY - 20, 0, scanlineY + 20);
+    scanlineGradient.addColorStop(0, 'hsla(195, 100%, 50%, 0)');
+    scanlineGradient.addColorStop(0.5, 'hsla(195, 100%, 50%, 0.2)');
+    scanlineGradient.addColorStop(1, 'hsla(195, 100%, 50%, 0)');
+    ctx.fillStyle = scanlineGradient;
+    ctx.fillRect(0, scanlineY - 20, width, 40);
+
+    // --- Borders ---
+    ctx.strokeStyle = primaryColor;
+    ctx.lineWidth = 1;
+    const cornerSize = 15;
+    ctx.beginPath();
+    // TL corner
+    ctx.moveTo(cornerSize, 0); ctx.lineTo(0, 0); ctx.lineTo(0, cornerSize);
+    // TR corner
+    ctx.moveTo(width - cornerSize, 0); ctx.lineTo(width, 0); ctx.lineTo(width, cornerSize);
+    // BL corner
+    ctx.moveTo(0, height - cornerSize); ctx.lineTo(0, height); ctx.lineTo(cornerSize, height);
+    // BR corner
+    ctx.moveTo(width - cornerSize, height); ctx.lineTo(width, height); ctx.lineTo(width, height - cornerSize);
+    ctx.stroke();
+
+
+    // --- Header ---
+    ctx.font = 'bold 18px "Space Grotesk", sans-serif';
+    ctx.fillStyle = primaryColor;
+    ctx.textAlign = 'center';
+    ctx.shadowColor = 'hsla(195, 100%, 50%, 0.5)';
+    ctx.shadowBlur = 10;
+    ctx.fillText('JetPredict', width / 2, 35);
+    ctx.shadowBlur = 0;
+
+    // --- Clock and Live indicator ---
+    ctx.font = '14px "Source Code Pro", monospace';
+    ctx.fillStyle = mutedColor;
+    ctx.fillText(timeString, width / 2, 55);
+    
+    ctx.fillStyle = Date.now() % 1000 > 500 ? '#22c55e' : '#16a34a';
+    ctx.beginPath();
+    ctx.arc(20, 30, 4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = fgColor;
+    ctx.font = 'bold 10px "Space Grotesk"';
+    ctx.textAlign = 'left';
+    ctx.fillText('LIVE', 30, 34);
+
+    // --- Predictions ---
     const upcomingPredictions = prediction.predictions.filter(p => {
         const [h, m] = p.time.split(':').map(Number);
         const pTime = new Date();
         pTime.setHours(h, m, 0, 0);
-        return pTime.getTime() > now.getTime() - 60000;
-    }).slice(0, 10);
-
-    ctx.font = '16px "Source Code Pro", monospace';
-    ctx.textAlign = "left";
+        return pTime.getTime() > now.getTime() - 60000; // Show for 1 min after
+    }).slice(0, 8);
+    
+    let isTargetLocked = false;
     
     upcomingPredictions.forEach((p, index) => {
-        const y = 90 + index * 30;
+        const y = 90 + index * 38;
+        const [h, m] = p.time.split(':').map(Number);
+        const pTime = new Date();
+        pTime.setHours(h,m,0,0);
+        const timeDiff = (pTime.getTime() - now.getTime()) / 1000;
         
-        const colorClass = getPredictionTimeColor(p.time);
-        if(colorClass === 'text-green-500') ctx.fillStyle = '#22c55e';
-        else if(colorClass === 'text-orange-500') ctx.fillStyle = '#f97316';
-        else if(colorClass === 'text-red-500') ctx.fillStyle = '#ef4444';
-        else ctx.fillStyle = `hsl(${fg})`;
+        let rowColor = mutedColor;
+        let isImminent = false;
         
-        ctx.fillText(p.time, 20, y);
+        if (timeDiff > 0 && timeDiff <= 30) {
+            rowColor = '#22c55e'; // Green
+            isImminent = true;
+        } else if (timeDiff <= 0 && timeDiff > -60) {
+            rowColor = '#f97316'; // Orange
+        } else if (timeDiff <= -60) {
+             rowColor = '#ef4444'; // Red
+        }
+
+        ctx.font = 'bold 24px "Source Code Pro", monospace';
+        ctx.fillStyle = primaryColor;
+        ctx.textAlign = 'right';
+        ctx.fillText(`${p.predictedCrashPoint.toFixed(2)}x`, width - 20, y + 8);
         
-        ctx.fillStyle = `hsl(${primary})`;
-        ctx.textAlign = "right";
-        ctx.fillText(`${p.predictedCrashPoint.toFixed(2)}x`, 280, y);
-        ctx.textAlign = "left";
+        ctx.font = '16px "Source Code Pro", monospace';
+        ctx.fillStyle = rowColor;
+        ctx.textAlign = 'left';
+        ctx.fillText(p.time, 20, y + 8);
+        
+        // Target lock effect
+        if (isImminent && !isTargetLocked) {
+            isTargetLocked = true;
+            ctx.strokeStyle = 'hsla(110, 100%, 50%, 0.8)';
+            ctx.lineWidth = 1.5;
+            const hPad = 15;
+            const vPad = 18;
+            ctx.beginPath();
+            ctx.moveTo(hPad, y - vPad); ctx.lineTo(hPad + 10, y - vPad);
+            ctx.moveTo(hPad, y - vPad); ctx.lineTo(hPad, y - vPad + 10);
+            ctx.moveTo(width - hPad, y - vPad); ctx.lineTo(width - hPad - 10, y - vPad);
+            ctx.moveTo(width - hPad, y - vPad); ctx.lineTo(width - hPad, y - vPad + 10);
+            ctx.moveTo(hPad, y + vPad); ctx.lineTo(hPad + 10, y + vPad);
+            ctx.moveTo(hPad, y + vPad); ctx.lineTo(hPad, y + vPad - 10);
+            ctx.moveTo(width - hPad, y + vPad); ctx.lineTo(width - hPad - 10, y + vPad);
+            ctx.moveTo(width - hPad, y + vPad); ctx.lineTo(width - hPad, y + vPad - 10);
+            ctx.stroke();
+            
+            ctx.fillStyle = 'hsla(110, 100%, 50%, 0.1)';
+            ctx.fillRect(0, y - 20, width, 40);
+        }
     });
 
   }, [prediction, currentTime]);
@@ -513,10 +611,8 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     const canvas = pipCanvasRef.current;
     if (!canvas) return;
 
-    // First draw
     drawPipCanvas();
     
-    // Create video and play stream
     pipVideoElement = document.createElement('video');
     pipVideoElement.srcObject = canvas.captureStream();
     pipVideoElement.muted = true;
@@ -833,98 +929,87 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                 </CardContent>
             </Card>
 
-
-         <div className="bg-card/50 border-border/30 backdrop-blur-md rounded-lg flex flex-col p-4 sm:p-6">
-              <div className="mb-4">
-                  <h3 className="text-lg font-bold text-foreground">Graphique des Prédictions</h3>
-                  <p className="text-sm text-muted-foreground">Vue d'ensemble des prédictions à venir.</p>
-              </div>
-              {canAccessChart ? (
-                <ChartContainer config={chartConfig} className="h-[250px] w-full flex-1">
-                  <AreaChart
-                    data={chartData}
-                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                  >
-                    <defs>
-                        <linearGradient id="fillCrash" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
-                            <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
-                        </linearGradient>
-                    </defs>
-                    <CartesianGrid
-                      vertical={false}
-                      strokeDasharray="3 3"
-                      stroke="hsl(var(--border) / 0.3)"
-                    />
-                    <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={8} fontSize={12} stroke="hsl(var(--muted-foreground))" />
-                    <YAxis
-                      tickLine={false}
-                      axisLine={false}
-                      tickMargin={8}
-                      fontSize={12}
-                      domain={yAxisDomain}
-                      stroke="hsl(var(--muted-foreground))"
-                    />
-                    <ChartTooltip 
-                        cursor={{ stroke: "hsl(var(--primary))", strokeWidth: 1, strokeDasharray: "3 3" }} 
-                        content={({ active, payload }) => {
-                          if (active && payload && payload.length) {
-                            return (
-                              <div className="rounded-lg border bg-background/90 p-2.5 shadow-sm backdrop-blur-sm">
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div className="flex flex-col">
-                                    <span className="text-[0.70rem] uppercase text-muted-foreground">Heure</span>
-                                    <span className="font-bold text-foreground">{payload[0].payload.name}</span>
-                                  </div>
-                                  <div className="flex flex-col">
-                                    <span className="text-[0.70rem] uppercase text-muted-foreground">Cote</span>
-                                    <span className="font-bold text-primary">{payload[0].value?.toFixed(2)}x</span>
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          }
-                          return null;
-                        }} 
-                    />
-                    <Area
-                      dataKey="crash"
-                      type="monotone"
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={2}
-                      fill="url(#fillCrash)"
-                    />
-                    {highestPrediction && (
-                      <ReferenceLine
-                        y={highestPrediction.predictedCrashPoint}
-                        stroke="hsl(var(--primary))"
-                        strokeDasharray="4 4"
-                        strokeWidth={1}
-                      >
-                        <Label value={`Max: ${highestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideTopLeft" fill="hsl(var(--primary))" fontSize={12} />
-                      </ReferenceLine>
-                    )}
-                    {lowestPrediction && (
-                      <ReferenceLine
-                        y={lowestPrediction.predictedCrashPoint}
-                        stroke="hsl(var(--muted-foreground))"
-                        strokeDasharray="4 4"
-                        strokeWidth={1}
-                      >
-                        <Label value={`Min: ${lowestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideBottomLeft" fill="hsl(var(--muted-foreground))" fontSize={12} />
-                      </ReferenceLine>
-                    )}
-                  </AreaChart>
-                </ChartContainer>
-              ) : (
-                <div className="h-[250px] w-full flex flex-col items-center justify-center bg-muted/50 rounded-lg p-4 text-center">
-                    <Lock className="h-10 w-10 text-primary/50 mb-4" />
-                    <h3 className="font-semibold text-foreground">Fonctionnalité Premium</h3>
-                    <p className="text-sm text-muted-foreground mb-4">Passez au forfait "Jour" ou supérieur pour voir le graphique.</p>
-                    <Button size="sm" onClick={() => router.push('/pricing')}>Voir les forfaits</Button>
+            <div className="bg-card/50 border-border/30 backdrop-blur-md rounded-lg flex flex-col p-4 sm:p-6">
+                <div className="mb-4">
+                    <h3 className="text-lg font-bold text-foreground">Graphique des Prédictions</h3>
+                    <p className="text-sm text-muted-foreground">Vue d'ensemble des prédictions à venir.</p>
                 </div>
-              )}
-            </div>
+                {canAccessChart ? (
+                    <ChartContainer config={chartConfig} className="h-[250px] w-full flex-1">
+                    <AreaChart
+                        data={chartData}
+                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                    >
+                        <defs>
+                            <linearGradient id="fillCrash" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.8}/>
+                                <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0.1}/>
+                            </linearGradient>
+                        </defs>
+                        <CartesianGrid
+                        vertical={false}
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--border) / 0.3)"
+                        />
+                        <XAxis dataKey="name" tickLine={false} axisLine={false} tickMargin={8} fontSize={12} stroke="hsl(var(--muted-foreground))" />
+                        <YAxis
+                        tickLine={false}
+                        axisLine={false}
+                        tickMargin={8}
+                        fontSize={12}
+                        domain={yAxisDomain}
+                        stroke="hsl(var(--muted-foreground))"
+                        />
+                        <ChartTooltip 
+                            cursor={{ stroke: "hsl(var(--primary))", strokeWidth: 1, strokeDasharray: "3 3" }} 
+                            content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                                return (
+                                <div className="rounded-lg border bg-background/90 p-2.5 shadow-sm backdrop-blur-sm">
+                                    <div className="grid grid-cols-2 gap-2">
+                                    <div className="flex flex-col">
+                                        <span className="text-[0.70rem] uppercase text-muted-foreground">Heure</span>
+                                        <span className="font-bold text-foreground">{payload[0].payload.name}</span>
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-[0.70rem] uppercase text-muted-foreground">Cote</span>
+                                        <span className="font-bold text-primary">{payload[0].value?.toFixed(2)}x</span>
+                                    </div>
+                                    </div>
+                                </div>
+                                );
+                            }
+                            return null;
+                            }} 
+                        />
+                        <Area
+                        dataKey="crash"
+                        type="monotone"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                        fill="url(#fillCrash)"
+                        />
+                         {highestPrediction && (
+                            <ReferenceLine y={highestPrediction.predictedCrashPoint} stroke="hsl(var(--primary))" strokeDasharray="3 3">
+                                <Label value={`Max: ${highestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideTopLeft" fill="hsl(var(--primary))" fontSize={12} />
+                            </ReferenceLine>
+                        )}
+                        {lowestPrediction && (
+                            <ReferenceLine y={lowestPrediction.predictedCrashPoint} stroke="hsl(var(--muted-foreground))" strokeDasharray="3 3">
+                                <Label value={`Min: ${lowestPrediction.predictedCrashPoint.toFixed(2)}x`} position="insideBottomLeft" fill="hsl(var(--muted-foreground))" fontSize={12} />
+                            </ReferenceLine>
+                        )}
+                    </AreaChart>
+                    </ChartContainer>
+                ) : (
+                    <div className="h-[250px] w-full flex flex-col items-center justify-center bg-muted/50 rounded-lg p-4 text-center">
+                        <Lock className="h-10 w-10 text-primary/50 mb-4" />
+                        <h3 className="font-semibold text-foreground">Fonctionnalité Premium</h3>
+                        <p className="text-sm text-muted-foreground mb-4">Passez au forfait "Jour" ou supérieur pour voir le graphique.</p>
+                        <Button size="sm" onClick={() => router.push('/pricing')}>Voir les forfaits</Button>
+                    </div>
+                )}
+                </div>
         </div>
 
         <Dialog open={isOverlayGuideOpen} onOpenChange={setIsOverlayGuideOpen}>
@@ -1075,3 +1160,6 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
 
 
+
+
+    
