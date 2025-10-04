@@ -284,7 +284,7 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
                 navigator.mediaSession.metadata = new MediaMetadata({
                     title: `Prochain Crash: ${nextPrediction.predictedCrashPoint.toFixed(2)}x`,
                     artist: `À ${nextPrediction.time}`,
-                    album: 'JetPredict',
+                    album: 'Jet Predict',
                      artwork: [{
                         src: 'https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png',
                         sizes: '512x512',
@@ -294,8 +294,8 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
             } else {
                  navigator.mediaSession.metadata = new MediaMetadata({
                     title: 'Aucune prédiction à venir',
-                    artist: 'JetPredict',
-                    album: 'JetPredict',
+                    artist: 'Jet Predict',
+                    album: 'Jet Predict',
                      artwork: [{
                         src: 'https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png',
                         sizes: '512x512',
@@ -504,7 +504,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     ctx.textAlign = 'center';
     ctx.shadowColor = 'hsla(195, 100%, 50%, 0.5)';
     ctx.shadowBlur = 10;
-    ctx.fillText('JetPredict', width / 2, 35);
+    ctx.fillText('Jet Predict', width / 2, 35);
     ctx.shadowBlur = 0;
 
     // --- Clock and Live indicator ---
@@ -1013,7 +1013,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                     <ol className="list-decimal list-inside space-y-2 text-muted-foreground">
                         <li>Allez dans les <strong>Paramètres</strong> de votre téléphone.</li>
                         <li>Cherchez et ouvrez la section <strong>"Applications"</strong>.</li>
-                        <li>Trouvez et sélectionnez <strong>JetPredict</strong> dans la liste.</li>
+                        <li>Trouvez et sélectionnez <strong>Jet Predict</strong> dans la liste.</li>
                         <li>Cherchez l'option <strong>"Superposition à d'autres applications"</strong> (ou "Afficher par-dessus d'autres applis") et activez-la.</li>
                     </ol>
                     <p className="text-xs text-muted-foreground pt-2">
@@ -1139,5 +1139,3 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
-
-    
