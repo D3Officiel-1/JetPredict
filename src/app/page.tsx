@@ -284,147 +284,150 @@ export default function LandingPage() {
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden">
         {/* Header */}
         <header className="fixed top-0 left-0 right-0 z-50 p-4">
-            <div className="container mx-auto flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2.5">
-                    <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md" />
-                    <span className="text-lg font-bold text-primary">Jet Predict</span>
-                </Link>
-                <Link href="/login" passHref>
-                    <Button variant="ghost">
-                        Connexion
-                        <ChevronRight size={16} className="ml-1" />
-                    </Button>
-                </Link>
-            </div>
-        </header>
+          <motion.div 
+              initial={{ y: -100 }}
+              animate={{ y: 0 }}
+              transition={{ type: 'spring', stiffness: 50, damping: 15 }}
+              className="container mx-auto flex items-center justify-between p-2 rounded-2xl bg-black/20 backdrop-blur-md border border-white/10"
+          >
+              <Link href="/" className="flex items-center gap-2.5">
+                  <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md" />
+                  <span className="text-lg font-bold text-primary">Jet Predict</span>
+              </Link>
+              <Link href="/login" passHref>
+                  <Button variant="ghost" className="rounded-full">
+                      Commencer
+                      <ChevronRight size={16} className="ml-1" />
+                  </Button>
+              </Link>
+          </motion.div>
+      </header>
 
       {/* Main Content */}
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center min-h-[100vh] py-20 md:py-32 overflow-hidden">
-            <div className="absolute inset-0 -z-20 bg-[#0A0F1E]"></div>
-            <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-[0.03]"></div>
-            
-            <motion.div
-                className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 blur-3xl opacity-50"
-                animate={{ x: [-100, 50], y: [-50, 100], scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
-                transition={{ duration: 30, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
-            />
-            <motion.div
-                className="absolute bottom-0 right-0 w-[50rem] h-[50rem] rounded-full bg-blue-500/10 blur-3xl opacity-50"
-                animate={{ x: [100, -50], y: [50, -100], scale: [1, 1.2, 1], opacity: [0.4, 0.2, 0.4] }}
-                transition={{ duration: 40, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
-            />
+          <div className="absolute inset-0 -z-20 bg-[#0A0F1E]"></div>
+          <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-5"></div>
+          
+          <motion.div
+              className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 blur-3xl opacity-50"
+              animate={{ x: [-100, 50], y: [-50, 100], scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
+              transition={{ duration: 30, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+          />
+          <motion.div
+              className="absolute bottom-0 right-0 w-[50rem] h-[50rem] rounded-full bg-blue-500/10 blur-3xl opacity-50"
+              animate={{ x: [100, -50], y: [50, -100], scale: [1, 1.2, 1], opacity: [0.4, 0.2, 0.4] }}
+              transition={{ duration: 40, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
+          />
 
-            <div className="container relative z-10 flex flex-col items-center">
-                <motion.div 
-                    className="mb-6"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.7 }}
-                >
-                    <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-1.5 rounded-full border border-primary/20">
-                        Version 2.0 avec IA Avancée
-                    </span>
-                </motion.div>
-                
-                <motion.h1 
-                    className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-tight"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4, duration: 0.7 }}
-                >
-                    <span className="block bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-400">Passez au niveau</span>
-                    <span className="block text-primary drop-shadow-[0_0_20px_hsl(var(--primary))]">supérieur.</span>
-                </motion.h1>
-                
-                <motion.p 
-                    className="mt-6 max-w-xl text-lg text-muted-foreground"
-                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.7 }}
-                >
-                    Jet Predict transforme vos paris en stratégies. Obtenez des prédictions de cotes fiables grâce à notre IA et prenez l'avantage.
-                </motion.p>
-                
-                 <motion.div
-                    className="mt-10 flex flex-wrap justify-center gap-4"
-                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.8, duration: 0.7 }}
-                >
-                    <Link href="/login" passHref>
-                        <Button
-                            size="lg"
-                            className="font-semibold text-lg py-7 px-8 rounded-full group shadow-[0_0_25px_hsl(var(--primary)/0.4)] transition-all duration-300 ease-in-out hover:shadow-[0_0_40px_hsl(var(--primary)/0.6)] hover:scale-105"
-                        >
-                            <span className="relative flex items-center">
-                                Activer le Protocole
-                                <MoveUpRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-45" />
-                            </span>
-                        </Button>
-                    </Link>
-                </motion.div>
-                 <motion.div 
-                    className="mt-12"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.0, duration: 1 }}
-                 >
-                    <div className="relative p-1 rounded-2xl bg-gradient-to-br from-primary/50 via-blue-500/30 to-transparent">
-                        <div className="p-1 rounded-[14px] bg-background">
-                            <Image
-                                src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
-                                alt="Tableau de bord Jet Predict"
-                                width={1000}
-                                height={625}
-                                className="object-cover rounded-xl shadow-2xl shadow-primary/20"
-                                priority
-                                data-ai-hint="dashboard futuristic"
-                            />
-                        </div>
-                    </div>
-                </motion.div>
-            </div>
-        </section>
-
+          <div className="container relative z-10 flex flex-col items-center">
+              <motion.div 
+                  className="mb-6"
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2, duration: 0.7 }}
+              >
+                  <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-1.5 rounded-full border border-primary/20">
+                      Version 2.0 avec IA Avancée
+                  </span>
+              </motion.div>
+              
+              <motion.h1 
+                  className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-tight"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.7 }}
+              >
+                  <span className="block bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-400">Passez au niveau</span>
+                  <span className="block text-primary drop-shadow-[0_0_20px_hsl(var(--primary))]">supérieur.</span>
+              </motion.h1>
+              
+              <motion.p 
+                  className="mt-6 max-w-xl text-lg text-muted-foreground"
+                   initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.6, duration: 0.7 }}
+              >
+                  Jet Predict transforme vos paris en stratégies. Obtenez des prédictions de cotes fiables grâce à notre IA et prenez l'avantage.
+              </motion.p>
+              
+               <motion.div
+                  className="mt-10 flex flex-wrap justify-center gap-4"
+                   initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.7 }}
+              >
+                  <Link href="/login" passHref>
+                      <Button
+                          size="lg"
+                          className="font-semibold text-lg py-7 px-8 rounded-full group shadow-[0_0_25px_hsl(var(--primary)/0.4)] transition-all duration-300 ease-in-out hover:shadow-[0_0_40px_hsl(var(--primary)/0.6)] hover:scale-105"
+                      >
+                          <span className="relative flex items-center">
+                              Activer le Protocole
+                              <MoveUpRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-45" />
+                          </span>
+                      </Button>
+                  </Link>
+              </motion.div>
+               <motion.div 
+                  className="mt-12 w-full max-w-4xl"
+                  initial={{ opacity: 0, y: 50 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0, duration: 1 }}
+               >
+                  <div className="relative p-1 rounded-2xl bg-gradient-to-br from-primary/50 via-blue-500/30 to-transparent">
+                      <div className="p-1 rounded-[14px] bg-background">
+                          <Image
+                              src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
+                              alt="Tableau de bord Jet Predict"
+                              width={1200}
+                              height={625}
+                              className="object-cover rounded-xl shadow-2xl shadow-primary/20"
+                              priority
+                              data-ai-hint="dashboard futuristic"
+                          />
+                      </div>
+                  </div>
+              </motion.div>
+          </div>
+      </section>
 
         {/* Social Proof Section */}
-         <section className="py-20 relative">
+        <section className="py-20 relative">
             <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[14px_24px]"></div>
-            <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#313b5c22,transparent)] -z-10"></div>
-
+            <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_50%_200px,#313b5c22,transparent)] -z-10"></div>
             <div className="container mx-auto text-center">
                 <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
-                    Approuvé par les parieurs professionnels
+                    Construit sur des Données Fiables
                 </h2>
                 <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-                    Nos statistiques parlent d'elles-mêmes. Rejoignez une communauté qui gagne grâce à des prédictions fiables.
+                    Rejoignez une communauté qui prend l'avantage grâce à des prédictions basées sur des millions de points de données.
                 </p>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {stats.map((stat, index) => (
-                         <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 50 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: index * 0.15 }}
-                            viewport={{ once: true }}
-                            className="relative group p-6 rounded-2xl bg-card/50 border border-primary/20 hover:border-primary/50 transition-colors duration-300 shadow-lg hover:shadow-primary/10"
-                        >
-                            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
-                            <div className="relative z-10 flex flex-col items-center gap-4">
-                                <div className="p-3 rounded-full bg-primary/10 text-primary border border-primary/20">
+                <div className="relative p-8 rounded-2xl bg-card/50 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10">
+                    <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-primary/20">
+                        {stats.map((stat, index) => (
+                             <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 50 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5, delay: index * 0.15 }}
+                                viewport={{ once: true }}
+                                className="flex flex-col items-center gap-3 p-6 md:p-0 md:px-6 first:pt-0 last:pb-0"
+                            >
+                                <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary border-2 border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
+                                     <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
                                     {stat.icon}
                                 </div>
                                 <p className="text-4xl font-bold text-foreground">{stat.value}</p>
                                 <p className="text-muted-foreground">{stat.label}</p>
-                            </div>
-                        </motion.div>
-                    ))}
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </section>
-
 
         {/* About Section */}
         <section id="about" className="py-20 relative overflow-hidden">
@@ -798,6 +801,8 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    
 
     
 
