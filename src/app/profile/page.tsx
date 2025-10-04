@@ -379,9 +379,9 @@ export default function ProfilePage() {
                             visible: { transition: { staggerChildren: 0.1, delay: 0.3 } }
                         }}
                     >
-                        <InfoRow icon={<ShieldCheck size={16}/>} label="Plan Actif" value={<span className="font-bold text-primary">{getPlanName()}</span>} index={0} />
-                        <InfoRow icon={<CalendarIcon size={16}/>} label="Date de fin" value={formatDate(pricingData?.findate)} index={1} />
-                        <InfoRow icon={<Wallet size={16}/>} label="Solde parrainage" value={<span className="font-bold text-green-400">{`${(userData.solde_referral || 0).toLocaleString('fr-FR')} FCFA`}</span>} index={2} />
+                        <InfoRow icon={<Wallet size={16}/>} label="Solde parrainage" value={<span className="font-bold text-green-400">{`${(userData.solde_referral || 0).toLocaleString('fr-FR')} FCFA`}</span>} index={0} />
+                        <InfoRow icon={<ShieldCheck size={16}/>} label="Plan Actif" value={<span className="font-bold text-primary">{getPlanName()}</span>} index={1} />
+                        <InfoRow icon={<CalendarIcon size={16}/>} label="Date de fin" value={formatDate(pricingData?.findate)} index={2} />
                     </motion.div>
                 </CardContent>
             </Card>
@@ -411,4 +411,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
