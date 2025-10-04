@@ -8,7 +8,7 @@ const withPWA = require('next-pwa')({
   disable: process.env.NODE_ENV === 'development',
   runtimeCaching: [
     {
-      urlPattern: /^https$?.*/,
+      urlPattern: /^https?:\/\/.*/,
       handler: 'NetworkFirst',
       options: {
         cacheName: 'https-calls',
