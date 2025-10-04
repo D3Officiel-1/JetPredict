@@ -733,16 +733,21 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-        <footer className="bg-card border-t border-primary/10 px-4">
-            <div className="container mx-auto max-w-screen-2xl py-12">
+        <footer className="bg-card/30 border-t border-primary/10">
+            <div className="container mx-auto py-12 px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
                     {/* Brand Section */}
-                    <div className="flex flex-col gap-4 items-start col-span-1 md:col-span-2 lg:col-span-1">
+                    <div className="flex flex-col gap-4 items-start col-span-1 lg:col-span-2">
                          <Link href="/" className="flex items-center gap-2">
                             <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} />
                             <span className="text-xl font-bold text-primary">Jet Predict</span>
                         </Link>
-                        <p className="text-sm text-muted-foreground">Prenez une longueur d'avance avec des analyses de paris basées sur les données.</p>
+                        <p className="text-sm text-muted-foreground max-w-sm">Prenez une longueur d'avance avec des analyses de paris basées sur les données.</p>
+                        <div className="flex space-x-4 pt-2">
+                            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><XIcon className="h-5 w-5" /></a>
+                            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><InstagramIcon className="h-5 w-5" /></a>
+                            <a href="#" className="text-muted-foreground hover:text-primary transition-colors"><TelegramIcon className="h-5 w-5" /></a>
+                        </div>
                     </div>
 
                     {/* Links Section */}
@@ -750,7 +755,6 @@ export default function LandingPage() {
                         <h3 className="font-semibold text-foreground mb-2">Explorer</h3>
                         <Link href="#features" className="text-muted-foreground hover:text-primary transition-colors">Fonctionnalités</Link>
                         <Link href="#pricing" className="text-muted-foreground hover:text-primary transition-colors">Tarifs</Link>
-                        <Link href="#testimonials" className="text-muted-foreground hover:text-primary transition-colors">Témoignages</Link>
                         <Link href="#faq" className="text-muted-foreground hover:text-primary transition-colors">FAQ</Link>
                     </div>
 
@@ -760,63 +764,43 @@ export default function LandingPage() {
                         <Link href="/legal/mentions-legales" className="text-muted-foreground hover:text-primary transition-colors">Mentions Légales</Link>
                         <Link href="/legal/cgu" className="text-muted-foreground hover:text-primary transition-colors">Conditions d'utilisation</Link>
                         <Link href="/legal/cgv" className="text-muted-foreground hover:text-primary transition-colors">Conditions de vente</Link>
-                        <Link href="/legal/confidentialite" className="text-muted-foreground hover:text-primary transition-colors">Politique de confidentialité</Link>
-                        <Link href="/legal/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link>
+                        <Link href="/legal/confidentialite" className="text-muted-foreground hover:text-primary transition-colors">Confidentialité</Link>
                     </div>
 
-                    {/* Partners Section */}
-                    <div className="flex flex-col gap-2">
-                        <h3 className="font-semibold text-foreground mb-2">Partenaires</h3>
-                        {partners.slice(0, 5).map((partner, index) => (
-                             <Link key={index} href={partner.url} target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors">{partner.name}</Link>
-                        ))}
-                    </div>
-
-                    {/* Social & PWA Section */}
-                    <div className="flex flex-col gap-2">
-                        <h3 className="font-semibold text-foreground mb-2">Restez Connecté</h3>
-                        <div className="flex space-x-4">
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors"><XIcon className="h-5 w-5" /></Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors"><InstagramIcon className="h-5 w-5" /></Link>
-                            <Link href="#" className="text-muted-foreground hover:text-primary transition-colors"><TelegramIcon className="h-5 w-5" /></Link>
+                    {/* App & Bot Section */}
+                    <div className="flex flex-col gap-4">
+                        <div>
+                            <h3 className="font-semibold text-foreground mb-2">Télécharger l'App</h3>
+                             <div className="flex items-center gap-2">
+                                <button onClick={handleAndroidInstallClick} className="cursor-pointer">
+                                     <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
+                                 </button>
+                                 <button onClick={handleIosInstallClick} className="cursor-pointer">
+                                     <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={60} height={35} className={cn("dark:invert-0 invert")}/>
+                                 </button>
+                                  <button onClick={handleWindowsInstallClick} className="cursor-pointer">
+                                     <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Download for Windows" width={60} height={35} />
+                                 </button>
+                             </div>
                         </div>
-                        <div className="mt-4">
+                        <div>
+                           <h3 className="font-semibold text-foreground mb-2">Notre Bot Telegram</h3>
                             <iframe
                               src="/api/telegram-widget"
-                              style={{border: 'none', width: '220px', height: '50px'}}
+                              style={{border: 'none', width: '180px', height: '50px'}}
                               title="Rejoindre le bot Telegram"
                             ></iframe>
                         </div>
-                        <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
-                         <div className="flex lg:flex-row gap-2 justify-start items-start flex-col lg:items-center sm:flex-row">
-                             <div className="flex lg:flex-row gap-2 justify-start items-start flex-col sm:flex-row sm:items-center">
-                               <button onClick={handleAndroidInstallClick} className="cursor-pointer">
-                                    <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
-                                </button>
-                                <button onClick={handleIosInstallClick} className="cursor-pointer">
-                                    <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={60} height={35} className={cn("dark:invert-0 invert")}/>
-                                </button>
-                                 <button onClick={handleWindowsInstallClick} className="cursor-pointer">
-                                    <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Download for Windows" width={60} height={35} />
-                                </button>
-                            </div>
-                         </div>
-                         {deferredPrompt && (
-                            <Button onClick={handleAndroidInstallClick} className="mt-2">
-                                <Download className="mr-2 h-4 w-4" />
-                                Installer l'application
-                            </Button>
-                         )}
                     </div>
                 </div>
 
-                <div className="mt-8 border-t border-border pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                     <p className="text-sm text-muted-foreground text-center md:text-left">
+                <div className="mt-12 border-t border-border/50 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                     <p className="text-sm text-muted-foreground text-center sm:text-left">
                         © {new Date().getFullYear()} Jet Predict — #D3 Officiel
                     </p>
                     <div className="flex items-center gap-2">
                         <Image src="https://dam.begmedia.com/front/tactics/icons/light/age_restriction.f38d38a8.svg" width={20} height={20} alt="18+" />
-                        <p className="text-xs text-muted-foreground/50 text-center md:text-right">
+                        <p className="text-xs text-muted-foreground/50 text-center sm:text-right">
                            Jouez de manière responsable.
                         </p>
                     </div>
@@ -901,4 +885,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
