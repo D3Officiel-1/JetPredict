@@ -24,17 +24,17 @@ const features = [
     {
         icon: <Zap className="h-8 w-8 text-primary" />,
         title: "Prédictions en Temps Réel",
-        description: "Obtenez des cotes suggérées instantanément en fonction du niveau de risque que vous choisissez pour les jeux de crash et les paris sportifs.",
+        description: "Obtenez des cotes suggérées instantanément en fonction du niveau de risque que vous choisissez.",
     },
     {
         icon: <BrainCircuit className="h-8 w-8 text-primary" />,
         title: "Fiabilité par l'IA",
-        description: "Notre IA analyse des milliers de points de données pour vous donner un indice de confiance fiable, vous aidant à prendre des décisions éclairées.",
+        description: "Notre IA analyse des milliers de points de données pour vous donner un indice de confiance fiable.",
     },
     {
         icon: <Award className="h-8 w-8 text-primary" />,
         title: "Stratégies Gagnantes",
-        description: "Accédez à des stratégies de paris adaptées, que vous soyez prudent ou audacieux, pour les jeux comme Lucky Jet ou les matchs de football.",
+        description: "Accédez à des stratégies de paris adaptées, que vous soyez prudent ou audacieux.",
     },
 ];
 
@@ -399,31 +399,33 @@ export default function LandingPage() {
             <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_50%_200px,#313b5c22,transparent)] -z-10"></div>
             <div className="container mx-auto text-center">
                 <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">
-                    Construit sur des Données Fiables
+                    Approuvé par les parieurs professionnels
                 </h2>
                 <p className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
                     Rejoignez une communauté qui prend l'avantage grâce à des prédictions basées sur des millions de points de données.
                 </p>
-                <div className="relative p-8 rounded-2xl bg-card/50 backdrop-blur-lg border border-primary/20 shadow-2xl shadow-primary/10">
-                    <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
-                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-primary/20">
-                        {stats.map((stat, index) => (
-                             <motion.div
-                                key={index}
-                                initial={{ opacity: 0, y: 50 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.5, delay: index * 0.15 }}
-                                viewport={{ once: true }}
-                                className="flex flex-col items-center gap-3 p-6 md:p-0 md:px-6 first:pt-0 last:pb-0"
-                            >
-                                <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary border-2 border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
-                                     <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
-                                    {stat.icon}
-                                </div>
-                                <p className="text-4xl font-bold text-foreground">{stat.value}</p>
-                                <p className="text-muted-foreground">{stat.label}</p>
-                            </motion.div>
-                        ))}
+                <div className="relative p-1 bg-gradient-to-br from-primary/30 to-transparent rounded-2xl">
+                    <div className="relative p-8 rounded-[15px] bg-background border border-primary/20 shadow-2xl shadow-primary/10">
+                        <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
+                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-primary/20">
+                            {stats.map((stat, index) => (
+                                 <motion.div
+                                    key={index}
+                                    initial={{ opacity: 0, y: 50 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.5, delay: index * 0.15 }}
+                                    viewport={{ once: true }}
+                                    className="flex flex-col items-center gap-3 p-6 md:p-0 md:px-6 first:pt-0 last:pb-0"
+                                >
+                                    <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-primary border-2 border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
+                                         <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+                                        {stat.icon}
+                                    </div>
+                                    <p className="text-4xl font-bold text-foreground">{stat.value}</p>
+                                    <p className="text-muted-foreground">{stat.label}</p>
+                                </motion.div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -483,30 +485,30 @@ export default function LandingPage() {
 
 
         {/* Features Section */}
-        <section id="features" className="py-20 bg-muted/50">
+        <section id="features" className="py-20 relative bg-muted/50 overflow-hidden">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.1),transparent)]"></div>
             <div className="container mx-auto">
-                <div className="text-center mb-12">
+                <div className="text-center mb-16">
                     <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Pourquoi choisir Jet Predict ?</h2>
-                    <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Tout ce dont vous avez besoin pour prendre une longueur d'avance et maximiser vos gains sur les paris sportifs.</p>
+                    <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Des outils de pointe pour une expérience de pari inégalée.</p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
                     {features.map((feature, index) => (
                         <motion.div
                             key={index}
+                            className="group relative p-1 bg-gradient-to-br from-primary/20 via-primary/5 to-transparent rounded-2xl"
                             initial={{ opacity: 0, y: 50 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: index * 0.15 }}
                             viewport={{ once: true }}
                         >
-                            <Card className="h-full bg-card/50 p-6 rounded-2xl border-primary/20 hover:border-primary/50 transition-colors duration-300 shadow-lg hover:shadow-primary/10 text-center group">
-                               <div className="flex justify-center mb-4">
-                                     <div className="p-4 rounded-full bg-primary/10 text-primary border border-primary/20 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20">
-                                        {feature.icon}
-                                    </div>
-                               </div>
-                                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                                <p className="text-muted-foreground">{feature.description}</p>
-                            </Card>
+                           <div className="h-full bg-card/80 backdrop-blur-lg p-8 rounded-[15px] text-center border border-transparent group-hover:border-primary/50 transition-colors duration-300">
+                               <div className="inline-block p-4 rounded-full bg-primary/10 text-primary border border-primary/20 mb-6 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20 group-hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)]">
+                                  {feature.icon}
+                              </div>
+                               <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+                               <p className="text-muted-foreground">{feature.description}</p>
+                           </div>
                         </motion.div>
                     ))}
                 </div>
@@ -723,7 +725,7 @@ export default function LandingPage() {
                         </div>
                         <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
                          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-2 lg:flex-col lg:items-start">
-                             <div className="flex flex-col lg:flex-row gap-2 justify-start items-start">
+                             <div className="flex lg:flex-row gap-2 justify-start items-start flex-col">
                                <button onClick={handleAndroidInstallClick} className="cursor-pointer">
                                     <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
                                 </button>
