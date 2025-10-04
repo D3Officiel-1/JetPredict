@@ -590,7 +590,7 @@ export default function LandingPage() {
         
         {/* Testimonials Section */}
         <section id="testimonials" className="py-20 relative">
-          <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_400px,hsl(var(--primary)/0.08),transparent)]"></div>
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_400px,hsl(var(--primary)/0.08),transparent)]"></div>
             <div className="container mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Ils nous font confiance</h2>
@@ -641,7 +641,8 @@ export default function LandingPage() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="py-20 bg-muted/50">
+        <section id="faq" className="py-20 relative overflow-hidden">
+            <div className="absolute inset-0 -z-10 bg-muted/50 [mask-image:radial-gradient(ellipse_80%_50%_at_50%_100%,#000_70%,transparent_110%)]"></div>
             <div className="container mx-auto max-w-3xl">
                 <div className="text-center mb-12">
                     <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Questions fréquentes</h2>
@@ -747,7 +748,7 @@ export default function LandingPage() {
                             ></iframe>
                         </div>
                         <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
-                         <div className="flex lg:flex-row gap-2 justify-start items-center flex-col lg:items-end">
+                         <div className="flex lg:flex-row gap-2 justify-start items-start flex-col lg:items-center sm:flex-row">
                              <div className="flex lg:flex-row gap-2 justify-start items-start flex-col sm:flex-row sm:items-center">
                                <button onClick={handleAndroidInstallClick} className="cursor-pointer">
                                     <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
