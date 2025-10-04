@@ -446,7 +446,7 @@ export default function Header() {
                                 <p>Viser les multiplicateurs élevés (&gt;5x) peut rapporter gros mais est très dangereux.</p>
                                 <p>Exemple : mise 500 FCFA → retirer à 10x → gain potentiel 5 000 FCFA.</p>
                                 <p>Ne mise jamais plus de 5 % de ton capital pour ce type de pari.</p>
-                                <p>Utilise-le seulement pour des occasions où ton capital principal est déjà sécurisé.</p>
+                                <p>Utilise le seulement pour des occasions où ton capital principal est déjà sécurisé.</p>
                                 <p>Cette stratégie doit être ponctuelle et réfléchie, jamais systématique.</p>
                                 <p>Elle peut transformer une petite mise en jackpot mais peut aussi tout faire disparaître en un tour.</p>
                             </StrategyItem>
@@ -454,7 +454,7 @@ export default function Header() {
                                 <p>Ne jamais risquer plus de 1–2 % du capital par tour.</p>
                                 <p>Si ton capital est de 50 000 FCFA, mise max 500–1 000 FCFA par tour.</p>
                                 <p>Cela permet de tenir plusieurs tours même en cas de pertes consécutives.</p>
-                                <p>Divise le capital en mini-pools pour gérer différentes stratégies en parallèle.</p>
+                                <p>Divise le capital en mini pools pour gérer différentes stratégies en parallèle.</p>
                                 <p>Cette discipline protège ton capital contre l’adrénaline et l’émotion.</p>
                                 <p>Une bonne gestion du capital est le cœur de toute stratégie efficace.</p>
                             </StrategyItem>
@@ -471,7 +471,7 @@ export default function Header() {
                                 <p>Exemple : 500 → 1 000 → 1 500 FCFA au lieu de doubler systématiquement.</p>
                                 <p>Cette méthode permet de récupérer les pertes plus lentement, mais plus sûr.</p>
                                 <p>Elle te protège contre des crashes consécutifs élevés qui peuvent tout brûler.</p>
-                                <p>Combine-la avec des retraits sécurisés pour limiter les pertes.</p>
+                                <p>Combine là avec des retraits sécurisés pour limiter les pertes.</p>
                                 <p>C’est une version plus prudente et adaptée aux petits capitales.</p>
                             </StrategyItem>
                             <StrategyItem title="10. Fibonacci">
@@ -502,7 +502,7 @@ export default function Header() {
                                 <p>Détermine un objectif clair par session, par exemple 10 000 FCFA de gains.</p>
                                 <p>Une fois atteint, arrête de jouer pour sécuriser tes profits.</p>
                                 <p>Cela évite de tout perdre par excès de confiance.</p>
-                                <p>Tu peux aussi définir des mini-objectifs pour suivre ta progression.</p>
+                                <p>Tu peux aussi définir des mini objectifs pour suivre ta progression.</p>
                                 <p>Cette discipline transforme un jeu aléatoire en session rentable.</p>
                                 <p>Objectifs = motivation + limite psychologique pour contrôler le jeu.</p>
                             </StrategyItem>
@@ -526,7 +526,7 @@ export default function Header() {
                                 <p>Divise ton capital en plusieurs petites mises sur différents multiplicateurs.</p>
                                 <p>Exemple : 50 000 FCFA → 5 mises de 1 000 FCFA + 10 mises de 500 FCFA.</p>
                                 <p>Cela te permet de sécuriser des gains constants tout en tentant des multiplicateurs élevés.</p>
-                                <p>Chaque mini-mise agit comme un pari indépendant.</p>
+                                <p>Chaque mini mise agit comme un pari indépendant.</p>
                                 <p>Réduit le risque global et augmente tes chances de gains cumulés.</p>
                                 <p>C’est une technique que les pros utilisent pour gérer le capital efficacement.</p>
                             </StrategyItem>
@@ -573,8 +573,8 @@ export default function Header() {
                             <StrategyItem title="22. Pauses régulières">
                                 <p>Jouer fatigué = décisions mauvaises = pertes assurées.</p>
                                 <p>Fais des pauses toutes les 15–30 minutes pour rester lucide.</p>
-                                <p>Profite-en pour analyser les tours précédents et ajuster tes stratégies.</p>
-                                <p>Respire, éloigne-toi de l’écran et reviens avec un esprit clair.</p>
+                                <p>Profite en pour analyser les tours précédents et ajuster tes stratégies.</p>
+                                <p>Respire, éloigne toi de l’écran et reviens avec un esprit clair.</p>
                                 <p>Les pros ne jouent jamais en continu sans repos.</p>
                                 <p>Le mental est ton meilleur allié pour maximiser tes gains.</p>
                             </StrategyItem>
