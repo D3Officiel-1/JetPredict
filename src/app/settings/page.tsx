@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, KeyRound, Mail, Trash2, LogOut, Palette, Loader2, ShieldAlert, Eye, EyeOff, Download, Bell, Vibrate, Music } from 'lucide-react';
+import { ArrowLeft, KeyRound, Mail, Trash2, LogOut, Palette, Loader2, ShieldAlert, Eye, EyeOff, Download, Bell, Vibrate, Music, Sun, Moon, Laptop } from 'lucide-react';
 import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -359,51 +359,42 @@ export default function SettingsPage() {
 
         <Card className="bg-card/70 backdrop-blur-sm border-border/50">
             <CardHeader>
-                <CardTitle>Application</CardTitle>
+                <CardTitle>Contrôle de l'Interface</CardTitle>
             </CardHeader>
-            <CardContent className="p-0">
-                <div className="flex items-center justify-between p-4 border-b border-border/50">
-                    <div className="flex items-center gap-4">
-                        <div className="text-primary"><Palette size={24} /></div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">Thème de l'interface</h3>
-                            <p className="text-sm text-muted-foreground">Choisissez une apparence.</p>
-                        </div>
-                    </div>
-                    <div className="pl-4">
-                        <Select value={theme} onValueChange={setTheme}>
-                            <SelectTrigger className="w-[180px]">
-                                <SelectValue placeholder="Changer de thème" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="light">Clair</SelectItem>
-                                <SelectItem value="dark">Sombre</SelectItem>
-                                <SelectItem value="system">Système</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+            <CardContent className="p-4 space-y-4">
+                <div>
+                     <Label className="text-sm font-semibold text-muted-foreground ml-1 mb-2 block">Thème de l'Application</Label>
+                     <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-2 border border-border/30">
+                        <Button variant={theme === 'light' ? 'default' : 'ghost'} onClick={() => setTheme('light')} className="flex-col h-16 gap-1">
+                            <Sun className="h-5 w-5"/>
+                            <span>Clair</span>
+                        </Button>
+                         <Button variant={theme === 'dark' ? 'default' : 'ghost'} onClick={() => setTheme('dark')} className="flex-col h-16 gap-1">
+                            <Moon className="h-5 w-5"/>
+                            <span>Sombre</span>
+                        </Button>
+                         <Button variant={theme === 'system' ? 'default' : 'ghost'} onClick={() => setTheme('system')} className="flex-col h-16 gap-1">
+                            <Laptop className="h-5 w-5"/>
+                            <span>Système</span>
+                        </Button>
+                     </div>
                 </div>
-                 <div className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-4">
-                        <div className="text-primary"><Download size={24} /></div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">Installer l'application</h3>
-                            <p className="text-sm text-muted-foreground">Accès rapide depuis votre bureau/accueil.</p>
-                        </div>
+                <div>
+                    <Label className="text-sm font-semibold text-muted-foreground ml-1 mb-2 block">Installer l'Application</Label>
+                    <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-4 border border-border/30">
+                        <button onClick={handleAndroidInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
+                            <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={40} height={40} className={cn("dark:invert-0 invert")}/>
+                            <span>Android</span>
+                        </button>
+                        <button onClick={handleIosInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
+                            <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={40} height={40} className={cn("dark:invert-0 invert")}/>
+                             <span>iOS</span>
+                        </button>
+                         <button onClick={handleWindowsInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
+                            <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Desktop" width={40} height={40}/>
+                             <span>Desktop</span>
+                        </button>
                     </div>
-                    <div className="pl-4">
-                         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 justify-start">
-                            <button onClick={handleAndroidInstallClick} className="cursor-pointer" title="Installer sur Android">
-                                <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={35} height={35} className={cn("dark:invert-0 invert")}/>
-                            </button>
-                            <button onClick={handleIosInstallClick} className="cursor-pointer" title="Installer sur iOS">
-                                <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={35} height={35} className={cn("dark:invert-0 invert")}/>
-                            </button>
-                             <button onClick={handleWindowsInstallClick} className="cursor-pointer" title="Installer sur Ordinateur">
-                                <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Download for Windows" width={35} height={35} />
-                            </button>
-                        </div>
-                    </div> 
                 </div>
             </CardContent>
         </Card>
@@ -450,8 +441,8 @@ export default function SettingsPage() {
                                     <Label htmlFor="delete-password">Entrez votre mot de passe pour confirmer :</Label>
                                     <div className="relative">
                                         <Input id="delete-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10" />
-                                        <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
-                                            {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                         <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
+                                          {showCurrentPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                                         </button>
                                     </div>
                                 </div>
