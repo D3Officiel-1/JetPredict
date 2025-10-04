@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket, Gamepad2, TrendingUp, HandCoins, CheckCircle } from 'lucide-react';
+import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket, Gamepad2, TrendingUp, HandCoins } from 'lucide-react';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { PlanId } from '@/types';
@@ -42,6 +42,19 @@ const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title:
         </div>
     </div>
 );
+
+const StrategyItem = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
+    <div className="bg-muted/50 p-4 rounded-lg border border-border/50">
+        <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">{icon}</span>
+            {title}
+        </h3>
+        <p className="text-sm text-muted-foreground whitespace-pre-line">
+            {description}
+        </p>
+    </div>
+);
+
 
 const fabVariants = {
   closed: { scale: 1, rotate: 0 },
@@ -386,15 +399,31 @@ export default function Header() {
                     </TabsContent>
                     <TabsContent value="how-to" className="pt-4">
                         <div className="space-y-4">
-                            <div className="bg-muted/50 p-4 rounded-lg border border-border/50">
-                                <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
-                                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">1</span>
-                                    Comprendre le principe
-                                </h3>
-                                <p className="text-sm text-muted-foreground">
-                                    Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x. Chaque tour commence avec une mise et le multiplicateur augmente jusqu’à ce qu’il "crash" de manière aléatoire. Ton objectif est de retirer avant que le multiplicateur s’effondre, sinon tu perds toute ta mise. C’est un jeu de hasard pur, mais avec observation et timing, tu peux gérer ton risque. Le multiplicateur peut être très bas ou atteindre des valeurs très élevées (&gt;10x). Comprendre ce mécanisme est la première étape avant de commencer à miser sérieusement.
-                                </p>
-                            </div>
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">1</span>}
+                                title="Comprendre le principe"
+                                description="Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x. Chaque tour commence avec une mise et le multiplicateur augmente jusqu’à ce qu’il 'crash' de manière aléatoire. Ton objectif est de retirer avant que le multiplicateur s’effondre, sinon tu perds toute ta mise. C’est un jeu de hasard pur, mais avec observation et timing, tu peux gérer ton risque. Le multiplicateur peut être très bas ou atteindre des valeurs très élevées (>10x). Comprendre ce mécanisme est la première étape avant de commencer à miser sérieusement."
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">2</span>}
+                                title="Commencer petit"
+                                description="Avant de miser gros, teste toujours le jeu avec de petites mises.
+Exemple : 200–500 FCFA par tour pour un capital initial de 50 000 FCFA.
+Cela te permet de comprendre la vitesse de montée du multiplicateur et le timing optimal du retrait.
+Les petits tours servent aussi à observer les tendances et le comportement du jeu.
+Tu peux noter combien de tours finissent en crash bas et combien atteignent un multiplicateur élevé.
+Commencer petit limite ton risque et t’apprend à jouer intelligemment."
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">3</span>}
+                                title="Fixer un capital"
+                                description="Détermine exactement combien tu es prêt à jouer pour une session.
+Exemple : capital = 50 000 FCFA pour 1 journée de jeu.
+Ne dépasse jamais ce capital pour éviter de tout perdre sur une mauvaise série.
+Divise ce capital en petites portions pour chaque tour afin de mieux contrôler les mises.
+Cela t’évite de te retrouver à miser tout ton argent en une seule fois par frustration ou excès de confiance.
+Un capital clair permet de suivre tes gains et pertes plus efficacement."
+                            />
                         </div>
                     </TabsContent>
                 </Tabs>
