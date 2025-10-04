@@ -42,9 +42,14 @@ const NotificationIcon = ({ type, isRead }: { type: Notification['type'], isRead
         info: <Info className="h-5 w-5 text-yellow-400" />,
     };
     return (
-        <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-background border border-border">
+        <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-background border-2 border-border/50 shadow-lg">
             {icons[type] || icons.info}
-            {!isRead && <div className="absolute top-0 right-0 h-3 w-3 rounded-full bg-primary border-2 border-background" />}
+            {!isRead && (
+                <div className="absolute -top-1 -right-1 flex h-4 w-4">
+                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                     <span className="relative inline-flex rounded-full h-4 w-4 bg-primary border-2 border-background"></span>
+                </div>
+            )}
         </div>
     );
 };
@@ -155,10 +160,6 @@ export default function NotificationPage() {
 
  const handleNotificationClick = async (notification: Notification) => {
     if (!user || notification.isRead || notification.type === 'global') return;
-
-    if (notification.link) {
-      router.push(notification.link);
-    }
     
     const notificationRef = doc(db, 'users', user.uid, 'notifications', notification.id);
     await updateDoc(notificationRef, { isRead: true });
@@ -166,7 +167,7 @@ export default function NotificationPage() {
   
   const handleLinkClick = (e: React.MouseEvent, link: string) => {
     e.stopPropagation();
-    router.push(link);
+    window.open(link, '_blank', 'noopener,noreferrer');
   }
 
   const handleMarkAllAsRead = async () => {
@@ -264,25 +265,29 @@ export default function NotificationPage() {
                   initial="hidden"
                   animate="visible"
               >
-                  <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-border/30 -z-10"></div>
+                  <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-border/30 -z-10"></div>
                   {allNotifications.map((notif) => (
                       <motion.div
                           key={notif.id}
-                          className="relative flex items-start gap-4"
+                          className="relative flex items-start gap-4 sm:gap-6"
                           variants={itemVariants}
                       >
                           <NotificationIcon type={notif.type} isRead={notif.isRead} />
                           <motion.div
                               className={cn(
-                                  "flex-1 -mt-1 p-5 rounded-xl border transition-all duration-300 w-full",
-                                  !notif.isRead ? "bg-primary/5 border-primary/20 hover:border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.1),inset_0_1px_1px_hsl(var(--primary)/0.2)] cursor-pointer" : "bg-muted/30 border-border/30 hover:bg-muted/50",
-                                  notif.type === 'global' && "border-purple-500/30",
+                                "relative flex-1 -mt-1 p-5 rounded-lg border backdrop-blur-md transition-all duration-300 w-full overflow-hidden group",
+                                "before:absolute before:inset-0 before:-z-10 before:bg-gradient-to-br before:opacity-50",
+                                !notif.isRead ? "border-primary/30 before:from-primary/10 before:to-transparent shadow-[0_0_25px_hsl(var(--primary)/0.1)] cursor-pointer" : "border-border/30 before:from-muted/20 before:to-transparent",
+                                notif.type === 'global' && "border-purple-500/30 before:from-purple-500/10",
+                                "hover:-translate-y-1 hover:shadow-lg"
                               )}
                               onClick={() => handleNotificationClick(notif)}
-                              whileHover={{ y: -3 }}
+                              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)' }}
                           >
+                            <div className="absolute inset-0 bg-[linear-gradient(45deg,hsla(0,0%,100%,.03)_25%,transparent_25%,transparent_50%,hsla(0,0%,100%,.03)_50%,hsla(0,0%,100%,.03)_75%,transparent_75%,transparent)] bg-[length:60px_60px] opacity-50 -z-10"></div>
+                              
                               <div className="flex justify-between items-start mb-2">
-                                  <h3 className="font-semibold text-foreground">{notif.title}</h3>
+                                  <h3 className="font-semibold text-foreground text-lg">{notif.title}</h3>
                                   <p className="text-xs text-muted-foreground whitespace-nowrap">
                                       {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                                   </p>
