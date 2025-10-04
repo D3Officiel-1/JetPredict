@@ -28,15 +28,17 @@ export default function NotFoundPage() {
 
     useEffect(() => {
       // Defer calculation until client-side mount
-      setInitialPositions(
-        Array.from({ length: 30 }).map(() => ({
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          duration: 8 + Math.random() * 8,
-          delay: Math.random() * 10,
-          size: Math.random() * 2 + 1,
-        }))
-      );
+      if (typeof window !== 'undefined') {
+        setInitialPositions(
+          Array.from({ length: 30 }).map(() => ({
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            duration: 8 + Math.random() * 8,
+            delay: Math.random() * 10,
+            size: Math.random() * 2 + 1,
+          }))
+        );
+      }
     }, []);
 
     if (!isClient || initialPositions.length === 0) return null;
