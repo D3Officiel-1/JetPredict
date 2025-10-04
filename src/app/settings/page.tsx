@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, KeyRound, Mail, Trash2, LogOut, Palette, Loader2, ShieldAlert, Eye, EyeOff, Download, Bell, Vibrate, Music, Sun, Moon, Laptop, MoreVertical, Share2, Smartphone, MonitorDown, CheckCircle, AppWindow } from 'lucide-react';
+import { ArrowLeft, KeyRound, Mail, Trash2, LogOut, Palette, Loader2, ShieldAlert, Eye, EyeOff, Download, Bell, Vibrate, Music, Sun, Moon, Laptop, MoreVertical, Share2, Smartphone, MonitorDown, CheckCircle, AppWindow, Compass } from 'lucide-react';
 import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -88,6 +88,8 @@ export default function SettingsPage() {
       vibrationEnabled: true,
   });
 
+  const [isFabEnabled, setIsFabEnabled] = useState(true);
+
   const { theme, setTheme } = useTheme();
 
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -131,6 +133,16 @@ export default function SettingsPage() {
   };
 
   useEffect(() => {
+    try {
+        const savedFabStateRaw = localStorage.getItem('fabState');
+        if (savedFabStateRaw) {
+            const parsedState = JSON.parse(savedFabStateRaw);
+            if (typeof parsedState.isDisabled === 'boolean') {
+                 setIsFabEnabled(!parsedState.isDisabled);
+            }
+        }
+    } catch(e) { console.error("Failed to parse FAB state from localStorage", e); }
+
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         router.push('/login');
@@ -196,6 +208,19 @@ export default function SettingsPage() {
           toast({ variant: 'destructive', title: 'Erreur', description: 'Impossible de sauvegarder le paramètre.' });
           // Revert UI change on failure
           setNotificationSettings(s => ({...s, [key]: !value}));
+      }
+  };
+
+  const handleFabEnabledChange = (enabled: boolean) => {
+      setIsFabEnabled(enabled);
+      try {
+          const currentStateRaw = localStorage.getItem('fabState');
+          const currentState = currentStateRaw ? JSON.parse(currentStateRaw) : {};
+          const newState = { ...currentState, isDisabled: !enabled };
+          localStorage.setItem('fabState', JSON.stringify(newState));
+          window.dispatchEvent(new CustomEvent('fabstate-change'));
+      } catch(e) {
+          console.error("Failed to update FAB state in localStorage", e);
       }
   };
 
@@ -381,6 +406,12 @@ export default function SettingsPage() {
                         </Button>
                      </div>
                 </div>
+                 <SettingItem 
+                    icon={<Compass size={24} />} 
+                    title="Bouton d'actions rapides" 
+                    description="Afficher le bouton flottant sur l'application." 
+                    action={<Switch checked={isFabEnabled} onCheckedChange={handleFabEnabledChange} />} 
+                />
                 <div>
                     <Label className="text-sm font-semibold text-muted-foreground ml-1 mb-2 block">Installer l'Application</Label>
                     <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-4 border border-border/30 items-end">

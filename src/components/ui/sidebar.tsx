@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -139,6 +140,8 @@ export default function Header() {
   const [isFabMenuOpen, setIsFabMenuOpen] = useState(false);
   const [isGuideOpen, setIsGuideOpen] = useState(false);
   
+  const [isFabDisabled, setIsFabDisabled] = useState(false);
+
   const auth = getAuth(app);
   const router = useRouter();
   const pathname = usePathname();
@@ -163,6 +166,23 @@ export default function Header() {
   }, [user, toast]);
 
   useEffect(() => {
+    const handleFabStateChange = () => {
+        try {
+            const savedStateRaw = localStorage.getItem('fabState');
+            if (savedStateRaw) {
+                const parsedState = JSON.parse(savedStateRaw);
+                setIsFabDisabled(!!parsedState.isDisabled);
+            }
+        } catch (e) {
+            console.error("Failed to read FAB state on change", e);
+        }
+    };
+    
+    // Initial load
+    handleFabStateChange();
+
+    window.addEventListener('fabstate-change', handleFabStateChange);
+
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) return;
       setUser(currentUser);
@@ -194,7 +214,10 @@ export default function Header() {
       };
     });
 
-    return () => unsubscribeAuth();
+    return () => {
+        unsubscribeAuth();
+        window.removeEventListener('fabstate-change', handleFabStateChange);
+    };
   }, [auth]);
 
   const handleLogout = async () => {
@@ -300,41 +323,43 @@ export default function Header() {
         </div>
       </header>
       
-      <div className="fixed bottom-6 right-6 z-40">
-        <motion.div
-          className="relative flex flex-col items-center gap-4"
-          initial={false}
-          animate={isFabMenuOpen ? "open" : "closed"}
-        >
-          <AnimatePresence>
-            {isFabMenuOpen && (
-              <motion.div
-                variants={menuContainerVariants}
-                className="absolute bottom-20 flex flex-col items-center gap-4"
-              >
-                <FABMenuItem icon={<HelpCircle size={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
-                <FABMenuItem icon={<WhatsAppIcon size={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
-                <FABMenuItem icon={<TelegramIcon size={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <motion.button
-            variants={fabVariants}
-            className="relative h-16 w-16 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
-            onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
-            whileTap={{ scale: 0.9 }}
-          >
+      {!isFabDisabled && (
+          <div className="fixed bottom-6 right-6 z-40">
             <motion.div
-              animate={{ rotate: isFabMenuOpen ? 135 : 0, scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="relative flex flex-col items-center gap-4"
+              initial={false}
+              animate={isFabMenuOpen ? "open" : "closed"}
             >
-              <X size={32} style={{ display: isFabMenuOpen ? 'block' : 'none' }} />
-              <Compass size={32} style={{ display: isFabMenuOpen ? 'none' : 'block' }} />
+              <AnimatePresence>
+                {isFabMenuOpen && (
+                  <motion.div
+                    variants={menuContainerVariants}
+                    className="absolute bottom-20 flex flex-col items-center gap-4"
+                  >
+                    <FABMenuItem icon={<HelpCircle size={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
+                    <FABMenuItem icon={<WhatsAppIcon size={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
+                    <FABMenuItem icon={<TelegramIcon size={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <motion.button
+                variants={fabVariants}
+                className="relative h-16 w-16 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
+                onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
+                whileTap={{ scale: 0.9 }}
+              >
+                <motion.div
+                  animate={{ rotate: isFabMenuOpen ? 135 : 0, scale: 1 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                >
+                  <X size={32} style={{ display: isFabMenuOpen ? 'block' : 'none' }} />
+                  <Compass size={32} style={{ display: isFabMenuOpen ? 'none' : 'block' }} />
+                </motion.div>
+              </motion.button>
             </motion.div>
-          </motion.button>
-        </motion.div>
-      </div>
+          </div>
+      )}
 
        <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
             <DialogContent className="max-w-md">
