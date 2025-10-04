@@ -401,45 +401,39 @@ export default function SettingsPage() {
             </CardContent>
         </Card>
         
-        <div className="relative p-6 bg-red-950/50 border border-red-500/30 rounded-2xl overflow-hidden shadow-lg shadow-red-500/10 group">
-          <motion.div 
-            className="absolute inset-0 border-2 border-red-500/50 rounded-2xl pointer-events-none"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: [1, 1.01, 1], opacity: 1 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          ></motion.div>
+        <div className="relative p-6 bg-red-500/5 dark:bg-red-950/50 border border-destructive/20 dark:border-red-500/30 rounded-2xl overflow-hidden shadow-lg shadow-red-500/10 group">
             <div className="absolute inset-0 bg-grid-pattern opacity-[0.05]"></div>
             
             <div className="text-center mb-6">
-                <h3 className="font-mono uppercase tracking-widest text-red-400"> // Zone de Danger //</h3>
-                <p className="text-sm text-red-400/60">Actions irréversibles. Procéder avec prudence.</p>
+                <h3 className="font-mono uppercase tracking-widest text-destructive dark:text-red-400"> // Zone de Danger //</h3>
+                <p className="text-sm text-destructive/70 dark:text-red-400/60">Actions irréversibles. Procéder avec prudence.</p>
             </div>
 
             <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-black/20 rounded-lg border border-red-500/20">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-background/30 rounded-lg border border-destructive/20 dark:border-red-500/20">
                     <div className="flex items-center gap-3">
-                        <LogOut className="h-6 w-6 text-red-400"/>
+                        <LogOut className="h-6 w-6 text-destructive dark:text-red-400"/>
                         <div>
                             <h4 className="font-semibold text-foreground">Terminer la session</h4>
-                            <p className="text-sm text-red-400/70">Mettre fin à votre session active.</p>
+                            <p className="text-sm text-destructive/80 dark:text-red-400/70">Mettre fin à votre session active.</p>
                         </div>
                     </div>
-                    <Button variant="outline" onClick={handleLogout} className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300 w-full sm:w-auto">
+                    <Button variant="outline" onClick={handleLogout} className="border-destructive/50 text-destructive dark:border-red-500/50 dark:text-red-400 hover:bg-destructive/10 dark:hover:bg-red-500/10 dark:hover:text-red-300 w-full sm:w-auto">
                         Déconnexion
                     </Button>
                 </div>
 
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-black/20 rounded-lg border border-red-500/20">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-background/30 rounded-lg border border-destructive/20 dark:border-red-500/20">
                     <div className="flex items-center gap-3">
-                        <Trash2 className="h-6 w-6 text-red-400"/>
+                        <Trash2 className="h-6 w-6 text-destructive dark:text-red-400"/>
                         <div>
                             <h4 className="font-semibold text-foreground">Supprimer le compte</h4>
-                            <p className="text-sm text-red-400/70">Effacement permanent des données.</p>
+                            <p className="text-sm text-destructive/80 dark:text-red-400/70">Effacement permanent des données.</p>
                         </div>
                     </div>
                      <AlertDialog>
                         <AlertDialogTrigger asChild>
-                             <Button variant="destructive" className="bg-red-600/80 hover:bg-red-600 text-white w-full sm:w-auto">
+                             <Button variant="destructive" className="bg-destructive/90 dark:bg-red-600/80 hover:bg-destructive dark:hover:bg-red-600 text-white w-full sm:w-auto">
                                 Initier Suppression
                             </Button>
                         </AlertDialogTrigger>
