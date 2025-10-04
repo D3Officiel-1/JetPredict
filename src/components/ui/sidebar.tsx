@@ -51,26 +51,22 @@ const fabVariants = {
 const menuContainerVariants = {
   closed: {
     opacity: 0,
-    scale: 0,
+    scale: 0.8,
+    y: 50,
     transition: {
       when: "afterChildren",
       staggerChildren: 0.05,
       staggerDirection: -1,
-      type: "spring",
-      stiffness: 200,
-      damping: 20,
     },
   },
   open: {
     opacity: 1,
     scale: 1,
+    y: 0,
     transition: {
       when: "beforeChildren",
       staggerChildren: 0.08,
       delayChildren: 0.1,
-      type: "spring",
-      stiffness: 300,
-      damping: 20,
     },
   },
 };
@@ -78,12 +74,7 @@ const menuContainerVariants = {
 
 const menuItemVariants = {
   closed: { opacity: 0, y: 20, scale: 0.8 },
-  open: {
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: { type: "spring", stiffness: 400, damping: 15 },
-  },
+  open: { opacity: 1, y: 0, scale: 1 },
 };
 
 const FABMenuItem = ({
@@ -106,7 +97,7 @@ const FABMenuItem = ({
     const props = href && !disabled ? { href, target: "_blank", rel: "noopener noreferrer" } : { onClick: disabled ? () => {} : onClick, disabled };
     
     return (
-        <motion.div variants={menuItemVariants}>
+        <motion.div variants={menuItemVariants} transition={{ type: "spring", stiffness: 400, damping: 15 }}>
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -367,25 +358,46 @@ export default function Header() {
        <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Guide d'Utilisation</DialogTitle>
+                    <DialogTitle>Guide</DialogTitle>
                 </DialogHeader>
-                <div className="py-4 space-y-6">
-                    <GuideStep
-                        icon={<Users />}
-                        title="1. Niveaux de Risque"
-                        description="Choisissez un niveau de risque. Plus le risque est élevé, plus les cotes sont hautes mais espacées dans le temps."
-                    />
-                    <GuideStep
-                        icon={<Wallet />}
-                        title="2. Historique des Crashs"
-                        description="Saisissez l'historique des derniers multiplicateurs de crash, séparés par un espace. Plus il y a de données, plus l'IA est précise."
-                    />
-                    <GuideStep
-                        icon={<Beaker />}
-                        title="3. Lancez la Prédiction"
-                        description="Cliquez sur 'Prédire'. L'IA analyse les données et génère une liste de cotes potentielles avec leurs heures estimées."
-                    />
-                </div>
+                <Tabs defaultValue="guide" className="py-4">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="guide">Guide d'utilisation</TabsTrigger>
+                        <TabsTrigger value="how-to">Comment Jouer</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="guide" className="pt-4">
+                         <div className="space-y-6">
+                            <GuideStep
+                                icon={<Users />}
+                                title="1. Niveaux de Risque"
+                                description="Choisissez un niveau de risque. Plus le risque est élevé, plus les cotes sont hautes mais espacées dans le temps."
+                            />
+                            <GuideStep
+                                icon={<Wallet />}
+                                title="2. Historique des Crashs"
+                                description="Saisissez l'historique des derniers multiplicateurs de crash, séparés par un espace. Plus il y a de données, plus l'IA est précise."
+                            />
+                            <GuideStep
+                                icon={<Beaker />}
+                                title="3. Lancez la Prédiction"
+                                description="Cliquez sur 'Prédire'. L'IA analyse les données et génère une liste de cotes potentielles avec leurs heures estimées."
+                            />
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="how-to" className="pt-4">
+                        <div className="space-y-4">
+                            <div className="bg-muted/50 p-4 rounded-lg border border-border/50">
+                                <h3 className="font-semibold text-foreground mb-2 flex items-center gap-2">
+                                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">1</span>
+                                    Comprendre le principe
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                    Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x. Chaque tour commence avec une mise et le multiplicateur augmente jusqu’à ce qu’il "crash" de manière aléatoire. Ton objectif est de retirer avant que le multiplicateur s’effondre, sinon tu perds toute ta mise. C’est un jeu de hasard pur, mais avec observation et timing, tu peux gérer ton risque. Le multiplicateur peut être très bas ou atteindre des valeurs très élevées (&gt;10x). Comprendre ce mécanisme est la première étape avant de commencer à miser sérieusement.
+                                </p>
+                            </div>
+                        </div>
+                    </TabsContent>
+                </Tabs>
             </DialogContent>
         </Dialog>
     </>
