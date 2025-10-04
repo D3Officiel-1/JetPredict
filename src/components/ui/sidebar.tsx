@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket, Gamepad2, TrendingUp, HandCoins, CheckCircle } from 'lucide-react';
+import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket, Gamepad2, TrendingUp, HandCoins, CheckCircle, LineChart, Target, PictureInPicture, BrainCircuit } from 'lucide-react';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { PlanId } from '@/types';
@@ -32,9 +32,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 
-const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
+const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string | React.ReactNode }) => (
     <div className="flex items-start gap-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 mt-1">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0 mt-1 border border-primary/20">
             {icon}
         </div>
         <div>
@@ -386,21 +386,38 @@ export default function Header() {
                     </TabsList>
                     <div className="flex-1 overflow-y-auto mt-4 pr-3 -mr-6">
                         <TabsContent value="guide" className="pt-2">
-                            <div className="space-y-6">
+                           <div className="space-y-6">
                                 <GuideStep
-                                    icon={<Users />}
-                                    title="1. Niveaux de Risque"
-                                    description="Choisissez un niveau de risque. Plus le risque est élevé, plus les cotes sont hautes mais espacées dans le temps."
+                                    icon={<TrendingUp />}
+                                    title="1. Le Tableau de Bord"
+                                    description={
+                                        <span>
+                                            Choisissez un <strong>Niveau de Risque</strong> (Faible, Modéré, etc.) pour ajuster le type de prédictions. Ensuite, dans la zone de texte, collez l'<strong>historique des crashs</strong> récents (ex: 1.23 4.56 2.01). Cliquez sur le bouton <strong>"Prédire"</strong> pour lancer l'analyse IA.
+                                        </span>
+                                    }
                                 />
                                 <GuideStep
-                                    icon={<Wallet />}
-                                    title="2. Historique des Crashs"
-                                    description="Saisissez l'historique des derniers multiplicateurs de crash, séparés par un espace. Plus il y a de données, plus l'IA est précise."
+                                    icon={<Target />}
+                                    title="2. Les Prédictions"
+                                    description={
+                                        <span>
+                                            Les résultats apparaissent dans la carte "Prochaines Prédictions". Chaque ligne indique une <strong>heure estimée</strong> et une <strong>cote prédite</strong>. Cliquez sur une prédiction pour voir plus de détails. Utilisez le bouton <strong>Copier</strong> pour partager la liste, ou <strong>Superposer</strong> (premium) pour afficher une fenêtre flottante.
+                                        </span>
+                                    }
                                 />
                                 <GuideStep
-                                    icon={<Beaker />}
-                                    title="3. Lancez la Prédiction"
-                                    description="Cliquez sur 'Prédire'. L'IA analyse les données et génère une liste de cotes potentielles avec leurs heures estimées."
+                                    icon={<BrainCircuit />}
+                                    title="3. Stratégies de l'IA"
+                                    description={
+                                        <span>
+                                            En cliquant sur une prédiction, une fenêtre s'ouvre. Si vous avez un forfait premium, l'IA générera deux stratégies : une <strong>Conservatrice</strong> pour sécuriser des gains, et une <strong>Agressive</strong> pour viser plus haut. Ces conseils vous aident à décider comment parier.
+                                        </span>
+                                    }
+                                />
+                                <GuideStep
+                                    icon={<LineChart />}
+                                    title="4. Le Graphique"
+                                    description="Le graphique vous donne une vue d'ensemble visuelle de toutes les cotes prédites dans le temps. Survolez les points pour voir les valeurs exactes. C'est un excellent outil pour repérer rapidement les pics de cotes (les opportunités les plus rentables)."
                                 />
                             </div>
                         </TabsContent>
@@ -536,15 +553,15 @@ export default function Header() {
                                                     <div>Tour</div>
                                                     <div>Mise</div>
                                                     <div>Cible</div>
-                                                    <div>Gain Pot.</div>
+                                                    <div className="text-right">Gain Pot.</div>
                                                     <div className="text-left">Action</div>
                                                 </div>
                                                 <div className="grid grid-cols-5 gap-x-2 gap-y-2 text-center items-center">
-                                                    <div>1</div><div>500</div><div>1,8x</div><div>900</div><div className="text-left text-green-400">Retirer tôt</div>
-                                                    <div>2</div><div>500</div><div>2,5x</div><div>1 250</div><div className="text-left text-blue-400">Retirer moyen</div>
-                                                    <div>3</div><div>500</div><div>5x</div><div>1 500</div><div className="text-left text-blue-400">Retirer à 3x</div>
-                                                    <div>4</div><div>200</div><div>10x</div><div>2 000</div><div className="text-left text-orange-400">Risqué</div>
-                                                    <div>5</div><div>1 000</div><div>1,5x</div><div>1 500</div><div className="text-left text-green-400">Retirer tôt</div>
+                                                    <div>1</div><div>500</div><div>1,8x</div><div className="text-right">900</div><div className="text-left text-green-400">Retirer tôt</div>
+                                                    <div>2</div><div>500</div><div>2,5x</div><div className="text-right">1 250</div><div className="text-left text-blue-400">Retirer moyen</div>
+                                                    <div>3</div><div>500</div><div>5x</div><div className="text-right">1 500</div><div className="text-left text-blue-400">Retirer à 3x</div>
+                                                    <div>4</div><div>200</div><div>10x</div><div className="text-right">2 000</div><div className="text-left text-orange-400">Risqué</div>
+                                                    <div>5</div><div>1 000</div><div>1,5x</div><div className="text-right">1 500</div><div className="text-left text-green-400">Retirer tôt</div>
                                                 </div>
                                             </div>
                                             <div className="mt-4 space-y-2">
