@@ -5,7 +5,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { getAuth, onAuthStateChanged, User, signOut } from 'firebase/auth';
 import { doc, updateDoc, onSnapshot, collection, query, where } from "firebase/firestore";
 import { app, db, requestForToken, onMessageListener } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -141,6 +141,7 @@ export default function Header() {
   
   const auth = getAuth(app);
   const router = useRouter();
+  const pathname = usePathname();
   const { toast } = useToast();
   
     useEffect(() => {
@@ -264,13 +265,13 @@ export default function Header() {
                     </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator className="my-2 bg-border/50" />
-                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/predict"><Rocket className="mr-2 h-4 w-4" /><span>Prédiction</span></Link></DropdownMenuItem>
-                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/notification"><Bell className="mr-2 h-4 w-4" /><span>Notifications</span>{unreadCount > 0 && <span className="notification-dot"></span>}</Link></DropdownMenuItem>
-                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/profile"><UserIcon className="mr-2 h-4 w-4" /><span>Profil</span></Link></DropdownMenuItem>
-                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/referral"><Users className="mr-2 h-4 w-4" /><span>Parrainage</span></Link></DropdownMenuItem>
-                <DropdownMenuItem asChild disabled={!isVerified || !canAccessPremiumFeatures}><Link href="/simulation"><Beaker className="mr-2 h-4 w-4" /><span>Simulation</span></Link></DropdownMenuItem>
-                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/settings"><Settings className="mr-2 h-4 w-4" /><span>Paramètres</span></Link></DropdownMenuItem>
-                <DropdownMenuItem asChild disabled={!isVerified || !canAccessSupport}><Link href="/support"><LifeBuoy className="mr-2 h-4 w-4" /><span>Support</span></Link></DropdownMenuItem>
+                {pathname !== '/predict' && <DropdownMenuItem asChild disabled={!isVerified}><Link href="/predict"><Rocket className="mr-2 h-4 w-4" /><span>Prédiction</span></Link></DropdownMenuItem>}
+                {pathname !== '/notification' && <DropdownMenuItem asChild disabled={!isVerified}><Link href="/notification"><Bell className="mr-2 h-4 w-4" /><span>Notifications</span>{unreadCount > 0 && <span className="notification-dot"></span>}</Link></DropdownMenuItem>}
+                {pathname !== '/profile' && <DropdownMenuItem asChild disabled={!isVerified}><Link href="/profile"><UserIcon className="mr-2 h-4 w-4" /><span>Profil</span></Link></DropdownMenuItem>}
+                {pathname !== '/referral' && <DropdownMenuItem asChild disabled={!isVerified}><Link href="/referral"><Users className="mr-2 h-4 w-4" /><span>Parrainage</span></Link></DropdownMenuItem>}
+                {pathname !== '/simulation' && <DropdownMenuItem asChild disabled={!isVerified || !canAccessPremiumFeatures}><Link href="/simulation"><Beaker className="mr-2 h-4 w-4" /><span>Simulation</span></Link></DropdownMenuItem>}
+                {pathname !== '/settings' && <DropdownMenuItem asChild disabled={!isVerified}><Link href="/settings"><Settings className="mr-2 h-4 w-4" /><span>Paramètres</span></Link></DropdownMenuItem>}
+                {pathname !== '/support' && <DropdownMenuItem asChild disabled={!isVerified || !canAccessSupport}><Link href="/support"><LifeBuoy className="mr-2 h-4 w-4" /><span>Support</span></Link></DropdownMenuItem>}
                 <DropdownMenuSeparator className="my-2 bg-border/50"/>
                 <DropdownMenuItem onClick={handleLogout} className="text-red-400 focus:bg-red-500/10 focus:text-red-400"><LogOut className="mr-2 h-4 w-4" /><span>Se déconnecter</span></DropdownMenuItem>
               </div>
@@ -309,10 +310,7 @@ export default function Header() {
             {isFabMenuOpen && (
               <motion.div
                 variants={menuContainerVariants}
-                className="flex flex-col items-center gap-4"
-                initial="closed"
-                animate="open"
-                exit="closed"
+                className="absolute bottom-20 flex flex-col items-center gap-4"
               >
                 <FABMenuItem icon={<HelpCircle size={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
                 <FABMenuItem icon={<WhatsAppIcon size={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
@@ -323,7 +321,7 @@ export default function Header() {
 
           <motion.button
             variants={fabVariants}
-            className="relative h-16 w-16 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center mt-4"
+            className="relative h-16 w-16 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
             onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
             whileTap={{ scale: 0.9 }}
           >
