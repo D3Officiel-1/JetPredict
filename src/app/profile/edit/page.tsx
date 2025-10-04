@@ -24,8 +24,49 @@ interface UserData {
   lastName: string;
   username: string;
   phone: string;
+  countryCode: string;
   favoriteGame: string;
 }
+
+const countries = [
+    { name: 'Bénin', code: '+229', flag: 'https://flagcdn.com/bj.svg' },
+    { name: 'Botswana', code: '+267', flag: 'https://flagcdn.com/bw.svg' },
+    { name: 'Burkina Faso', code: '+226', flag: 'https://flagcdn.com/bf.svg' },
+    { name: 'Cameroun', code: '+237', flag: 'https://flagcdn.com/cm.svg' },
+    { name: 'Centrafrique (RCA)', code: '+236', flag: 'https://flagcdn.com/cf.svg' },
+    { name: 'Tchad', code: '+235', flag: 'https://flagcdn.com/td.svg' },
+    { name: 'Côte d’Ivoire', code: '+225', flag: 'https://flagcdn.com/ci.svg' },
+    { name: 'Égypte', code: '+20', flag: 'https://flagcdn.com/eg.svg' },
+    { name: 'France', code: '+33', flag: 'https://flagcdn.com/fr.svg' },
+    { name: 'Gabon', code: '+241', flag: 'https://flagcdn.com/ga.svg' },
+    { name: 'Gambie', code: '+220', flag: 'https://flagcdn.com/gm.svg' },
+    { name: 'Ghana', code: '+233', flag: 'https://flagcdn.com/gh.svg' },
+    { name: 'Guinée (Conakry)', code: '+224', flag: 'https://flagcdn.com/gn.svg' },
+    { name: 'Guinée-Bissau', code: '+245', flag: 'https://flagcdn.com/gw.svg' },
+    { name: 'Liberia (Libéria)', code: '+231', flag: 'https://flagcdn.com/lr.svg' },
+    { name: 'Luxembourg', code: '+352', flag: 'https://flagcdn.com/lu.svg' },
+    { name: 'Madagascar', code: '+261', flag: 'https://flagcdn.com/mg.svg' },
+    { name: 'Mali', code: '+223', flag: 'https://flagcdn.com/ml.svg' },
+    { name: 'Mauritanie', code: '+222', flag: 'https://flagcdn.com/mr.svg' },
+    { name: 'Maroc', code: '+212', flag: 'https://flagcdn.com/ma.svg' },
+    { name: 'Moldavie', code: '+373', flag: 'https://flagcdn.com/md.svg' },
+    { name: 'Niger', code: '+227', flag: 'https://flagcdn.com/ne.svg' },
+    { name: 'Nigeria', code: '+234', flag: 'https://flagcdn.com/ng.svg' },
+    { name: 'Pologne', code: '+48', flag: 'https://flagcdn.com/pl.svg' },
+    { name: 'Roumanie', code: '+40', flag: 'https://flagcdn.com/ro.svg' },
+    { name: 'Rwanda', code: '+250', flag: 'https://flagcdn.com/rw.svg' },
+    { name: 'Sénégal', code: '+221', flag: 'https://flagcdn.com/sn.svg' },
+    { name: 'Sierra Leone', code: '+232', flag: 'https://flagcdn.com/sl.svg' },
+    { name: 'Slovaquie', code: '+421', flag: 'https://flagcdn.com/sk.svg' },
+    { name: 'South Africa (Afrique du Sud)', code: '+27', flag: 'https://flagcdn.com/za.svg' },
+    { name: 'South Sudan (Soudan du Sud)', code: '+211', flag: 'https://flagcdn.com/ss.svg' },
+    { name: 'Soudan', code: '+249', flag: 'https://flagcdn.com/sd.svg' },
+    { name: 'Togo', code: '+228', flag: 'https://flagcdn.com/tg.svg' },
+    { name: 'Tunisie', code: '+216', flag: 'https://flagcdn.com/tn.svg' },
+    { name: 'Ouganda (Uganda)', code: '+256', flag: 'https://flagcdn.com/ug.svg' },
+    { name: 'Zambie', code: '+260', flag: 'https://flagcdn.com/zm.svg' },
+    { name: 'Iran', code: '+98', flag: 'https://flagcdn.com/ir.svg' },
+];
 
 const FormRow = ({ icon, label, children }: { icon: React.ReactNode, label: string, children: React.ReactNode }) => (
     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
@@ -47,6 +88,7 @@ export default function EditProfilePage() {
     lastName: '',
     username: '',
     phone: '',
+    countryCode: '+225',
     favoriteGame: '',
   });
   const [initialUsername, setInitialUsername] = useState('');
@@ -74,11 +116,22 @@ export default function EditProfilePage() {
       getDoc(userDocRef).then((docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
+          const fullPhone = data.phone || '';
+          let countryCode = '+225';
+          let phone = fullPhone;
+
+          const matchedCountry = countries.find(c => fullPhone.startsWith(c.code));
+          if(matchedCountry) {
+              countryCode = matchedCountry.code;
+              phone = fullPhone.substring(matchedCountry.code.length);
+          }
+
           setFormData({
             firstName: data.firstName || '',
             lastName: data.lastName || '',
             username: data.username || '',
-            phone: data.phone || '',
+            phone: phone,
+            countryCode: countryCode,
             favoriteGame: data.favoriteGame || '',
           });
           setInitialUsername(data.username || '');
@@ -130,8 +183,8 @@ export default function EditProfilePage() {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
   
-  const handleSelectChange = (value: string) => {
-      setFormData(p => ({...p, favoriteGame: value}));
+  const handleSelectChange = (field: keyof UserData, value: string) => {
+      setFormData(p => ({...p, [field]: value}));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -149,6 +202,8 @@ export default function EditProfilePage() {
     try {
         const batch = writeBatch(db);
         const userDocRef = doc(db, "users", user.uid);
+        
+        const fullPhoneNumber = `${formData.countryCode}${formData.phone}`;
 
         const usernameChanged = formData.username !== initialUsername;
         if (usernameChanged && initialUsername) {
@@ -160,7 +215,13 @@ export default function EditProfilePage() {
             });
         }
         
-        batch.update(userDocRef, { ...formData });
+        batch.update(userDocRef, { 
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            username: formData.username,
+            phone: fullPhoneNumber,
+            favoriteGame: formData.favoriteGame
+        });
 
         await batch.commit();
 
@@ -213,7 +274,7 @@ export default function EditProfilePage() {
   if (isLoading) {
     return (
       <div className="flex min-h-screen w-full flex-col bg-background items-center justify-center text-center p-4">
-        <Image src="https://1play.gamedev-tech.cc/lucky_grm/assets/media/c544881eb170e73349e4c92d1706a96c.svg" alt="Loading..." width={100} height={100} className="animate-pulse" />
+        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="animate-pulse" />
         <p className="mt-4 text-muted-foreground">Chargement des informations...</p>
       </div>
     );
@@ -254,11 +315,28 @@ export default function EditProfilePage() {
                     </FormRow>
 
                     <FormRow icon={<Phone size={20} />} label="Téléphone">
-                        <Input id="phone" value={formData.phone} onChange={handleChange} placeholder="+XXX..." className="bg-background/50"/>
+                        <div className="flex gap-2">
+                            <Select value={formData.countryCode} onValueChange={(value) => handleSelectChange('countryCode', value)}>
+                                <SelectTrigger className="w-[120px] bg-background/50">
+                                    <SelectValue placeholder="Pays" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {countries.map(country => (
+                                        <SelectItem key={country.code} value={country.code}>
+                                            <div className="flex items-center gap-2">
+                                                <Image src={country.flag} alt={country.name} width={20} height={15} />
+                                                <span>{country.code}</span>
+                                            </div>
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Input id="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="Numéro" className="flex-1 bg-background/50" />
+                        </div>
                     </FormRow>
 
                     <FormRow icon={<Gamepad2 size={20} />} label="Jeu Préféré">
-                        <Select value={formData.favoriteGame} onValueChange={handleSelectChange}>
+                        <Select value={formData.favoriteGame} onValueChange={(value) => handleSelectChange('favoriteGame', value)}>
                             <SelectTrigger className="bg-background/50">
                                 <SelectValue placeholder="Sélectionnez un jeu" />
                             </SelectTrigger>
