@@ -27,20 +27,19 @@ export default function NotFoundPage() {
     const [initialPositions, setInitialPositions] = useState<any[]>([]);
 
     useEffect(() => {
-      if (typeof window !== 'undefined') {
-        setInitialPositions(
-          Array.from({ length: 30 }).map(() => ({
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            duration: 8 + Math.random() * 8,
-            delay: Math.random() * 10,
-            size: Math.random() * 2 + 1,
-          }))
-        );
-      }
+      // Defer calculation until client-side mount
+      setInitialPositions(
+        Array.from({ length: 30 }).map(() => ({
+          x: Math.random() * window.innerWidth,
+          y: Math.random() * window.innerHeight,
+          duration: 8 + Math.random() * 8,
+          delay: Math.random() * 10,
+          size: Math.random() * 2 + 1,
+        }))
+      );
     }, []);
 
-    if (initialPositions.length === 0) return null;
+    if (!isClient || initialPositions.length === 0) return null;
 
     return (
       <>
@@ -117,7 +116,7 @@ export default function NotFoundPage() {
         }}
       />
       
-      {isClient && <ParticleEffects />}
+      <ParticleEffects />
 
       {/* Content */}
       <div className="relative z-20 flex w-full max-w-4xl flex-col items-center">
