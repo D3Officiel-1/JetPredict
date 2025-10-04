@@ -2,17 +2,16 @@
 
 'use client';
 
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink, MoreVertical, Eye, EyeOff, X, CheckSquare, Square } from 'lucide-react';
 import Link from 'next/link';
-import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, getDocs, where, Timestamp, deleteDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, deleteDoc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
 import { MailOpenIcon } from '@/components/icons';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Checkbox } from '@/components/ui/checkbox';
 import Image from 'next/image';
@@ -45,10 +44,12 @@ const NotificationIcon = ({ type, isRead }: { type: Notification['type'], isRead
     };
     return (
         <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-background border-2 border-border/50 shadow-lg">
+            {!isRead && (
+                <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-70"></div>
+            )}
             {icons[type] || icons.info}
             {!isRead && (
                 <div className="absolute -top-1 -right-1 flex h-4 w-4">
-                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                      <span className="relative inline-flex rounded-full h-4 w-4 bg-primary border-2 border-background"></span>
                 </div>
             )}
@@ -101,6 +102,10 @@ export default function NotificationPage() {
         } else {
             newSet.add(notifId);
         }
+        // If last item is deselected, exit selection mode
+        if (newSet.size === 0) {
+            setSelectionMode(false);
+        }
         return newSet;
     });
   };
@@ -108,6 +113,7 @@ export default function NotificationPage() {
   const handleSelectAll = () => {
     if (selectedIds.size === personalNotifications.length) {
         setSelectedIds(new Set());
+        setSelectionMode(false);
     } else {
         setSelectedIds(new Set(personalNotifications.map(n => n.id)));
     }
@@ -295,39 +301,70 @@ export default function NotificationPage() {
             </p>
           </div>
         
-          <AnimatePresence>
-            {selectionMode && (
-                <motion.div 
-                    className="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 bg-muted/50 p-3 rounded-lg border border-border/50"
-                    initial={{ opacity: 0, y: -20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                >
-                    <div className="flex items-center gap-2">
-                         <Button variant="outline" size="sm" onClick={() => { setSelectionMode(false); setSelectedIds(new Set()); }}>
-                            <X className="h-4 w-4 mr-2" />
-                            Annuler
-                        </Button>
-                        <Button variant="outline" size="sm" onClick={handleSelectAll}>
-                           {selectedIds.size === personalNotifications.length ? <CheckSquare className="h-4 w-4 mr-2" /> : <Square className="h-4 w-4 mr-2" />}
-                           Tout Sél.
-                        </Button>
-                    </div>
-                    {selectedIds.size >= 2 && (
-                        <div className="flex flex-col sm:flex-row items-center gap-2 mt-2 sm:mt-0">
-                             <Button variant="secondary" size="sm" onClick={() => handleBulkAction('read')} className="w-full sm:w-auto">
-                                <CheckCheck className="h-4 w-4 mr-2" />
-                                Marquer comme lu
+            <AnimatePresence>
+                {selectionMode && (
+                    <motion.div
+                        className="sticky top-[70px] z-20 mb-6 flex h-14 items-center justify-between gap-4 rounded-xl border border-primary/20 bg-background/80 px-4 shadow-lg shadow-primary/10 backdrop-blur-md"
+                        initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                    >
+                        <div className="flex items-center gap-4">
+                             <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => { setSelectionMode(false); setSelectedIds(new Set()); }}
+                                className="h-9 w-9 text-muted-foreground hover:text-foreground"
+                            >
+                                <X className="h-5 w-5" />
                             </Button>
-                            <Button variant="destructive" size="sm" onClick={() => handleBulkAction('delete')} className="w-full sm:w-auto">
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Supprimer
-                            </Button>
+                            <span className="text-sm font-semibold text-foreground">
+                                {selectedIds.size} sélectionnée(s)
+                            </span>
                         </div>
-                    )}
-                </motion.div>
-            )}
-          </AnimatePresence>
+                        <div className="flex items-center gap-2">
+                             <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={handleSelectAll}
+                                className="text-muted-foreground hover:text-foreground"
+                            >
+                                {selectedIds.size === personalNotifications.length ? <CheckSquare className="mr-2 h-4 w-4" /> : <Square className="mr-2 h-4 w-4" />}
+                                Tout
+                            </Button>
+                             <AnimatePresence>
+                                {selectedIds.size >= 2 && (
+                                    <motion.div 
+                                        className="flex items-center gap-2"
+                                        initial={{ opacity: 0, scale: 0.8 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.8 }}
+                                    >
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleBulkAction('read')}
+                                            className="text-muted-foreground hover:text-foreground"
+                                        >
+                                            <CheckCheck className="mr-2 h-4 w-4" />
+                                            Lu
+                                        </Button>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            onClick={() => handleBulkAction('delete')}
+                                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                        >
+                                            <Trash2 className="mr-2 h-4 w-4" />
+                                            Suppr.
+                                        </Button>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
       
           {allNotifications.length > 0 ? (
                 <motion.div
@@ -346,7 +383,7 @@ export default function NotificationPage() {
                            <AnimatePresence>
                             {selectionMode && notif.type !== 'global' && (
                                 <motion.div 
-                                    className="z-20"
+                                    className="z-20 flex-shrink-0"
                                     initial={{ scale: 0.5, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     exit={{ scale: 0.5, opacity: 0 }}
@@ -364,9 +401,9 @@ export default function NotificationPage() {
                           <motion.div
                               className={cn(
                                 "relative flex-1 -mt-1 p-5 rounded-lg border backdrop-blur-md transition-all duration-300 w-full overflow-hidden group",
-                                "before:absolute before:inset-0 before:-z-10 before:bg-gradient-to-br before:opacity-50",
-                                !notif.isRead ? "border-primary/30 before:from-primary/10 before:to-transparent shadow-[0_0_25px_hsl(var(--primary)/0.1)]" : "border-border/30 before:from-muted/20 before:to-transparent",
-                                notif.type === 'global' && "border-purple-500/30 before:from-purple-500/10",
+                                "bg-card/60",
+                                !notif.isRead ? "border-primary/30 shadow-[0_0_25px_hsl(var(--primary)/0.1)]" : "border-border/30",
+                                notif.type === 'global' && "border-purple-500/30",
                                 selectionMode ? "cursor-pointer" : "hover:-translate-y-1 hover:shadow-lg",
                                 selectedIds.has(notif.id) && "border-primary bg-primary/10"
                               )}
@@ -375,35 +412,38 @@ export default function NotificationPage() {
                               onTouchStart={() => notif.type !== 'global' && handleTouchStart(notif.id)}
                               onTouchEnd={handleTouchEnd}
                               onTouchMove={handleTouchEnd}
-                              style={{ clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%)' }}
+                              style={{
+                                  clipPath: 'polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 0 100%)'
+                              }}
+                              whileHover={{ y: selectionMode ? 0 : -4 }}
                           >
-                            <div className="absolute inset-0 bg-[linear-gradient(45deg,hsla(0,0%,100%,.03)_25%,transparent_25%,transparent_50%,hsla(0,0%,100%,.03)_50%,hsla(0,0%,100%,.03)_75%,transparent_75%,transparent)] bg-[length:60px_60px] opacity-50 -z-10"></div>
+                            <div className="absolute inset-0 bg-[linear-gradient(45deg,hsla(0,0%,100%,.02)_25%,transparent_25%,transparent_50%,hsla(0,0%,100%,.02)_50%,hsla(0,0%,100%,.02)_75%,transparent_75%,transparent)] bg-[length:60px_60px] opacity-50 -z-10"></div>
                               
                                <div className="flex justify-between items-start mb-2">
                                   <h3 className="font-semibold text-foreground text-lg">{notif.title}</h3>
-                                  <div className="flex items-center gap-2">
-                                    <p className="text-xs text-muted-foreground whitespace-nowrap">
-                                        {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                                    </p>
-                                      {notif.type !== 'global' && !selectionMode && (
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-foreground opacity-50 group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
-                                                    <MoreVertical size={16} />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-                                                <DropdownMenuItem onClick={(e) => handleToggleRead(e, notif)}>
-                                                    {notif.isRead ? <Eye className="mr-2 h-4 w-4" /> : <EyeOff className="mr-2 h-4 w-4" />}
-                                                    <span>Marquer comme {notif.isRead ? 'non lu' : 'lu'}</span>
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem onClick={(e) => handleDelete(e, notif.id)} className="text-destructive focus:text-destructive">
-                                                    <Trash2 className="mr-2 h-4 w-4" />
-                                                    <span>Supprimer</span>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                      )}
+                                   <div className="flex items-center gap-2">
+                                        <p className="text-xs text-muted-foreground whitespace-nowrap">
+                                            {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                        </p>
+                                        {notif.type !== 'global' && !selectionMode && (
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-foreground opacity-50 group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
+                                                        <MoreVertical size={16} />
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                                                    <DropdownMenuItem onClick={(e) => handleToggleRead(e, notif)}>
+                                                        {notif.isRead ? <Eye className="mr-2 h-4 w-4" /> : <EyeOff className="mr-2 h-4 w-4" />}
+                                                        <span>Marquer comme {notif.isRead ? 'non lu' : 'lu'}</span>
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={(e) => handleDelete(e, notif.id)} className="text-destructive focus:text-destructive">
+                                                        <Trash2 className="mr-2 h-4 w-4" />
+                                                        <span>Supprimer</span>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        )}
                                   </div>
                               </div>
                               <p className="text-sm text-muted-foreground mb-3">{notif.message}</p>
