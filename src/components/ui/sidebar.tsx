@@ -398,32 +398,67 @@ export default function Header() {
                                 />
                             </div>
                         </TabsContent>
-                        <TabsContent value="how-to" className="pt-2">
+                         <TabsContent value="how-to" className="pt-2">
                             <div className="space-y-4">
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">1</span>}
                                     title="Comprendre le principe"
-                                    description="Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x. Chaque tour commence avec une mise et le multiplicateur augmente jusqu’à ce qu’il 'crash' de manière aléatoire. Ton objectif est de retirer avant que le multiplicateur s’effondre, sinon tu perds toute ta mise. C’est un jeu de hasard pur, mais avec observation et timing, tu peux gérer ton risque. Le multiplicateur peut être très bas ou atteindre des valeurs très élevées (>10x). Comprendre ce mécanisme est la première étape avant de commencer à miser sérieusement."
+                                    description={`Les jeux crash comme Aviator ou Lucky Jet fonctionnent sur un multiplicateur qui monte progressivement à partir de 1x.
+Chaque tour commence avec une mise et le multiplicateur augmente jusqu’à ce qu’il "crash" de manière aléatoire.
+Ton objectif est de retirer avant que le multiplicateur s’effondre, sinon tu perds toute ta mise.
+C’est un jeu de hasard pur, mais avec observation et timing, tu peux gérer ton risque.
+Le multiplicateur peut être très bas ou atteindre des valeurs très élevées (>10x).
+Comprendre ce mécanisme est la première étape avant de commencer à miser sérieusement.`}
                                 />
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">2</span>}
                                     title="Commencer petit"
-                                    description="Avant de miser gros, teste toujours le jeu avec de petites mises.
+                                    description={`Avant de miser gros, teste toujours le jeu avec de petites mises.
 Exemple : 200–500 FCFA par tour pour un capital initial de 50 000 FCFA.
 Cela te permet de comprendre la vitesse de montée du multiplicateur et le timing optimal du retrait.
 Les petits tours servent aussi à observer les tendances et le comportement du jeu.
 Tu peux noter combien de tours finissent en crash bas et combien atteignent un multiplicateur élevé.
-Commencer petit limite ton risque et t’apprend à jouer intelligemment."
+Commencer petit limite ton risque et t’apprend à jouer intelligemment.`}
                                 />
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">3</span>}
                                     title="Fixer un capital"
-                                    description="Détermine exactement combien tu es prêt à jouer pour une session.
+                                    description={`Détermine exactement combien tu es prêt à jouer pour une session.
 Exemple : capital = 50 000 FCFA pour 1 journée de jeu.
 Ne dépasse jamais ce capital pour éviter de tout perdre sur une mauvaise série.
 Divise ce capital en petites portions pour chaque tour afin de mieux contrôler les mises.
 Cela t’évite de te retrouver à miser tout ton argent en une seule fois par frustration ou excès de confiance.
-Un capital clair permet de suivre tes gains et pertes plus efficacement."
+Un capital clair permet de suivre tes gains et pertes plus efficacement.`}
+                                />
+                                <StrategyItem
+                                    icon={<span className="font-bold text-lg">4</span>}
+                                    title="Mise sécurisée"
+                                    description={`Pour sécuriser tes gains, retire toujours à des multiplicateurs bas mais fiables.
+Exemple : mise 500 FCFA → retirer à 1,8x → gain 900 FCFA.
+Cela permet d’accumuler des profits constants même si les gros multiplicateurs restent rares.
+Cette stratégie est parfaite pour débuter et protéger ton capital.
+Elle réduit le stress, car tu n’as pas à courir après des jackpots risqués.
+Elle te permet aussi de tester différentes tendances sans mettre ton capital en danger.`}
+                                />
+                                <StrategyItem
+                                    icon={<span className="font-bold text-lg">5</span>}
+                                    title="Retrait moyen"
+                                    description={`Vise un multiplicateur intermédiaire pour un équilibre risque/gain.
+Exemple : mise 500 FCFA → retirer à 3x → gain 1 500 FCFA.
+C’est une stratégie pour ceux qui veulent un peu plus de profit sans prendre de gros risques.
+Elle fonctionne mieux si tu observes des tendances dans les multiplicateurs.
+Tu peux combiner ce retrait moyen avec des petites mises sécurisées pour diversifier tes gains.
+C’est une étape intermédiaire avant d’attaquer les multiplicateurs élevés et risqués.`}
+                                />
+                                <StrategyItem
+                                    icon={<span className="font-bold text-lg">6</span>}
+                                    title="Retrait risqué"
+                                    description={`Viser les multiplicateurs élevés (>5x) peut rapporter gros mais est très dangereux.
+Exemple : mise 500 FCFA → retirer à 10x → gain potentiel 5 000 FCFA.
+Ne mise jamais plus de 5 % de ton capital pour ce type de pari.
+Utilise-le seulement pour des occasions où ton capital principal est déjà sécurisé.
+Cette stratégie doit être ponctuelle et réfléchie, jamais systématique.
+Elle peut transformer une petite mise en jackpot mais peut aussi tout faire disparaître en un tour.`}
                                 />
                             </div>
                         </TabsContent>
