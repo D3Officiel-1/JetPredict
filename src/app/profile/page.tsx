@@ -13,7 +13,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -220,30 +219,42 @@ export default function ProfilePage() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header />
-      <main className="w-full max-w-2xl mx-auto p-4 sm:p-8 space-y-8">
-        <Card className="bg-card/70 backdrop-blur-sm border-border/50 overflow-hidden">
-          <CardHeader className="flex flex-col sm:flex-row items-center gap-6 p-6">
-             <div className="relative">
-                <Avatar className="h-28 w-28 border-4 border-primary/50">
-                    <AvatarImage src={user.photoURL || ''} alt={userData.username || 'Avatar'} />
-                    <AvatarFallback className="text-4xl">{getInitials()}</AvatarFallback>
-                </Avatar>
-                <div className={`absolute bottom-1 right-1 h-5 w-5 rounded-full border-2 border-card ${userData.isOnline ? 'bg-green-500' : 'bg-destructive'}`}></div>
+      <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 space-y-8">
+        <div className="relative w-full h-48 md:h-64 rounded-2xl overflow-hidden bg-card/70 border border-border/50">
+            <Image 
+                src="https://picsum.photos/seed/profilebg/1200/400" 
+                alt="Banner" 
+                layout="fill" 
+                objectFit="cover" 
+                className="opacity-20"
+                data-ai-hint="futuristic abstract"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-background/20 to-transparent"></div>
+            
+            <div className="absolute -bottom-16 left-1/2 -translate-x-1/2 md:left-12 md:-translate-x-0 w-full md:w-auto px-4 md:px-0">
+                <div className="relative w-36 h-36 mx-auto md:mx-0">
+                    <Avatar className="w-full h-full border-4 border-background ring-4 ring-primary/50">
+                        <AvatarImage src={user.photoURL || ''} alt={userData.username || 'Avatar'} />
+                        <AvatarFallback className="text-5xl bg-muted">{getInitials()}</AvatarFallback>
+                    </Avatar>
+                    <div className={`absolute bottom-2 right-2 h-6 w-6 rounded-full border-2 border-background ring-2 ${userData.isOnline ? 'bg-green-500 ring-green-500/30' : 'bg-destructive ring-destructive/30'}`}></div>
+                </div>
             </div>
-            <div className="flex-1 text-center sm:text-left">
-              <CardTitle className="text-4xl font-bold">{userData.username}</CardTitle>
-              <CardDescription className="text-base text-muted-foreground mt-1">
-                {userData.email}
-              </CardDescription>
-              <Button asChild variant="outline" size="sm" className="mt-4">
-                <Link href="/profile/edit">
-                    <Edit className="mr-2 h-4 w-4"/>
-                    Modifier le profil
-                </Link>
-             </Button>
+
+            <div className="absolute top-4 right-4">
+                <Button asChild variant="outline" size="icon" className="bg-background/50 backdrop-blur-sm">
+                    <Link href="/profile/edit">
+                        <Edit className="h-5 w-5"/>
+                    </Link>
+                </Button>
             </div>
-          </CardHeader>
-        </Card>
+        </div>
+
+        <div className="pt-20 md:pt-4 md:pl-52 text-center md:text-left">
+            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">{userData.username}</h1>
+            <p className="text-muted-foreground mt-1">{userData.email}</p>
+        </div>
+
 
         <Card className="bg-card/70 backdrop-blur-sm border-border/50">
             <CardHeader>
