@@ -814,8 +814,8 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                 })}
               </RadioGroup>
 
-            <div className="grid lg:grid-cols-[1fr_auto] gap-4 items-center">
-              <div className="space-y-2 flex-1">
+            <div className="flex flex-col lg:flex-row gap-4 items-center">
+              <div className="space-y-2 flex-1 w-full">
                 <Label htmlFor="history-input" className="flex items-center gap-2">
                     <LineChartIcon className="h-4 w-4" />
                     Historique des crashs (séparé par des espaces)
@@ -1150,5 +1150,6 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
 
     
+
 
 
