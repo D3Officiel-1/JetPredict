@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
@@ -101,8 +100,8 @@ const FABMenuItem = ({
   tooltip?: string;
 }) => {
     
-    const Wrapper = href && !disabled ? Link : 'div';
-    const props = href && !disabled ? { href, target: "_blank", rel: "noopener noreferrer" } : { onClick: disabled ? undefined : onClick };
+    const Wrapper = href && !disabled ? Link : 'button';
+    const props = href && !disabled ? { href, target: "_blank", rel: "noopener noreferrer" } : { onClick: disabled ? () => {} : onClick, disabled };
     
     return (
         <motion.div variants={menuItemVariants}>
