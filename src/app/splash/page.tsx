@@ -8,12 +8,12 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 const systemChecks = [
-  "Booting JetOS...",
-  "Initializing prediction matrix...",
-  "Connecting to AI core...",
-  "Calibrating probability engine...",
-  "Loading quantum heuristics...",
-  "System online.",
+  "Démarrage de JetOS...",
+  "Initialisation de la matrice de prédiction...",
+  "Connexion au noyau IA...",
+  "Calibrage du moteur de probabilités...",
+  "Chargement des heuristiques quantiques...",
+  "Système en ligne.",
 ];
 
 export default function SplashPage() {
