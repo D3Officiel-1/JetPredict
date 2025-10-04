@@ -441,7 +441,7 @@ export default function SettingsPage() {
                                 <div className="space-y-2">
                                     <Label htmlFor="delete-password">Entrez votre mot de passe pour confirmer :</Label>
                                     <div className="relative">
-                                        <Input id="delete-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10" />
+                                        <Input id="delete-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10 bg-background/50" />
                                         <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
                                           {showCurrentPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                                         </button>
@@ -555,7 +555,7 @@ export default function SettingsPage() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isAndroidInstallGuideOpen} onOpenChange={setIsAndroidInstallGuideOpen}>
+       <Dialog open={isAndroidInstallGuideOpen} onOpenChange={setIsAndroidInstallGuideOpen}>
             <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -632,4 +632,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
