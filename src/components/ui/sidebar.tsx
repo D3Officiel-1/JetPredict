@@ -531,10 +531,23 @@ export default function Header() {
                                     title="Exemple concret en FCFA"
                                     description={
                                         <div>
-                                            <pre className="font-code text-xs bg-background/50 p-3 rounded-md overflow-x-auto">
-                                                {`Tour | Mise(FCFA) | Cible | Gain Potentiel | Action\n--------------------------------------------------------------\n1    | 500       | 1,8x  | 900            | Retirer tôt\n2    | 500       | 2,5x  | 1 250          | Retirer moyen\n3    | 500       | 5x    | 2 500          | Retirer à 3x\n4    | 500       | 10x   | 5 000          | Risqué → 200FCFA\n5    | 1 000     | 1,5x  | 1 500          | Retirer tôt`}
-                                            </pre>
-                                            <div className="mt-2 space-y-2">
+                                            <div className="font-mono text-xs bg-background/50 p-4 rounded-lg overflow-x-auto">
+                                                <div className="grid grid-cols-5 gap-x-2 gap-y-1 text-center font-semibold text-muted-foreground border-b border-border/50 pb-2 mb-2">
+                                                    <div>Tour</div>
+                                                    <div>Mise</div>
+                                                    <div>Cible</div>
+                                                    <div>Gain Pot.</div>
+                                                    <div className="text-left">Action</div>
+                                                </div>
+                                                <div className="grid grid-cols-5 gap-x-2 gap-y-2 text-center items-center">
+                                                    <div>1</div><div>500</div><div>1,8x</div><div>900</div><div className="text-left text-green-400">Retirer tôt</div>
+                                                    <div>2</div><div>500</div><div>2,5x</div><div>1 250</div><div className="text-left text-blue-400">Retirer moyen</div>
+                                                    <div>3</div><div>500</div><div>5x</div><div>1 500</div><div className="text-left text-blue-400">Retirer à 3x</div>
+                                                    <div>4</div><div>200</div><div>10x</div><div>2 000</div><div className="text-left text-orange-400">Risqué</div>
+                                                    <div>5</div><div>1 000</div><div>1,5x</div><div>1 500</div><div className="text-left text-green-400">Retirer tôt</div>
+                                                </div>
+                                            </div>
+                                            <div className="mt-4 space-y-2">
                                                 <p>Chaque tour doit être planifié selon ton capital, ton objectif et ton niveau de risque.</p>
                                                 <p>Note les résultats, ajuste et reste discipliné pour maximiser les gains.</p>
                                                 <p>Avec cette méthode, tu transformes un jeu aléatoire en jeu stratégique et rentable.</p>
