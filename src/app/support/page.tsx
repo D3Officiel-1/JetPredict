@@ -135,7 +135,7 @@ export default function SupportPage() {
                 </InfoCard>
                 <InfoCard icon={<WhatsAppIcon />} title="Notre Chaîne WhatsApp">
                     <p>Rejoignez notre chaîne pour les dernières actualités et mises à jour.</p>
-                    <a href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">Rejoindre la chaîne</a>
+                    <a href="https://www.whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">Rejoindre la chaîne</a>
                 </InfoCard>
             </div>
             
