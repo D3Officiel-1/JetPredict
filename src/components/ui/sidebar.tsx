@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket } from 'lucide-react';
+import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket, Gamepad2, TrendingUp, HandCoins } from 'lucide-react';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { PlanId } from '@/types';
@@ -28,6 +28,8 @@ import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { WhatsAppIcon } from '@/components/icons';
 import { Switch } from '@/components/ui/switch';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 
 const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
     <div className="flex items-start gap-4">
@@ -365,25 +367,57 @@ export default function Header() {
        <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
             <DialogContent className="max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Guide d'utilisation</DialogTitle>
+                    <DialogTitle>Guide & FAQ</DialogTitle>
                 </DialogHeader>
-                <div className="py-4 space-y-6">
-                    <GuideStep
-                        icon={<Users />}
-                        title="1. Niveaux de Risque"
-                        description="Choisissez un niveau de risque. Plus le risque est élevé, plus les cotes sont hautes mais espacées dans le temps."
-                    />
-                     <GuideStep
-                        icon={<Wallet />}
-                        title="2. Historique des Crashs"
-                        description="Saisissez l'historique des derniers multiplicateurs de crash, séparés par un espace. Plus il y a de données, plus l'IA est précise."
-                    />
-                     <GuideStep
-                        icon={<Beaker />}
-                        title="3. Lancez la Prédiction"
-                        description="Cliquez sur 'Prédire'. L'IA analyse les données et génère une liste de cotes potentielles avec leurs heures estimées."
-                    />
-                </div>
+                <Tabs defaultValue="guide" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="guide">Guide d'Utilisation</TabsTrigger>
+                        <TabsTrigger value="how-to">Comment Jouer</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="guide">
+                         <div className="py-4 space-y-6">
+                            <GuideStep
+                                icon={<Users />}
+                                title="1. Niveaux de Risque"
+                                description="Choisissez un niveau de risque. Plus le risque est élevé, plus les cotes sont hautes mais espacées dans le temps."
+                            />
+                            <GuideStep
+                                icon={<Wallet />}
+                                title="2. Historique des Crashs"
+                                description="Saisissez l'historique des derniers multiplicateurs de crash, séparés par un espace. Plus il y a de données, plus l'IA est précise."
+                            />
+                            <GuideStep
+                                icon={<Beaker />}
+                                title="3. Lancez la Prédiction"
+                                description="Cliquez sur 'Prédire'. L'IA analyse les données et génère une liste de cotes potentielles avec leurs heures estimées."
+                            />
+                        </div>
+                    </TabsContent>
+                    <TabsContent value="how-to">
+                        <div className="py-4 space-y-6">
+                           <GuideStep
+                                icon={<Gamepad2 />}
+                                title="Principe du Jeu"
+                                description="Le but est de retirer votre mise avant que le multiplicateur ne s'arrête (crash). Plus vous attendez, plus vos gains potentiels sont élevés, mais plus le risque de tout perdre augmente."
+                            />
+                             <GuideStep
+                                icon={<HandCoins />}
+                                title="1. Placer un Pari"
+                                description="Avant le début d'un tour, entrez le montant de votre mise et validez. Vous pouvez placer jusqu'à deux paris par tour."
+                            />
+                             <GuideStep
+                                icon={<TrendingUp />}
+                                title="2. Le Décollage"
+                                description="Le multiplicateur commence à 1.00x et augmente de plus en plus vite. Vos gains potentiels augmentent en temps réel."
+                            />
+                            <GuideStep
+                                icon={<CheckCircle />}
+                                title="3. Le Retrait (Cashout)"
+                                description="Cliquez sur 'Retirer' au bon moment. Votre mise sera multipliée par la cote affichée à cet instant. Si vous retirez à 2.50x, vous gagnez 2.5 fois votre mise."
+                            />
+                        </div>
+                    </TabsContent>
+                </Tabs>
             </DialogContent>
         </Dialog>
     </>
