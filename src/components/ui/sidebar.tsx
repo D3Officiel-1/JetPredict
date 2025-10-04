@@ -27,7 +27,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
-import { WhatsAppIcon, TelegramIcon } from '@/components/icons';
+import { WhatsAppIcon } from '@/components/icons';
 
 const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
     <div className="flex items-start gap-4">
@@ -338,7 +338,7 @@ export default function Header() {
                   >
                     <FABMenuItem icon={<HelpCircle size={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
                     <FABMenuItem icon={<WhatsAppIcon size={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
-                    <FABMenuItem icon={<TelegramIcon size={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
+                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={28} height={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                   </motion.div>
                 )}
               </AnimatePresence>
