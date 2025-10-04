@@ -42,47 +42,44 @@ const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title:
 
 const fabVariants = {
   closed: { scale: 1, rotate: 0 },
-  open: { scale: 1.1, rotate: 0 },
+  open: { scale: 1, rotate: 0 },
 };
 
 const menuContainerVariants = {
   closed: {
     opacity: 0,
-    scale: 0.8,
+    scale: 0,
     transition: {
-      when: 'afterChildren',
+      when: "afterChildren",
       staggerChildren: 0.05,
       staggerDirection: -1,
+      type: "spring",
+      stiffness: 200,
+      damping: 20,
     },
   },
   open: {
     opacity: 1,
     scale: 1,
     transition: {
-      when: 'beforeChildren',
-      staggerChildren: 0.1,
+      when: "beforeChildren",
+      staggerChildren: 0.08,
       delayChildren: 0.1,
-      type: 'spring',
+      type: "spring",
       stiffness: 300,
       damping: 20,
     },
   },
 };
 
+
 const menuItemVariants = {
-  closed: { opacity: 0, x: 0, y: 0, scale: 0.5 },
-  open: (index: number) => {
-    const angle = 90 + index * 45; // Spread from 90 to 180 degrees
-    const radius = 90;
-    const xOffset = radius * Math.cos(angle * (Math.PI / 180));
-    const yOffset = radius * Math.sin(angle * (Math.PI / 180));
-    return {
-      x: xOffset,
-      y: yOffset,
-      opacity: 1,
-      scale: 1,
-      transition: { type: 'spring', stiffness: 400, damping: 15 },
-    };
+  closed: { opacity: 0, y: 20, scale: 0.8 },
+  open: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring", stiffness: 400, damping: 15 },
   },
 };
 
@@ -93,7 +90,6 @@ const FABMenuItem = ({
   onClick,
   disabled = false,
   tooltip,
-  index,
 }: {
   icon: React.ReactNode;
   label: string;
@@ -101,15 +97,10 @@ const FABMenuItem = ({
   onClick?: () => void;
   disabled?: boolean;
   tooltip?: string;
-  index: number;
 }) => {
     
     const content = (
-         <motion.div
-            variants={menuItemVariants}
-            custom={index}
-            style={{ position: 'absolute' }}
-        >
+         <motion.div variants={menuItemVariants}>
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger asChild>
@@ -117,7 +108,7 @@ const FABMenuItem = ({
                             asChild={!disabled && !!href}
                             size="icon"
                             className={cn(
-                                "h-12 w-12 rounded-full shadow-lg border",
+                                "h-14 w-14 rounded-full shadow-lg border",
                                 disabled ? "bg-muted text-muted-foreground cursor-not-allowed opacity-60" : "bg-card text-card-foreground hover:bg-primary hover:text-primary-foreground"
                             )}
                             onClick={disabled ? undefined : onClick}
@@ -231,7 +222,7 @@ export default function Header() {
         <div className="flex items-center gap-2">
            <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-3 cursor-pointer group">
+                <button className="flex items-center gap-3 cursor-pointer group rounded-full p-1 pr-3 transition-colors hover:bg-muted">
                     <div className="relative">
                         <Avatar className="h-10 w-10 border-2 border-primary/30 group-hover:border-primary/70 transition-colors">
                             <AvatarImage src={user.photoURL ?? ''} alt="Avatar" />
@@ -244,32 +235,44 @@ export default function Header() {
                         <span className="font-bold text-sm text-foreground truncate max-w-[120px]">{userData?.username || user.displayName || 'Utilisateur'}</span>
                         <span className="text-xs text-muted-foreground">Mon Compte</span>
                     </div>
-                </div>
+                </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56" align="start" forceMount>
-              <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{userData?.username || user.displayName || 'Mon Compte'}</p>
-                  <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
-                </div>
-              </DropdownMenuLabel>
-              {!isVerified && (
-                <DropdownMenuItem asChild>
-                  <Link href="/verify-email" className="text-destructive focus:bg-destructive/10 focus:text-destructive">
-                    <ShieldAlert className="mr-2 h-4 w-4" />
-                    <span>Email non vérifié</span>
-                  </Link>
-                </DropdownMenuItem>
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild disabled={!isVerified}><Link href="/notification"><Bell className="mr-2 h-4 w-4" /><span>Notifications</span>{unreadCount > 0 && <span className="notification-dot"></span>}</Link></DropdownMenuItem>
-              <DropdownMenuItem asChild disabled={!isVerified}><Link href="/profile"><UserIcon className="mr-2 h-4 w-4" /><span>Profil</span></Link></DropdownMenuItem>
-              <DropdownMenuItem asChild disabled={!isVerified}><Link href="/referral"><Users className="mr-2 h-4 w-4" /><span>Parrainage</span></Link></DropdownMenuItem>
-              <DropdownMenuItem asChild disabled={!isVerified || !canAccessPremiumFeatures}><Link href="/simulation"><Beaker className="mr-2 h-4 w-4" /><span>Simulation</span></Link></DropdownMenuItem>
-              <DropdownMenuItem asChild disabled={!isVerified}><Link href="/settings"><Settings className="mr-2 h-4 w-4" /><span>Paramètres</span></Link></DropdownMenuItem>
-              <DropdownMenuItem asChild disabled={!isVerified || !canAccessSupport}><Link href="/support"><LifeBuoy className="mr-2 h-4 w-4" /><span>Support</span></Link></DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}><LogOut className="mr-2 h-4 w-4" /><span>Se déconnecter</span></DropdownMenuItem>
+            <DropdownMenuContent 
+                className="w-64 bg-card/80 backdrop-blur-xl border-primary/20 shadow-2xl shadow-primary/10" 
+                align="start" 
+                forceMount
+            >
+              <div className="p-2">
+                <DropdownMenuLabel className="font-normal p-2">
+                    <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                            <AvatarImage src={user.photoURL ?? ''} alt="Avatar" />
+                            <AvatarFallback>{getInitials(user.email)}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col space-y-1">
+                            <p className="text-sm font-medium leading-none">{userData?.username || user.displayName || 'Mon Compte'}</p>
+                            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                        </div>
+                    </div>
+                </DropdownMenuLabel>
+                {!isVerified && (
+                    <DropdownMenuItem asChild>
+                    <Link href="/verify-email" className="text-destructive focus:bg-destructive/10 focus:text-destructive m-1">
+                        <ShieldAlert className="mr-2 h-4 w-4" />
+                        <span>Email non vérifié</span>
+                    </Link>
+                    </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator className="my-2 bg-border/50" />
+                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/notification"><Bell className="mr-2 h-4 w-4" /><span>Notifications</span>{unreadCount > 0 && <span className="notification-dot"></span>}</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/profile"><UserIcon className="mr-2 h-4 w-4" /><span>Profil</span></Link></DropdownMenuItem>
+                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/referral"><Users className="mr-2 h-4 w-4" /><span>Parrainage</span></Link></DropdownMenuItem>
+                <DropdownMenuItem asChild disabled={!isVerified || !canAccessPremiumFeatures}><Link href="/simulation"><Beaker className="mr-2 h-4 w-4" /><span>Simulation</span></Link></DropdownMenuItem>
+                <DropdownMenuItem asChild disabled={!isVerified}><Link href="/settings"><Settings className="mr-2 h-4 w-4" /><span>Paramètres</span></Link></DropdownMenuItem>
+                <DropdownMenuItem asChild disabled={!isVerified || !canAccessSupport}><Link href="/support"><LifeBuoy className="mr-2 h-4 w-4" /><span>Support</span></Link></DropdownMenuItem>
+                <DropdownMenuSeparator className="my-2 bg-border/50"/>
+                <DropdownMenuItem onClick={handleLogout} className="text-red-400 focus:bg-red-500/10 focus:text-red-400"><LogOut className="mr-2 h-4 w-4" /><span>Se déconnecter</span></DropdownMenuItem>
+              </div>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
@@ -295,40 +298,44 @@ export default function Header() {
         </div>
       </header>
       
-       <div className="fixed bottom-6 right-6 z-40">
-            <motion.div
-                className="relative flex items-center justify-center"
-                initial={false}
-                animate={isFabMenuOpen ? "open" : "closed"}
-            >
-                 <AnimatePresence>
-                    {isFabMenuOpen && (
-                        <motion.div
-                            variants={menuContainerVariants}
-                            className="absolute"
-                            initial="closed"
-                            animate="open"
-                            exit="closed"
-                        >
-                            <FABMenuItem index={0} icon={<HelpCircle size={24} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
-                            <FABMenuItem index={1} icon={<WhatsAppIcon size={24} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
-                            <FABMenuItem index={2} icon={<TelegramIcon size={24} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+      <div className="fixed bottom-6 right-6 z-40">
+        <motion.div
+          className="relative flex flex-col items-center gap-4"
+          initial={false}
+          animate={isFabMenuOpen ? "open" : "closed"}
+        >
+          <AnimatePresence>
+            {isFabMenuOpen && (
+              <motion.div
+                variants={menuContainerVariants}
+                className="flex flex-col items-center gap-4"
+                initial="closed"
+                animate="open"
+                exit="closed"
+              >
+                <FABMenuItem icon={<HelpCircle size={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
+                <FABMenuItem icon={<WhatsAppIcon size={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
+                <FABMenuItem icon={<TelegramIcon size={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
+              </motion.div>
+            )}
+          </AnimatePresence>
 
-                <motion.button
-                    variants={fabVariants}
-                    className="relative h-14 w-14 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center"
-                    onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
-                    whileTap={{ scale: 0.9 }}
-                >
-                    <motion.div animate={{ rotate: isFabMenuOpen ? 45 : 0, scale: isFabMenuOpen ? 1.2 : 1 }} transition={{ type: "spring", stiffness: 400, damping: 20 }}>
-                        {isFabMenuOpen ? <X size={28} /> : <Compass size={28} />}
-                    </motion.div>
-                </motion.button>
+          <motion.button
+            variants={fabVariants}
+            className="relative h-16 w-16 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center mt-4"
+            onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
+            whileTap={{ scale: 0.9 }}
+          >
+            <motion.div
+              animate={{ rotate: isFabMenuOpen ? 135 : 0, scale: 1 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            >
+              <X size={32} style={{ display: isFabMenuOpen ? 'block' : 'none' }} />
+              <Compass size={32} style={{ display: isFabMenuOpen ? 'none' : 'block' }} />
             </motion.div>
-        </div>
+          </motion.button>
+        </motion.div>
+      </div>
 
        <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
             <DialogContent className="max-w-md">
