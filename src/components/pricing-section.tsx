@@ -9,7 +9,6 @@ import { db } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
 import type { PlanId, PricingConfig, PromoCode } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Star, Crown, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import Image from "next/image";
@@ -33,7 +32,6 @@ type Plan = {
     popular?: boolean;
 };
 
-
 const paymentMethods = [
     { name: "Wave", logoUrl: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/62/f6/ac/62f6ac8b-27d7-8a8f-e2c1-9bbc31e22fb1/AppIcon-0-0-1x_U007emarketing-0-1-0-85-220.png/230x0w.webp" },
     { name: "Orange Money", logoUrl: "https://www.orange.ci/particuliers/resources/img/master-logo.svg" },
@@ -41,6 +39,26 @@ const paymentMethods = [
     { name: "Moov Money", logoUrl: "https://www.moov-africa.ci/wp-content/uploads/2020/12/moovafrica-1.png" }
 ];
 
+const FeatureItem = ({ text, included, delay }: { text: string; included: boolean; delay: number }) => (
+    <motion.li
+        className="flex items-center gap-3"
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.4, delay, ease: "easeOut" }}
+        viewport={{ once: true }}
+    >
+        <div className="flex h-5 w-5 items-center justify-center rounded-full bg-black/20 backdrop-blur-sm">
+            {included ? (
+                <CheckCircle className="h-5 w-5 text-green-400" />
+            ) : (
+                <XCircle className="h-5 w-5 text-muted-foreground/30" />
+            )}
+        </div>
+        <span className={cn(included ? "text-foreground" : "text-muted-foreground/50 line-through")}>
+            {text}
+        </span>
+    </motion.li>
+);
 
 export function PricingSection({ isLandingPage = false, user }: { isLandingPage?: boolean, user?: User | null }) {
     const [plans, setPlans] = useState<Plan[]>([]);
@@ -60,7 +78,6 @@ export function PricingSection({ isLandingPage = false, user }: { isLandingPage?
     const router = useRouter();
     const { toast } = useToast();
     
-
     useEffect(() => {
         setIsLoading(true);
         const plansColRef = collection(db, "applications", "VMrS6ltRDuKImzxAl3lR", "plans");
@@ -70,7 +87,7 @@ export function PricingSection({ isLandingPage = false, user }: { isLandingPage?
             const fetchedPlans = snapshot.docs.map(doc => {
                 const data = doc.data();
                 return {
-                    id: data.period, // Using 'period' as the unique ID, e.g., "monthly"
+                    id: data.period,
                     name: data.name,
                     price: data.price,
                     promoPrice: data.promoPrice,
@@ -78,7 +95,7 @@ export function PricingSection({ isLandingPage = false, user }: { isLandingPage?
                     period: data.period,
                     features: data.features || [],
                     missingFeatures: data.missingFeatures || [],
-                    cta: "Choisir ce forfait",
+                    cta: "Activer le forfait",
                     popular: data.popular || false,
                 } as Plan;
             }).filter(p => p.id !== 'annual');
@@ -123,7 +140,6 @@ export function PricingSection({ isLandingPage = false, user }: { isLandingPage?
                 findate: endDate,
             });
 
-            // Mark promo code as used by this user
             const promoDocRef = doc(db, "promo", appliedPromo.id);
             await updateDoc(promoDocRef, {
                 people: arrayUnion(user.uid)
@@ -266,7 +282,6 @@ Merci de m'indiquer la procédure à suivre.`;
     
      useEffect(() => {
         if (!isPaymentDialogOpen) {
-            // Reset state on dialog close
             setTimeout(() => {
                  setDialogStep(1);
                  setHasPromoCode("non");
@@ -283,14 +298,15 @@ Merci de m'indiquer la procédure à suivre.`;
         const displayPrice = isPromo ? plan.promoPrice : plan.price;
 
         return (
-            <div className="pt-4 flex flex-col items-center">
+            <div className="pt-2 flex flex-col items-center">
                 {isPromo && (
-                    <span className="text-xl font-normal text-muted-foreground line-through">
+                    <span className="text-xl font-normal text-muted-foreground/70 line-through">
                         {plan.price.toLocaleString('fr-FR')} {plan.currency}
                     </span>
                 )}
-                <span className="text-4xl font-bold text-foreground">
-                    {displayPrice.toLocaleString('fr-FR')} {plan.currency}
+                <span className="text-5xl font-extrabold text-foreground tracking-tighter">
+                    {displayPrice.toLocaleString('fr-FR')} 
+                    <span className="text-3xl font-bold text-muted-foreground/80">{plan.currency}</span>
                 </span>
             </div>
         );
@@ -307,7 +323,7 @@ Merci de m'indiquer la procédure à suivre.`;
       return (
         <Button 
           size="lg" 
-          className="w-full font-semibold text-lg py-6 rounded-xl shadow-lg shadow-primary/30 transition-all duration-300 ease-in-out hover:shadow-primary/50 hover:scale-105"
+          className="w-full font-semibold text-lg py-6 rounded-xl bg-primary/90 text-primary-foreground shadow-lg shadow-primary/30 transition-all duration-300 ease-in-out hover:bg-primary hover:shadow-primary/50 hover:scale-105"
           onClick={() => handleChoosePlan(plan)}
         >
           {plan.cta}
@@ -332,7 +348,6 @@ Merci de m'indiquer la procédure à suivre.`;
         }
     };
 
-
     return (
         <>
             <motion.div
@@ -342,8 +357,8 @@ Merci de m'indiquer la procédure à suivre.`;
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
             >
-               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Des tarifs simples et transparents</h2>
-              <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Choisissez le plan qui vous convient et commencez à gagner dès aujourd'hui.</p>
+               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Nos Protocoles d'Accès</h2>
+              <p className="text-muted-foreground mt-2 max-w-xl mx-auto">Choisissez le protocole qui déverrouille votre potentiel.</p>
             </motion.div>
             {isLoading ? (
                 <div className="flex justify-center items-center py-20">
@@ -354,58 +369,54 @@ Merci de m'indiquer la procédure à suivre.`;
                 {plans.map((plan, index) => (
                     <motion.div
                         key={plan.id}
+                        className="group relative"
                         initial={{ opacity: 0, y: 50 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
                         viewport={{ once: true }}
                     >
+                         <motion.div
+                            className={cn(
+                                "absolute -inset-px rounded-2xl bg-gradient-to-br transition-all duration-500 opacity-0 group-hover:opacity-100",
+                                plan.popular ? "from-primary/70 via-blue-500/70 to-purple-500/70" : "from-border via-border/50 to-transparent"
+                            )}
+                            initial={{ filter: "blur(16px)"}}
+                            whileHover={{ filter: "blur(24px)"}}
+                        />
                         <div
                             className={cn(
-                                "relative flex flex-col h-full bg-card/50 backdrop-blur-lg border p-1 rounded-2xl transition-all duration-300",
-                                plan.popular ? "border-primary/50 shadow-2xl shadow-primary/10" : "border-border/20"
+                                "relative flex flex-col h-full bg-card/60 backdrop-blur-xl border rounded-2xl transition-all duration-300",
+                                plan.popular ? "border-primary/30" : "border-border/20 group-hover:border-primary/20"
                             )}
                         >
-                            <div className="flex flex-col h-full bg-card/80 rounded-[15px] p-6">
-                                <CardHeader className="p-0 text-center">
-                                    {plan.popular && (
-                                    <div className="flex justify-center mb-4">
-                                        <div className="inline-flex items-center gap-2 text-sm font-semibold bg-primary/10 text-primary px-3 py-1.5 rounded-full border border-primary/20">
-                                        <Star size={16} /> Le plus populaire
+                            <div className="flex flex-col h-full p-6 text-center">
+                                {plan.popular && (
+                                    <div className="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
+                                        <div className="inline-flex items-center gap-2 text-sm font-semibold bg-primary text-primary-foreground px-4 py-1.5 rounded-full border-2 border-background shadow-lg">
+                                            <Star size={16} /> Le plus populaire
                                         </div>
                                     </div>
-                                    )}
-                                    <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
+                                )}
+                                <div className="pt-8">
+                                    <h3 className="text-2xl font-bold flex items-center justify-center gap-2">
                                         {plan.id === 'monthly' && <Crown className="text-yellow-400" />} {plan.name}
-                                    </CardTitle>
-                                    <CardDescription className="text-center">
-                                        {renderPrice(plan)}
-                                        <span className="text-base font-normal text-muted-foreground">/ {plan.name.toLowerCase()}</span>
-                                    </CardDescription>
-                                </CardHeader>
-                                <CardContent className="flex-grow pt-8">
-                                    <ul className="space-y-4 text-left">
-                                        {[...plan.features, ...plan.missingFeatures].map((feature, i) => {
-                                            const isIncluded = plan.features.includes(feature);
-                                            return (
-                                            <li key={i} className="flex items-start gap-3">
-                                                <div>
-                                                {isIncluded ? (
-                                                <CheckCircle className="h-5 w-5 text-green-400 shrink-0 mt-0.5" />
-                                                ) : (
-                                                <XCircle className="h-5 w-5 text-muted-foreground/50 shrink-0 mt-0.5" />
-                                                )}
-                                                </div>
-                                                <span className={cn("text-muted-foreground", isIncluded && "text-foreground", !isIncluded && "line-through")}>
-                                                {feature}
-                                                </span>
-                                            </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </CardContent>
-                                <CardFooter className="p-0 pt-8 mt-auto">
+                                    </h3>
+                                    {renderPrice(plan)}
+                                    <p className="text-sm text-muted-foreground mt-1">/ {plan.period.toLowerCase()}</p>
+                                </div>
+                                <ul className="space-y-4 text-left mt-8 flex-grow">
+                                    {[...plan.features, ...plan.missingFeatures].map((feature, i) => (
+                                        <FeatureItem
+                                            key={i}
+                                            text={feature}
+                                            included={plan.features.includes(feature)}
+                                            delay={0.3 + i * 0.05}
+                                        />
+                                    ))}
+                                </ul>
+                                <div className="mt-8">
                                     {renderPlanButton(plan)}
-                                </CardFooter>
+                                </div>
                             </div>
                         </div>
                     </motion.div>
@@ -501,5 +512,3 @@ Merci de m'indiquer la procédure à suivre.`;
         </>
     );
 }
-
-    
