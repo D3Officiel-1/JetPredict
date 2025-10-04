@@ -319,8 +319,15 @@ export default function Header() {
         </div>
       </header>
       
-       {!isFabDisabled && (
-          <div className="fixed bottom-6 right-6 z-40">
+      <AnimatePresence>
+        {!isFabDisabled && (
+          <motion.div
+            className="fixed bottom-6 right-6 z-40"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+          >
             <motion.div
               className="relative flex flex-col items-center gap-4"
               initial={false}
@@ -331,6 +338,9 @@ export default function Header() {
                   <motion.div
                     variants={menuContainerVariants}
                     className="absolute bottom-20 flex flex-col items-center gap-4"
+                    initial="closed"
+                    animate="open"
+                    exit="closed"
                   >
                     <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/d/d6/Blue_Question_Circle.svg" alt="Guide" width={56} height={56} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
                     <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={56} height={56} />} label="WhatsApp" href="https://www.whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x" />
@@ -348,8 +358,9 @@ export default function Header() {
                   <Compass size={32} />
               </motion.button>
             </motion.div>
-          </div>
-      )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
        <Dialog open={isGuideOpen} onOpenChange={setIsGuideOpen}>
             <DialogContent className="max-w-md">
