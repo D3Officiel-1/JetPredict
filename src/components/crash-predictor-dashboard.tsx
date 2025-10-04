@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useState, useEffect, useTransition, useMemo, Fragment, useRef, useCallback } from "react";
@@ -368,18 +369,27 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
         userTime: userTime,
       };
 
-      try {
-        const predResult = await predictCrashPoint(predictionInput);
-        setPrediction(predResult);
-
-      } catch (error) {
-        console.error("La prédiction a échoué:", error);
-        toast({
-          variant: "destructive",
-          title: "Erreur de prédiction",
-          description:
-            "L'IA n'a pas réussi à générer une prédiction.",
-        });
+      let retries = 3;
+      while (retries > 0) {
+        try {
+          const predResult = await predictCrashPoint(predictionInput);
+          setPrediction(predResult);
+          return; // Success
+        } catch (error: any) {
+          if (error.message.includes('503') && retries > 1) {
+            console.log(`[predictCrashPoint] Model overloaded, retrying... (${4 - retries}/3)`);
+            await new Promise(resolve => setTimeout(resolve, Math.pow(2, 4 - retries) * 1000));
+          } else {
+              console.error("La prédiction a échoué:", error);
+              toast({
+                  variant: "destructive",
+                  title: "Erreur de prédiction",
+                  description: "L'IA n'a pas réussi à générer une prédiction.",
+              });
+              return; // Failure
+          }
+        }
+        retries--;
       }
     });
   };
@@ -635,45 +645,56 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     if (!canAccessPremiumFeatures) return;
 
     startFetchingStrategies(async () => {
-      try {
-        if (prediction?.savedStrategies) {
-          const cachedStrategy = prediction.savedStrategies.find(s => s.time === p.time);
-          if (cachedStrategy) {
-              setStrategies({
-                  conservativeStrategy: cachedStrategy.conservativeStrategy,
-                  aggressiveStrategy: cachedStrategy.aggressiveStrategy,
-              });
-              return;
-          }
-        }
-        
-        const strategyInput: SuggestBettingStrategyInput = {
-          riskTolerance: riskLevel,
-          predictedCrashPoint: p.predictedCrashPoint,
-        };
-        const strategyResult = await suggestBettingStrategy(strategyInput);
-        setStrategies(strategyResult);
+        let retries = 3;
+        while(retries > 0) {
+            try {
+                if (prediction?.savedStrategies) {
+                    const cachedStrategy = prediction.savedStrategies.find(s => s.time === p.time);
+                    if (cachedStrategy) {
+                        setStrategies({
+                            conservativeStrategy: cachedStrategy.conservativeStrategy,
+                            aggressiveStrategy: cachedStrategy.aggressiveStrategy,
+                        });
+                        return;
+                    }
+                }
+                
+                const strategyInput: SuggestBettingStrategyInput = {
+                    riskTolerance: riskLevel,
+                    predictedCrashPoint: p.predictedCrashPoint,
+                };
+                const strategyResult = await suggestBettingStrategy(strategyInput);
+                setStrategies(strategyResult);
 
-        if (prediction?.predictionId && strategyResult) {
-          await saveStrategiesToPrediction({
-            predictionId: prediction.predictionId,
-            strategies: strategyResult,
-            predictionTime: p.time,
-          });
-          setPrediction(prev => {
-              if (!prev) return null;
-              const newSavedStrategies = [...(prev.savedStrategies || []), { time: p.time, ...strategyResult }];
-              return { ...prev, savedStrategies: newSavedStrategies };
-          })
+                if (prediction?.predictionId && strategyResult) {
+                    await saveStrategiesToPrediction({
+                        predictionId: prediction.predictionId,
+                        strategies: strategyResult,
+                        predictionTime: p.time,
+                    });
+                    setPrediction(prev => {
+                        if (!prev) return null;
+                        const newSavedStrategies = [...(prev.savedStrategies || []), { time: p.time, ...strategyResult }];
+                        return { ...prev, savedStrategies: newSavedStrategies };
+                    })
+                }
+                return; // Success
+            } catch (error: any) {
+                 if (error.message.includes('503') && retries > 1) {
+                    console.log(`[suggestBettingStrategy] Model overloaded, retrying... (${4 - retries}/3)`);
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, 4 - retries) * 1000));
+                 } else {
+                    console.error("La suggestion de stratégie a échoué:", error);
+                    toast({
+                        variant: "destructive",
+                        title: "Erreur de Stratégie",
+                        description: "L'IA n'a pas pu générer de stratégie.",
+                    });
+                    return; // Failure
+                 }
+            }
+            retries--;
         }
-      } catch (error) {
-        console.error("La suggestion de stratégie a échoué:", error);
-        toast({
-          variant: "destructive",
-          title: "Erreur de Stratégie",
-          description: "L'IA n'a pas pu générer de stratégie.",
-        });
-      }
     });
   };
 
@@ -1025,26 +1046,20 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
         <AnimatePresence>
             {isFullScreenPredictionOpen && (
-                 <div
-                    className="fixed inset-0 z-50"
+                 <motion.div
+                    className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     onClick={(e) => {
                         if (e.target === e.currentTarget) {
                             setIsFullScreenPredictionOpen(false);
                         }
                     }}
                 >
-                    <motion.div
-                        key="backdrop"
-                        className="fixed inset-0 bg-black/80"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                    />
-                    
-                    <div className="fixed inset-0 flex flex-col items-center justify-center p-4">
+                    <div className="flex-1 flex items-center justify-center w-full">
                         {fullScreenPredictionData && (
                             <motion.div
-                                key="fullscreen-card"
                                 className="relative w-full max-w-4xl bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-center gap-6 p-4 sm:p-8 text-center overflow-hidden"
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
@@ -1136,21 +1151,22 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                                 </div>
                             </motion.div>
                         )}
-                        <div className="flex justify-center mt-4">
-                            <motion.button
-                                className="h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
-                                onClick={() => setIsFullScreenPredictionOpen(false)}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
-                            >
-                                <X />
-                            </motion.button>
-                        </div>
                     </div>
-                </div>
+                     <motion.div
+                        className="flex justify-center flex-shrink-0 py-4"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
+                    >
+                        <button
+                            className="h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
+                            onClick={() => setIsFullScreenPredictionOpen(false)}
+                        >
+                            <X />
+                        </button>
+                    </motion.div>
+                </motion.div>
             )}
         </AnimatePresence>
       </div>
   );
 }
-
