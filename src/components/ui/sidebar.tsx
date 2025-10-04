@@ -269,9 +269,9 @@ export default function Header() {
                             <AvatarImage src={user.photoURL ?? ''} alt="Avatar" />
                             <AvatarFallback>{getInitials(user.email)}</AvatarFallback>
                         </Avatar>
-                        <div className="flex flex-col space-y-1">
-                            <p className="text-sm font-medium leading-none">{userData?.username || user.displayName || 'Mon Compte'}</p>
-                            <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                        <div className="flex flex-col space-y-1 overflow-hidden">
+                            <p className="text-sm font-medium leading-none truncate">{userData?.username || user.displayName || 'Mon Compte'}</p>
+                            <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
                         </div>
                     </div>
                 </DropdownMenuLabel>
