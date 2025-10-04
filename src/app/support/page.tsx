@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -11,6 +12,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
+import Header from '@/components/ui/sidebar';
 
 const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
     <div className="bg-muted/50 p-6 rounded-xl border border-border/50 transition-all hover:border-primary/50 hover:bg-muted">
@@ -106,20 +108,9 @@ export default function SupportPage() {
   }
 
   return (
-    <div className="relative flex flex-col items-center min-h-screen bg-background text-foreground overflow-hidden p-4">
-      <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_500px_at_50%_200px,#313b5c44,transparent)]"></div>
-      
-      <div className="absolute top-4 left-4">
-        <Button asChild variant="ghost">
-          <Link href="/predict">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour à l'accueil
-          </Link>
-        </Button>
-      </div>
-      
-      <main className="w-full max-w-4xl z-10 mt-20 space-y-8">
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <Header />
+      <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 space-y-8">
         <div>
             <h1 className="text-3xl font-bold text-primary">Contact & Service Client</h1>
             <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 01 septembre 2025</p>

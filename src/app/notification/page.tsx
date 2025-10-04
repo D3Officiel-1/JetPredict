@@ -15,6 +15,7 @@ import { BellIcon, MailOpenIcon } from '@/components/icons';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import Header from '@/components/ui/sidebar';
 
 interface Notification {
     id: string;
@@ -214,104 +215,96 @@ export default function NotificationPage() {
   };
 
   return (
-    <div className="relative flex flex-col min-h-screen bg-background text-foreground overflow-hidden">
-        <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-10"></div>
-        <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_center,#313b5c44_0%,transparent_40%)]"></div>
-      
-        <header className="sticky top-0 z-20 flex items-center justify-between p-4 bg-background/80 backdrop-blur-md">
-            <Button asChild variant="ghost">
-                <Link href="/predict">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Retour
-                </Link>
-            </Button>
-            <div className="flex gap-2">
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="outline" size="icon" onClick={handleMarkAllAsRead} disabled={unreadCount === 0}>
-                                <CheckCheck className="h-5 w-5" />
-                                <span className="sr-only">Tout marquer comme lu</span>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Tout marquer comme lu</p></TooltipContent>
-                    </Tooltip>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button variant="destructive" size="icon" onClick={handleDeleteRead} disabled={personalNotifications.filter(n => n.isRead).length === 0}>
-                                <Trash2 className="h-5 w-5" />
-                                <span className="sr-only">Supprimer les notifications lues</span>
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Supprimer les notifications lues</p></TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            </div>
-        </header>
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <Header />
+      <main className="flex-1 px-4 py-8 sm:px-8">
+        <div className="w-full max-w-3xl mx-auto">
+          <div className="text-center mb-8 sm:mb-12">
+            <h1 className="text-4xl font-bold tracking-tight">Centre de notifications</h1>
+            <p className="text-muted-foreground mt-2">
+              {unreadCount > 0 ? `Vous avez ${unreadCount} notification(s) non lue(s).` : 'Vous êtes à jour.'}
+            </p>
+          </div>
 
-        <main className="w-full max-w-3xl mx-auto px-4 py-8 z-10">
-            <div className="text-center mb-12">
-                <h1 className="text-4xl font-bold tracking-tight">Centre de notifications</h1>
-                <p className="text-muted-foreground mt-2">
-                    {unreadCount > 0 ? `Vous avez ${unreadCount} notification(s) non lue(s).` : 'Vous êtes à jour.'}
-                </p>
-            </div>
-        
-            {allNotifications.length > 0 ? (
-                 <motion.div
-                    className="relative flex flex-col gap-8"
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="visible"
-                >
-                    <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-border/30 -z-10"></div>
-                    {allNotifications.map((notif) => (
-                        <motion.div
-                            key={notif.id}
-                            className="relative flex items-start gap-4"
-                            variants={itemVariants}
-                        >
-                            <NotificationIcon type={notif.type} />
-                            <motion.div
-                                className={cn(
-                                    "flex-1 -mt-1 p-5 rounded-xl border transition-all duration-300 w-full",
-                                    !notif.isRead ? "bg-primary/5 border-primary/20 hover:border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.1),inset_0_1px_1px_hsl(var(--primary)/0.2)] cursor-pointer" : "bg-muted/30 border-border/30 hover:bg-muted/50",
-                                    notif.type === 'global' && !notif.isRead && "bg-purple-500/5 border-purple-500/20 hover:border-purple-500/40 shadow-[0_0_15px_hsl(var(--primary)/0.1),inset_0_1px_1px_hsl(var(--primary)/0.2)]",
-                                    notif.type === 'global' && "border-purple-500/30",
-                                )}
-                                onClick={() => handleNotificationClick(notif)}
-                                whileHover={{ y: -3 }}
-                            >
-                                <div className="flex justify-between items-start mb-2">
-                                    <h3 className="font-semibold text-foreground">{notif.title}</h3>
-                                    <p className="text-xs text-muted-foreground whitespace-nowrap">
-                                        {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                                    </p>
-                                </div>
-                                <p className="text-sm text-muted-foreground mb-3">{notif.message}</p>
-                                {notif.mediaUrl && (
-                                    <div className="mt-3 rounded-lg overflow-hidden border border-border/50">
-                                        {isVideo(notif.mediaUrl) ? (
-                                            <video src={notif.mediaUrl} width={600} height={400} autoPlay loop muted playsInline className="w-full h-auto object-cover" />
-                                        ) : (
-                                            <Image src={notif.mediaUrl} alt={notif.title} width={600} height={400} className="w-full h-auto object-cover" />
-                                        )}
-                                    </div>
-                                )}
-                            </motion.div>
-                        </motion.div>
-                    ))}
-                </motion.div>
-            ) : (
-                <div className="text-center py-24 text-muted-foreground flex flex-col items-center gap-6">
-                    <MailOpenIcon className="h-20 w-20 text-primary/30" />
-                    <div className="space-y-1">
-                        <h3 className="text-xl font-semibold">Boîte de réception vide</h3>
-                        <p className="text-sm max-w-xs">Vous n'avez aucune notification pour le moment. Nous vous informerons ici.</p>
-                    </div>
-                </div>
-            )}
-        </main>
+          <div className="mb-6 flex justify-end gap-2">
+             <TooltipProvider>
+                  <Tooltip>
+                      <TooltipTrigger asChild>
+                          <Button variant="outline" size="icon" onClick={handleMarkAllAsRead} disabled={unreadCount === 0}>
+                              <CheckCheck className="h-5 w-5" />
+                              <span className="sr-only">Tout marquer comme lu</span>
+                          </Button>
+                      </TooltipTrigger>
+                      <TooltipContent><p>Tout marquer comme lu</p></TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                      <TooltipTrigger asChild>
+                          <Button variant="destructive" size="icon" onClick={handleDeleteRead} disabled={personalNotifications.filter(n => n.isRead).length === 0}>
+                              <Trash2 className="h-5 w-5" />
+                              <span className="sr-only">Supprimer les notifications lues</span>
+                          </Button>
+                      </TooltipTrigger>
+                      <TooltipContent><p>Supprimer les notifications lues</p></TooltipContent>
+                  </Tooltip>
+              </TooltipProvider>
+          </div>
+      
+          {allNotifications.length > 0 ? (
+                <motion.div
+                  className="relative flex flex-col gap-8"
+                  variants={containerVariants}
+                  initial="hidden"
+                  animate="visible"
+              >
+                  <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-border/30 -z-10"></div>
+                  {allNotifications.map((notif) => (
+                      <motion.div
+                          key={notif.id}
+                          className="relative flex items-start gap-4"
+                          variants={itemVariants}
+                      >
+                          <NotificationIcon type={notif.type} />
+                          <motion.div
+                              className={cn(
+                                  "flex-1 -mt-1 p-5 rounded-xl border transition-all duration-300 w-full",
+                                  !notif.isRead ? "bg-primary/5 border-primary/20 hover:border-primary/40 shadow-[0_0_15px_hsl(var(--primary)/0.1),inset_0_1px_1px_hsl(var(--primary)/0.2)] cursor-pointer" : "bg-muted/30 border-border/30 hover:bg-muted/50",
+                                  notif.type === 'global' && !notif.isRead && "bg-purple-500/5 border-purple-500/20 hover:border-purple-500/40 shadow-[0_0_15px_hsl(var(--primary)/0.1),inset_0_1px_1px_hsl(var(--primary)/0.2)]",
+                                  notif.type === 'global' && "border-purple-500/30",
+                              )}
+                              onClick={() => handleNotificationClick(notif)}
+                              whileHover={{ y: -3 }}
+                          >
+                              <div className="flex justify-between items-start mb-2">
+                                  <h3 className="font-semibold text-foreground">{notif.title}</h3>
+                                  <p className="text-xs text-muted-foreground whitespace-nowrap">
+                                      {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                  </p>
+                              </div>
+                              <p className="text-sm text-muted-foreground mb-3">{notif.message}</p>
+                              {notif.mediaUrl && (
+                                  <div className="mt-3 rounded-lg overflow-hidden border border-border/50">
+                                      {isVideo(notif.mediaUrl) ? (
+                                          <video src={notif.mediaUrl} width={600} height={400} autoPlay loop muted playsInline className="w-full h-auto object-cover" />
+                                      ) : (
+                                          <Image src={notif.mediaUrl} alt={notif.title} width={600} height={400} className="w-full h-auto object-cover" />
+                                      )}
+                                  </div>
+                              )}
+                          </motion.div>
+                      </motion.div>
+                  ))}
+              </motion.div>
+          ) : (
+              <div className="text-center py-24 text-muted-foreground flex flex-col items-center gap-6">
+                  <MailOpenIcon className="h-20 w-20 text-primary/30" />
+                  <div className="space-y-1">
+                      <h3 className="text-xl font-semibold">Boîte de réception vide</h3>
+                      <p className="text-sm max-w-xs">Vous n'avez aucune notification pour le moment. Nous vous informerons ici.</p>
+                  </div>
+              </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }

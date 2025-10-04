@@ -23,6 +23,7 @@ import Link from 'next/link';
 import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import Header from '@/components/ui/sidebar';
 
 interface UserData {
   uid?: string;
@@ -217,20 +218,9 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="relative flex flex-col items-center min-h-screen bg-background text-foreground overflow-hidden p-4 sm:p-8">
-      <div className="absolute inset-0 bg-grid-pattern opacity-10"></div>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_200px,#313b5c44,transparent)]"></div>
-      
-      <div className="absolute top-4 left-4 z-20">
-        <Button asChild variant="ghost">
-          <Link href="/predict">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour
-          </Link>
-        </Button>
-      </div>
-
-      <main className="w-full max-w-2xl z-10 mt-20 space-y-8">
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <Header />
+      <main className="w-full max-w-2xl mx-auto p-4 sm:p-8 space-y-8">
         <Card className="bg-card/70 backdrop-blur-sm border-border/50 overflow-hidden">
           <CardHeader className="flex flex-col sm:flex-row items-center gap-6 p-6">
              <div className="relative">
