@@ -516,30 +516,40 @@ export default function SettingsPage() {
       </Dialog>
       
       <Dialog open={isModalOpen === 'email'} onOpenChange={(open) => !open && setIsModalOpen(null)}>
-        <DialogContent>
+        <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
           <DialogHeader>
-            <DialogTitle>Changer d'adresse e-mail</DialogTitle>
+            <DialogTitle className="text-2xl font-bold flex items-center gap-3">
+                <Mail className="text-primary"/>
+                Reconfiguration d'Identité
+            </DialogTitle>
+            <DialogDescription>
+                Entrez votre nouvelle adresse e-mail et confirmez avec votre mot de passe.
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4">
+          <div className="space-y-6 pt-4">
              <div className="space-y-2">
-              <Label htmlFor="new-email">Nouvelle adresse e-mail</Label>
-              <Input id="new-email" type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="nouvel@email.com" />
+              <Label htmlFor="new-email" className="font-semibold text-muted-foreground">Nouvel Email</Label>
+              <div className="relative flex items-center">
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                  <Input id="new-email" type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="nouvel@email.com" className="pl-10 bg-background/50"/>
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email-password">Mot de passe actuel</Label>
+              <Label htmlFor="email-password" className="font-semibold text-muted-foreground">Mot de passe actuel</Label>
               <div className="relative flex items-center">
-                <Input id="email-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" />
-                <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground -ml-8" onClick={() => setShowCurrentPassword(p => !p)}>
-                    {showCurrentPassword ? <EyeOff /> : <Eye />}
+                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                <Input id="email-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="pl-10 bg-background/50" />
+                <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
+                    {showCurrentPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                 </Button>
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="ghost" onClick={() => setIsModalOpen(null)}>Annuler</Button>
-            <Button onClick={handleChangeEmail} disabled={isProcessing || !currentPassword || !newEmail}>
+          <DialogFooter className="pt-6">
+            <Button variant="ghost" onClick={() => setIsModalOpen(null)} className="w-full sm:w-auto">Annuler</Button>
+            <Button onClick={handleChangeEmail} disabled={isProcessing || !currentPassword || !newEmail} className="w-full sm:w-auto">
               {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Enregistrer
+              Confirmer
             </Button>
           </DialogFooter>
         </DialogContent>
