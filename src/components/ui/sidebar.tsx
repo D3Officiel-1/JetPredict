@@ -49,9 +49,9 @@ const StrategyItem = ({ icon, title, description }: { icon: React.ReactNode; tit
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary font-bold">{icon}</span>
             {title}
         </h3>
-        <p className="text-sm text-muted-foreground whitespace-pre-line">
+        <div className="text-sm text-muted-foreground whitespace-pre-line">
             {description}
-        </p>
+        </div>
     </div>
 );
 
@@ -643,7 +643,7 @@ Un joueur qui s’adapte survivra plus longtemps et fera plus de profits.`}
                                 icon={<span className="font-bold text-lg">25</span>}
                                 title="Exemple concret en FCFA"
                                 description={
-                                    <>
+                                    <div>
                                         <pre className="font-code text-xs bg-background/50 p-3 rounded-md overflow-x-auto">
                                             {`Tour | Mise(FCFA) | Cible | Gain Potentiel | Action\n--------------------------------------------------------------\n1    | 500       | 1,8x  | 900            | Retirer tôt\n2    | 500       | 2,5x  | 1 250          | Retirer moyen\n3    | 500       | 5x    | 2 500          | Retirer à 3x\n4    | 500       | 10x   | 5 000          | Risqué → 200FCFA\n5    | 1 000     | 1,5x  | 1 500          | Retirer tôt`}
                                         </pre>
@@ -652,7 +652,7 @@ Un joueur qui s’adapte survivra plus longtemps et fera plus de profits.`}
                                             <p>Note les résultats, ajuste et reste discipliné pour maximiser les gains.</p>
                                             <p>Avec cette méthode, tu transformes un jeu aléatoire en jeu stratégique et rentable.</p>
                                         </div>
-                                    </>
+                                    </div>
                                 }
                             />
                              <StrategyItem
