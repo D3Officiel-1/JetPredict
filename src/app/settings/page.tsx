@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -449,11 +448,11 @@ export default function SettingsPage() {
                                 </AlertDialogHeader>
                                 <div className="space-y-2">
                                     <Label htmlFor="delete-password">Entrez votre mot de passe pour confirmer :</Label>
-                                    <div className="relative flex items-center">
-                                        <Input id="delete-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
-                                        <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground -ml-8" onClick={() => setShowCurrentPassword(p => !p)}>
-                                            {showCurrentPassword ? <EyeOff /> : <Eye />}
-                                        </Button>
+                                    <div className="relative">
+                                        <Input id="delete-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10" />
+                                        <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
+                                            {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                        </button>
                                     </div>
                                 </div>
                                 <AlertDialogFooter>
@@ -479,29 +478,29 @@ export default function SettingsPage() {
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="current-password">Mot de passe actuel</Label>
-              <div className="relative flex items-center">
-                <Input id="current-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} />
-                <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground -ml-8" onClick={() => setShowCurrentPassword(p => !p)}>
-                    {showCurrentPassword ? <EyeOff /> : <Eye />}
-                </Button>
+              <div className="relative">
+                <Input id="current-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10"/>
+                <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
+                    {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="new-password">Nouveau mot de passe</Label>
-              <div className="relative flex items-center">
-                <Input id="new-password" type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                 <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground -ml-8" onClick={() => setShowNewPassword(p => !p)}>
-                    {showNewPassword ? <EyeOff /> : <Eye />}
-                </Button>
+              <div className="relative">
+                <Input id="new-password" type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="pr-10"/>
+                 <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
+                    {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirm-password">Confirmer le nouveau mot de passe</Label>
-               <div className="relative flex items-center">
-                <Input id="confirm-password" type={showNewPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                 <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground -ml-8" onClick={() => setShowNewPassword(p => !p)}>
-                    {showNewPassword ? <EyeOff /> : <Eye />}
-                </Button>
+               <div className="relative">
+                <Input id="confirm-password" type={showNewPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="pr-10"/>
+                 <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
+                    {showNewPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                </button>
               </div>
             </div>
           </div>
@@ -536,12 +535,12 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="email-password" className="font-semibold text-muted-foreground">Mot de passe actuel</Label>
-              <div className="relative flex items-center">
+              <div className="relative">
                 <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
-                <Input id="email-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="pl-10 bg-background/50" />
-                <Button type="button" variant="ghost" size="icon" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-muted-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
+                <Input id="email-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="pl-10 pr-10 bg-background/50" />
+                <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
                     {showCurrentPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                </Button>
+                </button>
               </div>
             </div>
           </div>

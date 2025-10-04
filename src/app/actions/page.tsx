@@ -223,7 +223,7 @@ const ActionContent = () => {
                     <div className="space-y-6">
                         <div className="space-y-2">
                             <Label htmlFor="newPassword">Nouveau mot de passe</Label>
-                            <div className="relative flex items-center">
+                             <div className="relative">
                                 <Input
                                     id="newPassword"
                                     type={showPassword ? 'text' : 'password'}
@@ -232,14 +232,14 @@ const ActionContent = () => {
                                     required
                                     className="bg-background/50 pr-10"
                                 />
-                                <Button type="button" variant="ghost" size="icon" className="absolute right-1 h-7 w-7 text-muted-foreground" onClick={() => setShowPassword(p => !p)}>
+                                <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
                                     {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                                </Button>
+                                </button>
                             </div>
                         </div>
                         <div className="space-y-2">
                             <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
-                             <div className="relative flex items-center">
+                             <div className="relative">
                                 <Input
                                     id="confirmPassword"
                                     type={showPassword ? 'text' : 'password'}
@@ -248,9 +248,9 @@ const ActionContent = () => {
                                     required
                                     className="bg-background/50 pr-10"
                                 />
-                                 <Button type="button" variant="ghost" size="icon" className="absolute right-1 h-7 w-7 text-muted-foreground" onClick={() => setShowPassword(p => !p)}>
+                                 <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
                                     {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                                </Button>
+                                </button>
                             </div>
                         </div>
                          <Button type="submit" className="w-full" disabled={isProcessing}>

@@ -704,11 +704,11 @@ export default function RegisterPage() {
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="password">Mot de passe</Label>
-                        <div className="relative flex items-center">
-                            <Input id="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handlePasswordChange} required />
-                            <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground -ml-8" onClick={() => setShowPassword(p => !p)}>
-                            {showPassword ? <EyeOff /> : <Eye />}
-                            </Button>
+                        <div className="relative">
+                            <Input id="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handlePasswordChange} required className="pr-10" />
+                            <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
+                                {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                            </button>
                         </div>
                        <div className="grid grid-cols-4 gap-2 pt-2">
                           {[...Array(4)].map((_, i) => (
@@ -718,11 +718,11 @@ export default function RegisterPage() {
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
-                       <div className="relative flex items-center">
-                          <Input id="confirmPassword" type={showPassword ? "text" : "password"} value={formData.confirmPassword} onChange={handlePasswordChange} required />
-                           <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground -ml-8" onClick={() => setShowPassword(p => !p)}>
-                            {showPassword ? <EyeOff /> : <Eye />}
-                          </Button>
+                       <div className="relative">
+                          <Input id="confirmPassword" type={showPassword ? "text" : "password"} value={formData.confirmPassword} onChange={handlePasswordChange} required className="pr-10" />
+                           <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
+                            {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                          </button>
                       </div>
                     </div>
                   </div>

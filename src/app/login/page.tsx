@@ -380,18 +380,18 @@ export default function LoginPage() {
                   Mot de passe oublié ?
                 </Link>
               </div>
-              <div className="relative flex items-center">
+              <div className="relative">
                 <Input 
                   id="password" 
                   type={showPassword ? "text" : "password"} 
                   required 
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="bg-background/50"
+                  className="bg-background/50 pr-10"
                 />
-                <Button type="button" variant="ghost" size="icon" className="absolute right-1 h-7 w-7 text-muted-foreground" onClick={() => setShowPassword(p => !p)}>
+                <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
                   {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                </Button>
+                </button>
               </div>
             </div>
             <div className="flex flex-col gap-4 mt-4">
