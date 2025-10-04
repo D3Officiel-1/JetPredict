@@ -242,39 +242,6 @@ export default function NotificationPage() {
     e.stopPropagation();
     window.open(link, '_blank', 'noopener,noreferrer');
   }
-
-  const handleMarkAllAsRead = async () => {
-    if (!user) return;
-    const batch = writeBatch(db);
-    const notificationsRef = collection(db, 'users', user.uid, 'notifications');
-    const unreadQuery = query(notificationsRef, where('isRead', '==', false));
-    const unreadSnapshot = await getDocs(unreadQuery);
-
-    unreadSnapshot.docs.forEach(document => {
-        batch.update(document.ref, { isRead: true });
-    });
-
-    await batch.commit();
-  };
-  
-  const handleDeleteAll = async (type: 'read' | 'all') => {
-      if (!user) return;
-      const batch = writeBatch(db);
-      const notificationsRef = collection(db, 'users', user.uid, 'notifications');
-      let queryToDelete;
-
-      if (type === 'read') {
-          queryToDelete = query(notificationsRef, where('isRead', '==', true));
-      } else {
-          queryToDelete = query(notificationsRef);
-      }
-      
-      const snapshot = await getDocs(queryToDelete);
-      snapshot.docs.forEach(document => {
-          batch.delete(document.ref);
-      });
-      await batch.commit();
-  };
   
   const handleToggleRead = async (e: React.MouseEvent, notif: Notification) => {
     e.stopPropagation();
@@ -346,7 +313,7 @@ export default function NotificationPage() {
                            Tout Sél.
                         </Button>
                     </div>
-                    {selectedIds.size > 0 && (
+                    {selectedIds.size >= 1 && (
                         <div className="flex items-center gap-2">
                              <Button variant="secondary" size="sm" onClick={() => handleBulkAction('read')}>
                                 <CheckCheck className="h-4 w-4 mr-2" />
