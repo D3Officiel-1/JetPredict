@@ -239,9 +239,9 @@ export default function Header() {
   if (!user) return null;
 
   const StrategyItem = ({ title, content }: { title: string, content: React.ReactNode }) => (
-    <div className="space-y-2">
-      <h4 className="text-md font-semibold text-primary">{title}</h4>
-      <div className="text-sm text-muted-foreground space-y-1">{content}</div>
+    <div className="p-4 bg-muted/30 border border-border/30 rounded-lg space-y-2">
+        <h4 className="text-md font-semibold text-primary">{title}</h4>
+        <div className="text-sm text-muted-foreground space-y-1">{content}</div>
     </div>
   );
 
