@@ -16,7 +16,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowLeft, User as UserIcon, Wallet, ShieldCheck, CalendarIcon, Smartphone, Gamepad2, Gift, AtSign, Clock, Edit, Link2, Copy, Check, Bot } from 'lucide-react';
+import { User as UserIcon, Wallet, ShieldCheck, CalendarIcon, Smartphone, Gamepad2, Gift, AtSign, Clock, Edit, Link2, Copy, Check, Bot } from 'lucide-react';
 import Link from 'next/link';
 import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
