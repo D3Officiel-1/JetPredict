@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket, Gamepad2, TrendingUp, HandCoins } from 'lucide-react';
+import { LogOut, Settings, User as UserIcon, Beaker, Bell, LifeBuoy, Users, ShieldAlert, HelpCircle, Compass, X, Wallet, Rocket, Gamepad2, TrendingUp, HandCoins, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import type { PlanId } from '@/types';
@@ -459,7 +459,7 @@ Utilise-le seulement pour des occasions où ton capital principal est déjà sé
 Cette stratégie doit être ponctuelle et réfléchie, jamais systématique.
 Elle peut transformer une petite mise en jackpot mais peut aussi tout faire disparaître en un tour.`}
                             />
-                            <StrategyItem
+                             <StrategyItem
                                 icon={<span className="font-bold text-lg">7</span>}
                                 title="7. Gestion du capital"
                                 description={`Ne jamais risquer plus de 1–2 % du capital par tour.
@@ -489,7 +489,7 @@ Elle te protège contre des crashes consécutifs élevés qui peuvent tout brûl
 Combine-la avec des retraits sécurisés pour limiter les pertes.
 C’est une version plus prudente et adaptée aux petits capitales.`}
                             />
-                            <StrategyItem
+                             <StrategyItem
                                 icon={<span className="font-bold text-lg">10</span>}
                                 title="10. Fibonacci"
                                 description={`Augmente la mise selon la suite de Fibonacci après chaque perte : 500 → 500 → 1 000 → 1 500 → 2 500.
@@ -519,7 +519,7 @@ Cherche les cycles ou répétitions qui peuvent influencer ton timing.
 Ce n’est jamais garanti, mais l’observation augmente tes chances de gains.
 C’est un outil stratégique que beaucoup de joueurs ignorent.`}
                             />
-                            <StrategyItem
+                             <StrategyItem
                                 icon={<span className="font-bold text-lg">13</span>}
                                 title="13. Fixer un objectif"
                                 description={`Détermine un objectif clair par session, par exemple 10 000 FCFA de gains.
@@ -529,7 +529,7 @@ Tu peux aussi définir des mini-objectifs pour suivre ta progression.
 Cette discipline transforme un jeu aléatoire en session rentable.
 Objectifs = motivation + limite psychologique pour contrôler le jeu.`}
                             />
-                             <StrategyItem
+                            <StrategyItem
                                 icon={<span className="font-bold text-lg">14</span>}
                                 title="14. Plafond de perte"
                                 description={`Détermine combien tu es prêt à perdre par session, ex. 20 % du capital.
@@ -539,7 +539,7 @@ Cela impose une discipline stricte et protège ton capital sur le long terme.
 Combine avec un objectif de gain pour équilibrer risque et profit.
 Ne jamais dépasser ton plafond = règle d’or.`}
                             />
-                            <StrategyItem
+                             <StrategyItem
                                 icon={<span className="font-bold text-lg">15</span>}
                                 title="15. Ne pas courir après les pertes"
                                 description={`Perdre plusieurs tours de suite peut déclencher l’adrénaline.
@@ -548,6 +548,46 @@ C’est la manière la plus rapide de tout perdre.
 Fais une pause ou reprends avec des mises sécurisées.
 Apprendre à accepter les pertes est clé pour un jeu rentable.
 Le contrôle émotionnel est plus important que la stratégie technique.`}
+                            />
+                             <StrategyItem
+                                icon={<span className="font-bold text-lg">16</span>}
+                                title="16. Fractionner les mises"
+                                description={`Divise ton capital en plusieurs petites mises sur différents multiplicateurs.
+Exemple : 50 000 FCFA → 5 mises de 1 000 FCFA + 10 mises de 500 FCFA.
+Cela te permet de sécuriser des gains constants tout en tentant des multiplicateurs élevés.
+Chaque mini-mise agit comme un pari indépendant.
+Réduit le risque global et augmente tes chances de gains cumulés.
+C’est une technique que les pros utilisent pour gérer le capital efficacement.`}
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">17</span>}
+                                title="17. Timing du retrait"
+                                description={`Le timing est essentiel : retirer trop tôt = petits gains, trop tard = perte.
+Observe la montée du multiplicateur et fixe un seuil cible par tour.
+Exemple : retirer à 1,8x pour sécuriser ou à 3x pour un peu plus de profit.
+Adapte selon ton capital et ton objectif de gain.
+Ne jamais baser le timing uniquement sur le feeling.
+L’observation et l’expérience permettent de trouver le bon moment pour retirer.`}
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">18</span>}
+                                title="18. Combinaison des stratégies"
+                                description={`Ne te limite pas à une seule stratégie.
+Combine retraits sécurisés, martingale modifiée et mises fractionnelles pour équilibrer risque et gain.
+Exemple : 70 % des mises sécurisées, 20 % en retrait moyen, 10 % en gros multiplicateur.
+Cela permet de rester rentable même si certains tours crashent.
+Tu diversifies tes paris comme un trader gère un portefeuille.
+La combinaison est plus efficace qu’une seule stratégie isolée.`}
+                            />
+                            <StrategyItem
+                                icon={<span className="font-bold text-lg">19</span>}
+                                title="19. Profiter des bonus"
+                                description={`Beaucoup de casinos offrent bonus, free bets ou tours gratuits.
+Exemple : 10 % bonus sur dépôt = capital supplémentaire à jouer sans risque réel.
+Cela permet de tester des stratégies ou multiplier tes gains.
+Lis toujours les conditions pour ne pas te retrouver piégé.
+Les bonus peuvent transformer une session moyenne en session rentable.
+C’est une ressource sous-utilisée par la plupart des joueurs.`}
                             />
                         </TabsContent>
                     </div>
