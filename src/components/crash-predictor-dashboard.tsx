@@ -1036,15 +1036,22 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         onClick={() => setIsFullScreenPredictionOpen(false)}
                     />
                     <motion.div
-                        key="card"
+                        key="fullscreen-card-wrapper"
                         className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4"
                         initial={{ opacity: 0, scale: 0.9 }}
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.9 }}
                         transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+                        onClick={(e) => {
+                            // Close only if clicking on the wrapper itself, not its children
+                            if (e.target === e.currentTarget) {
+                                setIsFullScreenPredictionOpen(false);
+                            }
+                        }}
                     >
                         <div
-                            className="relative w-full max-w-4xl flex-1 bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-between p-4 sm:p-8 text-center overflow-hidden max-h-[80vh] sm:max-h-[700px]"
+                            className="relative w-full max-w-4xl bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center gap-6 p-4 sm:p-8 text-center overflow-hidden"
+                            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
                         >
                             {/* Background Elements */}
                             <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
@@ -1052,14 +1059,14 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                             <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-primary/10 to-transparent -z-10"></div>
                             <div className="absolute inset-0 border-[6px] border-primary/20 rounded-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
 
-                            <div className="flex-shrink-0">
+                            <div>
                                 <p className="text-muted-foreground mb-1">Prédiction pour</p>
                                 <div className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
                                     <h2 className="text-2xl sm:text-4xl font-bold text-primary font-code">{fullScreenPredictionData.time}</h2>
                                 </div>
                             </div>
                             
-                            <div className="flex-grow flex flex-col items-center justify-center">
+                            <div>
                                 <motion.div 
                                     className="text-[15vw] sm:text-9xl md:text-[180px] lg:text-[220px] font-extrabold bg-clip-text text-transparent bg-gradient-to-br from-primary via-blue-300 to-cyan-200"
                                     style={{
@@ -1073,7 +1080,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                                 </motion.div>
                             </div>
                         
-                            <div className="w-full max-w-xl flex-shrink-0">
+                            <div className="w-full max-w-xl">
                                 {isFetchingStrategies ? (
                                     <div className="flex h-32 items-center justify-center p-4 text-muted-foreground">
                                         <Loader2 className="mr-3 h-6 w-6 animate-spin" />
@@ -1148,5 +1155,6 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       </div>
   );
 }
+
 
 
