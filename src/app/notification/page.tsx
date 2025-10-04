@@ -7,11 +7,11 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { app, db } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink, MoreVertical, Eye, EyeOff } from 'lucide-react';
+import { Gift, ShieldCheck, Info, Trash2, CheckCheck, Megaphone, ExternalLink, MoreVertical, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { collection, query, onSnapshot, orderBy, doc, updateDoc, writeBatch, getDocs, where, Timestamp, deleteDoc } from 'firebase/firestore';
 import { cn } from '@/lib/utils';
-import { BellIcon, MailOpenIcon } from '@/components/icons';
+import { MailOpenIcon } from '@/components/icons';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import Image from 'next/image';
@@ -316,34 +316,35 @@ export default function NotificationPage() {
                           >
                             <div className="absolute inset-0 bg-[linear-gradient(45deg,hsla(0,0%,100%,.03)_25%,transparent_25%,transparent_50%,hsla(0,0%,100%,.03)_50%,hsla(0,0%,100%,.03)_75%,transparent_75%,transparent)] bg-[length:60px_60px] opacity-50 -z-10"></div>
                               
-                              <div className="flex justify-between items-start mb-2">
+                               <div className="flex justify-between items-start mb-2">
                                   <h3 className="font-semibold text-foreground text-lg">{notif.title}</h3>
-                                  <p className="text-xs text-muted-foreground whitespace-nowrap">
-                                      {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                                  </p>
+                                  <div className="flex items-center gap-2">
+                                    <p className="text-xs text-muted-foreground whitespace-nowrap">
+                                        {notif.timestamp?.toDate().toLocaleString('fr-FR', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                                    </p>
+                                      {notif.type !== 'global' && (
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-foreground opacity-50 group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
+                                                    <MoreVertical size={16} />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
+                                                <DropdownMenuItem onClick={(e) => handleToggleRead(e, notif)}>
+                                                    {notif.isRead ? <Eye className="mr-2 h-4 w-4" /> : <EyeOff className="mr-2 h-4 w-4" />}
+                                                    <span>Marquer comme {notif.isRead ? 'non lu' : 'lu'}</span>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem onClick={(e) => handleDelete(e, notif.id)} className="text-destructive focus:text-destructive">
+                                                    <Trash2 className="mr-2 h-4 w-4" />
+                                                    <span>Supprimer</span>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                      )}
+                                  </div>
                               </div>
                               <p className="text-sm text-muted-foreground mb-3">{notif.message}</p>
                               
-                              {notif.type !== 'global' && (
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="absolute top-2 right-2 h-8 w-8 text-muted-foreground hover:text-foreground opacity-50 group-hover:opacity-100" onClick={(e) => e.stopPropagation()}>
-                                            <MoreVertical size={18} />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>
-                                        <DropdownMenuItem onClick={(e) => handleToggleRead(e, notif)}>
-                                            {notif.isRead ? <Eye className="mr-2 h-4 w-4" /> : <EyeOff className="mr-2 h-4 w-4" />}
-                                            <span>Marquer comme {notif.isRead ? 'non lu' : 'lu'}</span>
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem onClick={(e) => handleDelete(e, notif.id)} className="text-destructive focus:text-destructive">
-                                            <Trash2 className="mr-2 h-4 w-4" />
-                                            <span>Supprimer</span>
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                              )}
-
                               {notif.mediaUrl && (
                                   <div className="mt-3 rounded-lg overflow-hidden border border-border/50">
                                       {isVideo(notif.mediaUrl) ? (
