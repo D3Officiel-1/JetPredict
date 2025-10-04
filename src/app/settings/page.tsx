@@ -384,7 +384,7 @@ export default function SettingsPage() {
                     <Label className="text-sm font-semibold text-muted-foreground ml-1 mb-2 block">Installer l'Application</Label>
                     <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-4 border border-border/30 items-end">
                         <button onClick={handleAndroidInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-                            <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={40} height={40} className={cn("dark:invert-0 invert")}/>
+                            <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={40} height={40} />
                             <span>Android</span>
                         </button>
                         <button onClick={handleIosInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
@@ -476,9 +476,9 @@ export default function SettingsPage() {
           <div className="space-y-6 pt-4">
             <div className="space-y-2">
                 <Label htmlFor="current-password" className="font-semibold text-muted-foreground">Mot de passe actuel</Label>
-                <div className="relative flex items-center">
-                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                <div className="relative">
                     <Input id="current-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="pl-10 pr-10 bg-background/50" />
+                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
                     <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
                         {showCurrentPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -486,9 +486,9 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-2">
                 <Label htmlFor="new-password" className="font-semibold text-muted-foreground">Nouveau mot de passe</Label>
-                <div className="relative flex items-center">
-                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                <div className="relative">
                     <Input id="new-password" type={showNewPassword ? "text" : "password"} value={newPassword} onChange={(e) => setNewPassword(e.target.value)} placeholder="Nouveau secret" className="pl-10 pr-10 bg-background/50"/>
+                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
                      <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
                         {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
@@ -496,11 +496,11 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-2">
                 <Label htmlFor="confirm-password" className="font-semibold text-muted-foreground">Confirmer le nouveau mot de passe</Label>
-                <div className="relative flex items-center">
-                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+                <div className="relative">
                     <Input id="confirm-password" type={showNewPassword ? "text" : "password"} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} placeholder="Confirmer le secret" className="pl-10 pr-10 bg-background/50"/>
+                     <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
                      <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowNewPassword(p => !p)}>
-                        {showNewPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                        {showNewPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                 </div>
             </div>
@@ -529,16 +529,16 @@ export default function SettingsPage() {
           <div className="space-y-6 pt-4">
              <div className="space-y-2">
               <Label htmlFor="new-email" className="font-semibold text-muted-foreground">Nouvel Email</Label>
-              <div className="relative flex items-center">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
+              <div className="relative">
                   <Input id="new-email" type="email" value={newEmail} onChange={(e) => setNewEmail(e.target.value)} placeholder="nouvel@email.com" className="pl-10 bg-background/50"/>
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
               </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email-password" className="font-semibold text-muted-foreground">Mot de passe actuel</Label>
               <div className="relative">
-                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
                 <Input id="email-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} placeholder="••••••••" className="pl-10 pr-10 bg-background/50" />
+                <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none" />
                 <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
                     {showCurrentPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                 </button>
@@ -559,7 +559,7 @@ export default function SettingsPage() {
             <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                         <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={24} height={24} className={cn("dark:invert-0 invert")}/>
+                         <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={24} height={24} />
                         Guide d'installation pour Android
                     </DialogTitle>
                 </DialogHeader>

@@ -678,7 +678,7 @@ export default function LandingPage() {
                         <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
                         <div className="flex flex-col sm:flex-row items-end gap-2 justify-start">
                             <button onClick={handleAndroidInstallClick} className="cursor-pointer">
-                                <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} className={cn("dark:invert-0 invert")}/>
+                                <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
                             </button>
                             <button onClick={handleIosInstallClick} className="cursor-pointer">
                                 <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={60} height={35} className={cn("dark:invert-0 invert")}/>
@@ -714,7 +714,7 @@ export default function LandingPage() {
             <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                         <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={24} height={24} className={cn("dark:invert-0 invert")}/>
+                         <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={24} height={24} />
                         Guide d'installation pour Android
                     </DialogTitle>
                 </DialogHeader>
@@ -791,4 +791,3 @@ export default function LandingPage() {
     
 
     
-
