@@ -22,6 +22,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 import Header from '@/components/ui/sidebar';
+import { motion } from 'framer-motion';
 
 const SettingItem = ({ icon, title, description, action, disabled = false }: { icon: React.ReactNode, title: string, description: string, action: React.ReactNode, disabled?: boolean }) => (
   <div className={cn(
@@ -400,66 +401,76 @@ export default function SettingsPage() {
             </CardContent>
         </Card>
         
-        <Card className="bg-card/70 backdrop-blur-sm border-destructive/50">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-destructive"><ShieldAlert />Zone de Danger</CardTitle>
-                <CardDescription>Ces actions sont irréversibles.</CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-                 <div className="flex items-center justify-between p-4 border-b border-destructive/20">
-                    <div className="flex items-center gap-4">
-                        <div className="text-destructive"><LogOut size={24} /></div>
+        <div className="relative p-6 bg-red-950/50 border border-red-500/30 rounded-2xl overflow-hidden shadow-lg shadow-red-500/10 group">
+          <motion.div 
+            className="absolute inset-0 border-2 border-red-500/50 rounded-2xl pointer-events-none"
+            initial={{ scale: 0.95, opacity: 0 }}
+            animate={{ scale: [1, 1.01, 1], opacity: 1 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          ></motion.div>
+            <div className="absolute inset-0 bg-grid-pattern opacity-[0.05]"></div>
+            
+            <div className="text-center mb-6">
+                <h3 className="font-mono uppercase tracking-widest text-red-400"> // Zone de Danger //</h3>
+                <p className="text-sm text-red-400/60">Actions irréversibles. Procéder avec prudence.</p>
+            </div>
+
+            <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-black/20 rounded-lg border border-red-500/20">
+                    <div className="flex items-center gap-3">
+                        <LogOut className="h-6 w-6 text-red-400"/>
                         <div>
-                            <h3 className="font-semibold text-foreground">Se déconnecter</h3>
-                            <p className="text-sm text-muted-foreground">Mettre fin à votre session.</p>
+                            <h4 className="font-semibold text-foreground">Terminer la session</h4>
+                            <p className="text-sm text-red-400/70">Mettre fin à votre session active.</p>
                         </div>
                     </div>
-                    <div className="pl-4">
-                        <Button variant="outline" onClick={handleLogout}>Déconnexion</Button>
-                    </div>
+                    <Button variant="outline" onClick={handleLogout} className="border-red-500/50 text-red-400 hover:bg-red-500/10 hover:text-red-300 w-full sm:w-auto">
+                        Déconnexion
+                    </Button>
                 </div>
-                <div className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-4">
-                        <div className="text-destructive"><Trash2 size={24} /></div>
+
+                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-black/20 rounded-lg border border-red-500/20">
+                    <div className="flex items-center gap-3">
+                        <Trash2 className="h-6 w-6 text-red-400"/>
                         <div>
-                            <h3 className="font-semibold text-foreground">Supprimer mon compte</h3>
-                            <p className="text-sm text-muted-foreground">Vos données seront effacées.</p>
+                            <h4 className="font-semibold text-foreground">Supprimer le compte</h4>
+                            <p className="text-sm text-red-400/70">Effacement permanent des données.</p>
                         </div>
                     </div>
-                    <div className="pl-4">
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="destructive">Supprimer</Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                <AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    Cette action est irréversible. Votre compte, abonnements et données seront supprimés définitivement.
-                                </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <div className="space-y-2">
-                                    <Label htmlFor="delete-password">Entrez votre mot de passe pour confirmer :</Label>
-                                    <div className="relative">
-                                        <Input id="delete-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10 bg-background/50" />
-                                        <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
-                                          {showCurrentPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                                        </button>
-                                    </div>
+                     <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                             <Button variant="destructive" className="bg-red-600/80 hover:bg-red-600 text-white w-full sm:w-auto">
+                                Initier Suppression
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                            <AlertDialogTitle>Êtes-vous absolument sûr ?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Cette action est irréversible. Votre compte, abonnements et données seront supprimés définitivement.
+                            </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <div className="space-y-2">
+                                <Label htmlFor="delete-password">Entrez votre mot de passe pour confirmer :</Label>
+                                <div className="relative">
+                                    <Input id="delete-password" type={showCurrentPassword ? "text" : "password"} value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="pr-10 bg-background/50" />
+                                    <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowCurrentPassword(p => !p)}>
+                                        {showCurrentPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                                    </button>
                                 </div>
-                                <AlertDialogFooter>
-                                <AlertDialogCancel onClick={() => setCurrentPassword('')}>Annuler</AlertDialogCancel>
-                                <AlertDialogAction onClick={handleDeleteAccount} disabled={isProcessing || !currentPassword}>
-                                     {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                    Confirmer la suppression
-                                </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </div> 
+                            </div>
+                            <AlertDialogFooter>
+                            <AlertDialogCancel onClick={() => setCurrentPassword('')}>Annuler</AlertDialogCancel>
+                            <AlertDialogAction onClick={handleDeleteAccount} disabled={isProcessing || !currentPassword}>
+                                    {isProcessing && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                Confirmer la suppression
+                            </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
       </main>
 
       <Dialog open={isModalOpen === 'password'} onOpenChange={(open) => !open && setIsModalOpen(null)}>
