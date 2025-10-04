@@ -101,7 +101,7 @@ const FABMenuItem = ({
   tooltip?: string;
 }) => {
     
-    const Wrapper = href && !disabled ? Link : 'button';
+    const Wrapper = href && !disabled ? Link : 'div';
     const props = href && !disabled ? { href, target: "_blank", rel: "noopener noreferrer" } : { onClick: disabled ? undefined : onClick };
     
     return (
@@ -113,7 +113,7 @@ const FABMenuItem = ({
                             {...props}
                             className={cn(
                                 "h-14 w-14 rounded-full flex items-center justify-center transition-transform hover:scale-110",
-                                disabled ? "cursor-not-allowed opacity-60" : ""
+                                disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
                             )}
                         >
                            {icon}
