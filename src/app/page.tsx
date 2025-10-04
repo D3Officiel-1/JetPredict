@@ -339,16 +339,13 @@ export default function LandingPage() {
                     transition={{ duration: 0.8, ease: "easeOut" }}
                     className="relative flex justify-center items-center lg:h-[500px]"
                 >
-                    <div 
-                    className="w-full h-full"
-                    >
+                    <div className="relative w-full aspect-square max-w-md lg:max-w-none">
                          <Image
-                        src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
-                        alt="Tableau de bord Jet Predict"
-                        width={700}
-                        height={700}
-                        className="rounded-full shadow-2xl object-cover border-8 border-primary/10"
-                        data-ai-hint="futuristic data"
+                            src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
+                            alt="Tableau de bord Jet Predict"
+                            fill
+                            className="rounded-full shadow-2xl object-cover border-8 border-primary/10"
+                            data-ai-hint="futuristic data"
                         />
                         <motion.div 
                             initial={{ opacity: 0, y: 20 }}
@@ -789,3 +786,4 @@ export default function LandingPage() {
 
 
     
+
