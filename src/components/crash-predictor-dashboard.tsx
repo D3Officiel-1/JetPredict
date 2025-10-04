@@ -106,6 +106,14 @@ interface NotificationSettings {
     vibrationEnabled?: boolean;
 }
 
+interface Star {
+  x: number;
+  y: number;
+  size: number;
+  opacity: number;
+}
+
+
 let pipVideoElement: HTMLVideoElement | null = null;
 let pipCanvasInterval: NodeJS.Timeout | null = null;
 
@@ -139,6 +147,7 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
   
   const notifiedPredictions = useRef(new Set());
   const pipCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const starsRef = useRef<Star[]>([]);
 
 
   const allowedRiskLevels = useMemo(() => PLAN_RISK_LEVELS[planId] || [], [planId]);
@@ -440,69 +449,51 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
+    
     const dpr = window.devicePixelRatio || 1;
-    canvas.width = 300 * dpr;
-    canvas.height = 400 * dpr;
-    ctx.scale(dpr, dpr);
     const width = 300;
     const height = 400;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    ctx.scale(dpr, dpr);
 
     const now = new Date();
     const timeString = now.toLocaleTimeString('fr-FR');
     
-    // --- Styles ---
     const primaryColor = 'hsl(195, 100%, 50%)';
     const fgColor = 'hsl(240, 27%, 93%)';
     const mutedColor = 'hsl(240, 19%, 72%)';
-    const bgColor = 'hsl(233, 38%, 14%)';
 
     // --- Background ---
     const bgGradient = ctx.createLinearGradient(0, 0, 0, height);
-    bgGradient.addColorStop(0, '#121832');
-    bgGradient.addColorStop(1, '#0c1023');
+    bgGradient.addColorStop(0, '#0a0f1e');
+    bgGradient.addColorStop(1, '#1a203c');
     ctx.fillStyle = bgGradient;
     ctx.fillRect(0, 0, width, height);
 
-    // --- Grid ---
-    ctx.strokeStyle = 'hsla(195, 100%, 50%, 0.1)';
-    ctx.lineWidth = 0.5;
-    for (let i = 0; i < width; i += 20) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, height);
-        ctx.stroke();
+    // --- Stars ---
+    if (starsRef.current.length === 0) {
+        for (let i = 0; i < 50; i++) {
+            starsRef.current.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 1.5,
+                opacity: Math.random() * 0.8
+            });
+        }
     }
-    for (let i = 0; i < height; i += 20) {
-        ctx.beginPath();
-        ctx.moveTo(0, i);
-        ctx.lineTo(width, i);
-        ctx.stroke();
-    }
-    
-    // --- Scanline effect ---
-    const scanlineY = (Date.now() % 3000) / 3000 * height;
-    const scanlineGradient = ctx.createLinearGradient(0, scanlineY - 20, 0, scanlineY + 20);
-    scanlineGradient.addColorStop(0, 'hsla(195, 100%, 50%, 0)');
-    scanlineGradient.addColorStop(0.5, 'hsla(195, 100%, 50%, 0.2)');
-    scanlineGradient.addColorStop(1, 'hsla(195, 100%, 50%, 0)');
-    ctx.fillStyle = scanlineGradient;
-    ctx.fillRect(0, scanlineY - 20, width, 40);
 
-    // --- Borders ---
-    ctx.strokeStyle = primaryColor;
-    ctx.lineWidth = 1;
-    const cornerSize = 15;
-    ctx.beginPath();
-    // TL corner
-    ctx.moveTo(cornerSize, 0); ctx.lineTo(0, 0); ctx.lineTo(0, cornerSize);
-    // TR corner
-    ctx.moveTo(width - cornerSize, 0); ctx.lineTo(width, 0); ctx.lineTo(width, cornerSize);
-    // BL corner
-    ctx.moveTo(0, height - cornerSize); ctx.lineTo(0, height); ctx.lineTo(cornerSize, height);
-    // BR corner
-    ctx.moveTo(width - cornerSize, height); ctx.lineTo(width, height); ctx.lineTo(width, height - cornerSize);
-    ctx.stroke();
+    ctx.fillStyle = 'white';
+    starsRef.current.forEach(star => {
+        star.y += 0.1;
+        if (star.y > height) {
+            star.y = 0;
+            star.x = Math.random() * width;
+        }
+        ctx.globalAlpha = star.opacity;
+        ctx.fillRect(star.x, star.y, star.size, star.size);
+    });
+    ctx.globalAlpha = 1;
 
 
     // --- Header ---
