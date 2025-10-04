@@ -43,7 +43,7 @@ const GuideStep = ({ icon, title, description }: { icon: React.ReactNode, title:
 
 const fabVariants = {
   closed: { scale: 1, rotate: 0 },
-  open: { scale: 1, rotate: 0 },
+  open: { scale: 1, rotate: 45 },
 };
 
 const menuContainerVariants = {
@@ -337,7 +337,7 @@ export default function Header() {
                     className="absolute bottom-20 flex flex-col items-center gap-4"
                   >
                     <FABMenuItem icon={<HelpCircle size={28} />} label="Guide" onClick={() => setIsGuideOpen(true)} />
-                    <FABMenuItem icon={<WhatsAppIcon size={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
+                    <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width={28} height={28} />} label="WhatsApp" href="https://whatsapp.com/channel/0029VbB81H82kNFwTwis9a07" />
                     <FABMenuItem icon={<Image src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram" width={28} height={28} />} label="Telegram" href="https://t.me/Predict_D3officiel" />
                   </motion.div>
                 )}
@@ -349,13 +349,7 @@ export default function Header() {
                 onClick={() => setIsFabMenuOpen(!isFabMenuOpen)}
                 whileTap={{ scale: 0.9 }}
               >
-                <motion.div
-                  animate={{ rotate: isFabMenuOpen ? 135 : 0, scale: 1 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                >
-                  <X size={32} style={{ display: isFabMenuOpen ? 'block' : 'none' }} />
-                  <Compass size={32} style={{ display: isFabMenuOpen ? 'none' : 'block' }} />
-                </motion.div>
+                  <Compass size={32} />
               </motion.button>
             </motion.div>
           </div>
