@@ -117,6 +117,45 @@ interface Star {
 let pipVideoElement: HTMLVideoElement | null = null;
 let pipCanvasInterval: NodeJS.Timeout | null = null;
 
+const PredictButton = ({ onClick, disabled, isPredicting }: { onClick: () => void; disabled: boolean; isPredicting: boolean }) => {
+    return (
+        <div className="relative flex items-center justify-center h-28 w-28">
+            <button
+                onClick={onClick}
+                disabled={disabled}
+                className={cn(
+                    "group relative h-24 w-24 rounded-full bg-gradient-to-br from-primary/50 to-primary/80 text-primary-foreground shadow-lg transition-all duration-300",
+                    "flex flex-col items-center justify-center",
+                    "hover:scale-105 hover:shadow-primary/40",
+                    "disabled:scale-100 disabled:bg-muted disabled:shadow-none disabled:cursor-not-allowed disabled:from-muted disabled:to-muted"
+                )}
+            >
+                {/* Static outer ring */}
+                <div className="absolute inset-0 rounded-full border-2 border-primary/30 opacity-50 transition-opacity duration-300 group-hover:opacity-100"></div>
+
+                {isPredicting ? (
+                    <>
+                        <div className="absolute inset-0 animate-spin" style={{ animationDuration: '1.5s' }}>
+                            <div className="absolute h-full w-full rounded-full border-t-2 border-b-2 border-transparent border-t-primary-foreground"></div>
+                        </div>
+                        <div className="absolute inset-2 animate-spin" style={{ animationDirection: 'reverse', animationDuration: '2s' }}>
+                            <div className="absolute h-full w-full rounded-full border-l-2 border-r-2 border-transparent border-l-primary-foreground/50"></div>
+                        </div>
+                        <span className="text-xs font-bold uppercase tracking-widest">Analyse</span>
+                    </>
+                ) : (
+                    <>
+                         {/* Pulsing glow */}
+                        <div className="absolute inset-0 rounded-full bg-primary/50 blur-lg transition-all duration-500 group-hover:blur-xl group-hover:bg-primary/70 animate-pulse group-disabled:hidden"></div>
+                        <Zap className="h-8 w-8 mb-1 transition-transform duration-300 group-hover:scale-110" />
+                        <span className="text-sm font-bold uppercase tracking-wider">Prédire</span>
+                    </>
+                )}
+            </button>
+        </div>
+    );
+};
+
 export function CrashPredictorDashboard({ planId, notificationSettings }: { planId: PlanId, notificationSettings?: NotificationSettings }) {
   const [isClient, setIsClient] = useState(false);
   const [gameHistory, setGameHistory] = useState<number[]>(INITIAL_HISTORY);
@@ -422,7 +461,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     ctx.scale(dpr, dpr);
 
     const now = new Date();
-    const timeString = now.toLocaleTimeString('fr-FR');
+    const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
     
     const primaryColor = 'hsl(195, 100%, 50%)';
     const fgColor = 'hsl(240, 27%, 93%)';
@@ -775,8 +814,8 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                 })}
               </RadioGroup>
 
-            <div className="grid lg:grid-cols-[1fr_auto] gap-4 items-end">
-              <div className="space-y-2">
+            <div className="grid lg:grid-cols-[1fr_auto] gap-4 items-center">
+              <div className="space-y-2 flex-1">
                 <Label htmlFor="history-input" className="flex items-center gap-2">
                     <LineChartIcon className="h-4 w-4" />
                     Historique des crashs (séparé par des espaces)
@@ -786,22 +825,15 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                   value={historyInput}
                   onChange={(e) => setHistoryInput(e.target.value)}
                   placeholder="Ex: 1.23x 4.56 2.01 10.42..."
-                  className="min-h-[80px] font-code bg-muted/30 border-dashed"
+                  className="min-h-[112px] font-code bg-muted/30 border-dashed"
                   disabled={isPredicting || hasFuturePredictions}
                 />
               </div>
-              <Button
+              <PredictButton
                 onClick={handlePrediction}
                 disabled={isPredicting || hasFuturePredictions || !historyInput.trim()}
-                className="w-full lg:w-auto h-20 lg:h-full text-lg"
-              >
-                {isPredicting ? (
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                ) : (
-                  <Zap className="mr-2 h-5 w-5" />
-                )}
-                Prédire
-              </Button>
+                isPredicting={isPredicting}
+              />
             </div>
             {hasFuturePredictions && (
               <Alert>
@@ -1118,4 +1150,5 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
 
     
+
 
