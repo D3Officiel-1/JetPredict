@@ -22,6 +22,7 @@ import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
 interface UserData {
   uid?: string;
@@ -48,9 +49,9 @@ interface PricingData {
   findate?: Timestamp;
 }
 
-const InfoRow = ({ label, value, icon, index = 0 }: { label: string; value: string | React.ReactNode; icon: React.ReactNode, index?: number }) => (
+const InfoRow = ({ label, value, icon, index = 0, className }: { label: string; value: string | React.ReactNode; icon: React.ReactNode, index?: number, className?: string }) => (
     <motion.div
-      className="relative flex flex-col gap-2 bg-muted/30 p-4 rounded-lg border border-border/20 overflow-hidden"
+      className={cn("relative flex flex-col gap-2 bg-muted/30 p-4 rounded-lg border border-border/20 overflow-hidden", className)}
       variants={{
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 }
@@ -361,7 +362,7 @@ export default function ProfilePage() {
                     >
                         <InfoRow icon={<UserIcon size={16}/>} label="Nom Complet" value={`${userData.firstName} ${userData.lastName}`} index={0} />
                         <InfoRow icon={<Smartphone size={16}/>} label="Téléphone" value={userData.phone} index={1} />
-                        <InfoRow icon={<Clock size={16}/>} label="Membre Depuis" value={formatDate(userData.createdAt)} index={2} />
+                        <InfoRow icon={<Clock size={16}/>} label="Membre Depuis" value={formatDate(userData.createdAt)} index={2} className="sm:col-span-2" />
                     </motion.div>
                 </CardContent>
             </Card>
@@ -381,7 +382,7 @@ export default function ProfilePage() {
                     >
                         <InfoRow icon={<Wallet size={16}/>} label="Solde parrainage" value={<span className="font-bold text-green-400">{`${(userData.solde_referral || 0).toLocaleString('fr-FR')} FCFA`}</span>} index={0} />
                         <InfoRow icon={<ShieldCheck size={16}/>} label="Plan Actif" value={<span className="font-bold text-primary">{getPlanName()}</span>} index={1} />
-                        <InfoRow icon={<CalendarIcon size={16}/>} label="Date de fin" value={formatDate(pricingData?.findate)} index={2} />
+                        <InfoRow icon={<CalendarIcon size={16}/>} label="Date de fin" value={formatDate(pricingData?.findate)} index={2} className="sm:col-span-2" />
                     </motion.div>
                 </CardContent>
             </Card>
