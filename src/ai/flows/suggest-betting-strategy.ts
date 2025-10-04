@@ -1,3 +1,4 @@
+
 'use server';
 
 /**
@@ -68,7 +69,25 @@ const suggestBettingStrategyFlow = ai.defineFlow(
     outputSchema: SuggestBettingStrategyOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
-    return output!;
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const {output} = await prompt(input);
+        if (output) {
+          return output;
+        }
+      } catch (error: any) {
+        if (error.message.includes('503') && retries > 1) {
+          console.log(`[suggestBettingStrategyFlow] Model overloaded, retrying... (${3 - retries + 1}/3)`);
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, 3 - retries) * 1000));
+        } else {
+          throw error;
+        }
+      }
+      retries--;
+    }
+    // Si toutes les tentatives échouent, renvoyer un objet vide ou une erreur significative.
+    // Pour cet exemple, nous allons lancer l'erreur finale.
+    throw new Error('Failed to get betting strategy after multiple retries.');
   }
 );

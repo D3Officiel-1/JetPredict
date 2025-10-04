@@ -134,30 +134,42 @@ const predictCrashPointFlow = ai.defineFlow(
       }
     }
     
-    // Si aucune prédiction cachée n'est trouvée ou si elles sont toutes passées, générer une nouvelle prédiction
-    const {output} = await predictCrashPointPrompt(input);
-    if (output) {
-      const predictionRef = doc(collection(db, "predictions"));
-      await setDoc(predictionRef, {
-        predictions: output.predictions,
-        userId: input.userId,
-        createdAt: serverTimestamp(),
-        historyHash: historyHash, // Sauvegarde le hash pour la mise en cache
-        inputData: {
-          gameName: input.gameName,
-          riskLevel: input.riskLevel,
-        },
-        savedStrategies: [], // Initialiser avec un tableau vide
-      });
-      
-      const docSnap = await getDoc(predictionRef);
-      const data = docSnap.data();
+    let retries = 3;
+    while (retries > 0) {
+      try {
+        const {output} = await predictCrashPointPrompt(input);
+        if (output) {
+          const predictionRef = doc(collection(db, "predictions"));
+          await setDoc(predictionRef, {
+            predictions: output.predictions,
+            userId: input.userId,
+            createdAt: serverTimestamp(),
+            historyHash: historyHash, // Sauvegarde le hash pour la mise en cache
+            inputData: {
+              gameName: input.gameName,
+              riskLevel: input.riskLevel,
+            },
+            savedStrategies: [], // Initialiser avec un tableau vide
+          });
+          
+          const docSnap = await getDoc(predictionRef);
+          const data = docSnap.data();
 
-      return { 
-        ...output, 
-        predictionId: predictionRef.id,
-        savedStrategies: data?.savedStrategies || [],
-      };
+          return { 
+            ...output, 
+            predictionId: predictionRef.id,
+            savedStrategies: data?.savedStrategies || [],
+          };
+        }
+      } catch (error: any) {
+        if (error.message.includes('503') && retries > 1) {
+          console.log(`[predictCrashPointFlow] Model overloaded, retrying... (${3 - retries + 1}/3)`);
+          await new Promise(resolve => setTimeout(resolve, Math.pow(2, 3 - retries) * 1000));
+        } else {
+          throw error;
+        }
+      }
+      retries--;
     }
     return { predictions: [] };
   }
