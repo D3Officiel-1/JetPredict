@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useTransition, useMemo, Fragment, useRef, useCallback } from "react";
@@ -1141,15 +1140,4 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
   );
 }
 
-
-
-
-
-
-
-
-
     
-
-
-
