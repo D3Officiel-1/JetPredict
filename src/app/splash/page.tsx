@@ -5,75 +5,44 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
+import { cn } from '@/lib/utils';
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      when: "beforeChildren",
-      staggerChildren: 0.2,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      duration: 0.5,
-      ease: "easeInOut",
-    },
-  },
-};
-
-const logoVariants = {
-  hidden: { scale: 0.5, opacity: 0 },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      damping: 15,
-      stiffness: 100,
-      delay: 0.2,
-    },
-  },
-};
-
-const textVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      stiffness: 100,
-    },
-  },
-};
-
-const loadingBarVariants = {
-  hidden: { width: "0%" },
-  visible: {
-    width: "100%",
-    transition: {
-      duration: 3,
-      ease: "linear",
-      delay: 0.5,
-    },
-  },
-};
+const systemChecks = [
+  "Booting JetOS...",
+  "Initializing prediction matrix...",
+  "Connecting to AI core...",
+  "Calibrating probability engine...",
+  "Loading quantum heuristics...",
+  "System online.",
+];
 
 export default function SplashPage() {
   const router = useRouter();
   const [isExiting, setIsExiting] = useState(false);
+  const [currentCheck, setCurrentCheck] = useState(0);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    // Navigate away after the full sequence
+    const navigationTimer = setTimeout(() => {
       setIsExiting(true);
       setTimeout(() => router.push('/'), 500); // Wait for exit animation
-    }, 3500);
+    }, 4000);
 
-    return () => clearTimeout(timer);
+    // Cycle through system check messages
+    const textInterval = setInterval(() => {
+      setCurrentCheck((prev) => {
+        if (prev < systemChecks.length - 1) {
+          return prev + 1;
+        }
+        clearInterval(textInterval);
+        return prev;
+      });
+    }, 500);
+
+    return () => {
+      clearTimeout(navigationTimer);
+      clearInterval(textInterval);
+    };
   }, [router]);
 
   return (
@@ -83,11 +52,27 @@ export default function SplashPage() {
           <motion.div
             className="absolute inset-0 z-0"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            animate={{ opacity: 1, transition: { duration: 1 } }}
             exit={{ opacity: 0 }}
           >
             <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
             <div className="absolute inset-0 bg-[radial-gradient(circle_800px_at_50%_50%,hsl(var(--primary)/0.1),transparent_70%)]"></div>
+             {[...Array(4)].map((_, i) => (
+                <motion.div
+                    key={i}
+                    className="absolute w-px h-full bg-gradient-to-b from-primary/0 to-primary/30 to-primary/0"
+                    initial={{ y: "-100%", opacity: 0 }}
+                    animate={{ y: ["-100%", "100%"], opacity: [0, 1, 0] }}
+                    transition={{
+                        delay: i * 0.5,
+                        duration: 3,
+                        repeat: Infinity,
+                        repeatType: "loop",
+                        ease: "linear",
+                    }}
+                    style={{ left: `${(i + 1) * 20}%` }}
+                />
+            ))}
           </motion.div>
         )}
       </AnimatePresence>
@@ -96,31 +81,26 @@ export default function SplashPage() {
         {!isExiting && (
           <motion.div
             key="splash-content"
-            variants={containerVariants}
             initial="hidden"
             animate="visible"
-            exit="exit"
-            className="z-10 flex flex-col items-center"
+            exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.5 } }}
+            className="z-10 flex flex-col items-center w-full max-w-sm"
           >
-            <motion.div variants={logoVariants} className="relative flex items-center justify-center">
+            <motion.div
+              className="relative w-32 h-32 mb-8"
+              initial={{ scale: 0.5, opacity: 0, rotate: -45 }}
+              animate={{ scale: 1, opacity: 1, rotate: 0, transition: { type: 'spring', damping: 15, stiffness: 100, delay: 0.3 } }}
+            >
               {[...Array(3)].map((_, i) => (
                 <motion.div
                   key={i}
-                  className="absolute rounded-full border border-primary/30"
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{
-                    scale: [1, 3],
-                    opacity: [1, 0],
-                  }}
+                  className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
+                  animate={{ rotate: 360 }}
                   transition={{
-                    delay: i * 0.5 + 0.5,
-                    duration: 2,
+                    delay: i * 0.2,
+                    duration: 10 + i * 5,
                     repeat: Infinity,
-                    ease: "easeOut",
-                  }}
-                  style={{
-                    width: '128px',
-                    height: '128px',
+                    ease: "linear",
                   }}
                 />
               ))}
@@ -135,25 +115,33 @@ export default function SplashPage() {
             </motion.div>
 
             <motion.h1
-              className="mt-6 text-5xl font-extrabold tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground"
-              variants={textVariants}
+              className="text-5xl font-extrabold tracking-tighter"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 0.8 } }}
             >
-              Jet Predict
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground">
+                Jet Predict
+              </span>
             </motion.h1>
 
-            <motion.div
-              className="mt-12 w-48 h-1 bg-muted/30 rounded-full overflow-hidden"
-              variants={textVariants}
+             <motion.div
+              className="mt-8 w-full h-8 flex items-center justify-center font-code text-sm text-primary"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { delay: 1 } }}
             >
-              <motion.div
-                className="h-full bg-gradient-to-r from-primary/50 to-primary rounded-full"
-                variants={loadingBarVariants}
-              />
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={currentCheck}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {systemChecks[currentCheck]}
+                </motion.p>
+              </AnimatePresence>
             </motion.div>
 
-            <motion.p className="mt-4 text-sm text-muted-foreground" variants={textVariants}>
-              Initialisation des systèmes...
-            </motion.p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -163,7 +151,7 @@ export default function SplashPage() {
           <motion.footer
             className="absolute bottom-5 text-xs text-muted-foreground/50 z-10"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1, transition: { delay: 0.8 } }}
+            animate={{ opacity: 1, transition: { delay: 1.5 } }}
             exit={{ opacity: 0 }}
           >
             © {new Date().getFullYear()} Jet Predict — #D3 Officiel
