@@ -315,34 +315,45 @@ export default function SettingsPage() {
             </CardContent>
         </Card>
 
-        <Card className="bg-card/70 backdrop-blur-sm border-border/50">
+        <Card className="relative bg-card/70 backdrop-blur-sm border-border/50 overflow-hidden">
+            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] -z-10"></div>
             <CardHeader>
-                <CardTitle>Sécurité du Compte</CardTitle>
+                <CardTitle>Terminal d'Authentification</CardTitle>
+                <CardDescription>Gérez vos identifiants de connexion.</CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-                 <div className="flex items-center justify-between p-4 border-b border-border/50">
-                    <div className="flex items-center gap-4">
-                        <div className="text-primary"><Mail size={24} /></div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">Changer d'adresse e-mail</h3>
-                            <p className="text-sm text-muted-foreground">Mettez à jour l'e-mail de votre compte.</p>
-                        </div>
+            <CardContent className="p-4 space-y-2">
+                 <div
+                    className="group relative flex items-center gap-4 rounded-lg bg-muted/30 p-4 border border-border/30 transition-all hover:border-primary/50 hover:bg-muted/50"
+                >
+                    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="p-3 rounded-lg bg-primary/10 text-primary border border-primary/20"><Mail size={24} /></div>
+                    <div className="flex-1">
+                        <h3 className="font-semibold text-foreground">Changer d'adresse e-mail</h3>
+                        <p className="text-sm text-muted-foreground truncate">{user.email}</p>
                     </div>
-                    <div className="pl-4">
-                        <Button variant="outline" onClick={() => setIsModalOpen('email')}>Modifier</Button>
-                    </div>
+                     <button
+                        onClick={() => setIsModalOpen('email')}
+                        className="font-bold text-sm text-primary opacity-70 group-hover:opacity-100 transition-opacity"
+                    >
+                        Modifier
+                    </button>
                 </div>
-                 <div className="flex items-center justify-between p-4">
-                    <div className="flex items-center gap-4">
-                        <div className="text-primary"><KeyRound size={24} /></div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">Changer de mot de passe</h3>
-                            <p className="text-sm text-muted-foreground">Utilisez un mot de passe fort.</p>
-                        </div>
+
+                <div
+                     className="group relative flex items-center gap-4 rounded-lg bg-muted/30 p-4 border border-border/30 transition-all hover:border-primary/50 hover:bg-muted/50"
+                >
+                    <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                    <div className="p-3 rounded-lg bg-primary/10 text-primary border border-primary/20"><KeyRound size={24} /></div>
+                    <div className="flex-1">
+                        <h3 className="font-semibold text-foreground">Changer de mot de passe</h3>
+                        <p className="text-sm text-muted-foreground">Utilisez un mot de passe fort et unique.</p>
                     </div>
-                    <div className="pl-4">
-                        <Button variant="outline" onClick={() => setIsModalOpen('password')}>Modifier</Button>
-                    </div>
+                    <button
+                        onClick={() => setIsModalOpen('password')}
+                        className="font-bold text-sm text-primary opacity-70 group-hover:opacity-100 transition-opacity"
+                    >
+                        Modifier
+                    </button>
                 </div>
             </CardContent>
         </Card>
@@ -611,4 +622,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-
