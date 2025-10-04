@@ -183,6 +183,7 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
   const [fullScreenPredictionData, setFullScreenPredictionData] = useState<SinglePrediction | null>(null);
   const [isOverlayGuideOpen, setIsOverlayGuideOpen] = useState(false);
   const [selectedStrategy, setSelectedStrategy] = useState<'conservative' | 'aggressive'>('conservative');
+  const [refreshKey, setRefreshKey] = useState(0);
   
   const pipCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const starsRef = useRef<Star[]>([]);
@@ -220,6 +221,12 @@ export function CrashPredictorDashboard({ planId, notificationSettings }: { plan
       unsubscribeAuth();
     };
   }, [auth]);
+
+  const handleCloseModal = () => {
+    setIsFullScreenPredictionOpen(false);
+    // Force a "transparent" refresh as requested by triggering a re-render.
+    setRefreshKey(prevKey => prevKey + 1);
+  };
 
 
   useEffect(() => {
@@ -791,7 +798,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
   );
 
   return (
-      <div className="flex flex-1 flex-col gap-4 md:gap-8">
+      <div className="flex flex-1 flex-col gap-4 md:gap-8" key={refreshKey}>
         <canvas ref={pipCanvasRef} style={{ display: 'none' }} width="300" height="400"></canvas>
         <Card className="bg-card/50 border-border/30 backdrop-blur-md">
           <CardHeader>
@@ -1046,25 +1053,21 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
         <AnimatePresence>
             {isFullScreenPredictionOpen && (
-                 <motion.div
-                    className="fixed inset-0 z-50 flex flex-col items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+                <motion.div
+                    className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/80 backdrop-blur-sm"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={(e) => {
-                        if (e.target === e.currentTarget) {
-                            setIsFullScreenPredictionOpen(false);
-                        }
-                    }}
+                    exit={{ opacity: 0, transition: { duration: 0.1 } }}
+                    onClick={handleCloseModal}
                 >
-                    <div className="flex-1 flex items-center justify-center w-full">
+                    <div className="relative w-full max-w-4xl flex-1 flex flex-col items-center justify-center p-4">
                         {fullScreenPredictionData && (
                             <motion.div
                                 className="relative w-full max-w-4xl bg-background/90 backdrop-blur-2xl border border-primary/20 rounded-2xl flex flex-col items-center justify-center gap-6 p-4 sm:p-8 text-center overflow-hidden"
                                 initial={{ opacity: 0, scale: 0.9 }}
                                 animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ type: 'spring', damping: 25, stiffness: 250 }}
+                                transition={{ type: 'spring', damping: 25, stiffness: 250, delay: 0.1 }}
+                                onClick={(e) => e.stopPropagation()}
                             >
                                 {/* Background Elements */}
                                 <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
@@ -1151,19 +1154,19 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                                 </div>
                             </motion.div>
                         )}
-                    </div>
-                     <motion.div
-                        className="flex justify-center flex-shrink-0 py-4"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
-                    >
-                        <button
-                            className="h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
-                            onClick={() => setIsFullScreenPredictionOpen(false)}
+                        <motion.div
+                            className="flex justify-center flex-shrink-0 py-4"
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0, transition: { delay: 0.2 } }}
                         >
-                            <X />
-                        </button>
-                    </motion.div>
+                            <button
+                                className="h-12 w-12 rounded-full bg-black/30 text-muted-foreground hover:text-foreground hover:bg-black/40 border border-white/10 backdrop-blur-sm flex items-center justify-center"
+                                onClick={handleCloseModal}
+                            >
+                                <X />
+                            </button>
+                        </motion.div>
+                    </div>
                 </motion.div>
             )}
         </AnimatePresence>
