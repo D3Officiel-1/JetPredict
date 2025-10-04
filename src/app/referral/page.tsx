@@ -263,46 +263,50 @@ Merci de traiter ma demande.`;
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header />
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 space-y-8">
-        <Card className="bg-card/70 backdrop-blur-sm border-border/50 overflow-hidden">
-             <CardContent className="p-6 space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-6 items-center">
-                     <div className="relative flex justify-center items-center">
-                        <div className="absolute h-24 w-24 bg-primary/10 rounded-full blur-xl"></div>
-                        <div className="relative bg-primary/10 text-primary rounded-full h-24 w-24 flex items-center justify-center border-2 border-primary/20 shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
+        <Card className="relative bg-card/70 backdrop-blur-sm border-border/50 overflow-hidden shadow-2xl shadow-primary/10">
+            <div className="absolute inset-0 bg-grid-pattern opacity-[0.03] -z-10"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-primary/5 to-transparent -z-10"></div>
+
+             <CardContent className="p-6 space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 items-center text-center md:text-left">
+                    <div>
+                        <p className="text-sm text-muted-foreground">Solde de parrainage</p>
+                        <p className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-300 drop-shadow-[0_0_10px_hsl(var(--primary)/0.5)]">
+                            {balance.toLocaleString('fr-FR')} <span className="text-3xl text-muted-foreground">FCFA</span>
+                        </p>
+                    </div>
+                    <div className="relative flex justify-center items-center h-24 w-24 mx-auto md:mx-0">
+                        <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl animate-pulse"></div>
+                        <div className="relative bg-primary/10 text-primary rounded-full h-24 w-24 flex items-center justify-center border-2 border-primary/30 shadow-[0_0_20px_hsl(var(--primary)/0.3)]">
                             <Gift className="w-12 h-12" />
                             <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs font-bold px-2 py-1 rounded-full border-2 border-background">
                                 20%
                             </div>
                         </div>
                     </div>
-                    <div className="text-center md:text-left">
-                        <p className="text-sm text-muted-foreground">Solde de parrainage</p>
-                        <p className="text-5xl font-bold text-primary">
-                            {balance.toLocaleString('fr-FR')} <span className="text-3xl text-muted-foreground">FCFA</span>
-                        </p>
-                    </div>
                 </div>
 
-                <div className="text-center bg-muted/50 p-4 rounded-lg border border-border/50">
+                <div className="text-center bg-muted/30 p-4 rounded-lg border border-border/30">
                     <p className="text-muted-foreground text-sm">
                         Partagez votre code. Pour chaque forfait acheté par vos filleuls, vous recevez 20% de commission.
                     </p>
                 </div>
                 
-                <div>
-                    <Label className="text-sm text-muted-foreground text-center block mb-2">Votre Code de Parrainage</Label>
-                    <div className="relative flex items-stretch gap-2">
-                        <div className="flex-1 text-center text-2xl font-bold tracking-widest bg-muted text-primary rounded-lg px-6 py-3 border border-dashed border-primary/50 flex items-center justify-center">
+                <div className="space-y-4">
+                    <Label className="text-sm text-muted-foreground text-center block">Votre Code de Parrainage</Label>
+                    <div className="relative flex items-stretch gap-2 group">
+                        <div className="absolute -inset-px bg-gradient-to-r from-primary/50 to-cyan-500/50 rounded-lg blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+                        <div className="relative flex-1 text-center text-2xl font-bold tracking-widest bg-muted text-primary rounded-lg px-6 py-3 border border-dashed border-primary/50 flex items-center justify-center">
                             {referralCode || <Loader2 className="w-5 h-5 animate-spin mx-auto"/>}
                         </div>
-                        <Button onClick={handleCopyCode} variant="outline" className="px-4 h-auto" disabled={!referralCode}>
+                        <Button onClick={handleCopyCode} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode}>
                             {isCopied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
                         </Button>
                     </div>
                 </div>
 
-                <div>
-                    <Button onClick={openWithdrawDialog} disabled={balance < 1000} className="w-full h-12 text-lg">
+                <div className="pt-2">
+                    <Button onClick={openWithdrawDialog} disabled={balance < 1000} className="w-full h-12 text-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-shadow">
                         <Download className="mr-2 h-5 w-5" />
                         Retirer mes gains
                     </Button>
@@ -446,11 +450,3 @@ Merci de traiter ma demande.`;
   );
 }
 
-
-    
-
-    
-
-    
-
-    
