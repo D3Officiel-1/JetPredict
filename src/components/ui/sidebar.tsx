@@ -373,13 +373,13 @@ export default function Header() {
                 <DialogHeader>
                     <DialogTitle>Guide</DialogTitle>
                 </DialogHeader>
-                <Tabs defaultValue="guide" className="py-4 flex-1 flex flex-col">
-                    <TabsList className="grid w-full grid-cols-2">
+                <Tabs defaultValue="guide" className="flex-1 flex flex-col overflow-hidden">
+                    <TabsList className="grid w-full grid-cols-2 shrink-0">
                         <TabsTrigger value="guide">Guide d'utilisation</TabsTrigger>
                         <TabsTrigger value="how-to">Comment Jouer</TabsTrigger>
                     </TabsList>
-                    <div className="flex-1 overflow-y-auto mt-4 pr-3">
-                        <TabsContent value="guide" className="pt-4">
+                    <div className="flex-1 overflow-y-auto mt-4 pr-2 -mr-3">
+                        <TabsContent value="guide" className="pt-2">
                             <div className="space-y-6">
                                 <GuideStep
                                     icon={<Users />}
@@ -398,7 +398,7 @@ export default function Header() {
                                 />
                             </div>
                         </TabsContent>
-                        <TabsContent value="how-to" className="pt-4">
+                        <TabsContent value="how-to" className="pt-2">
                             <div className="space-y-4">
                                 <StrategyItem
                                     icon={<span className="font-bold text-lg">1</span>}
