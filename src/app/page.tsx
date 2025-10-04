@@ -323,43 +323,21 @@ export default function LandingPage() {
 
             <div className="container relative z-10 flex flex-col items-center">
                  <motion.div
-                    className="relative mb-12 w-full max-w-xl aspect-square"
+                    className="relative mb-12 w-full max-w-xl aspect-video"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                  >
                      <Image
-                        src="https://res.cloudinary.com/dlxomrluy/image/upload/v1759515534/lpam8x97v127oxebnthn.png"
-                        alt="Holographic Globe"
+                        src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
+                        alt="Tableau de bord Jet Predict"
                         fill
-                        className="object-contain opacity-70 animate-[spin_60s_linear_infinite]"
+                        className="object-contain"
                         priority
-                        data-ai-hint="holographic globe"
+                        data-ai-hint="dashboard futuristic"
                      />
                      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#121832_80%)]"></div>
 
-                     {/* HUD Elements */}
-                     <motion.div 
-                        className="absolute top-[20%] left-[10%] w-32 h-16 bg-black/30 backdrop-blur-sm border border-primary/20 rounded-lg p-2 text-left"
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5, duration: 0.5 }}
-                    >
-                        <p className="text-xs text-primary/80 font-mono">FIABILITÉ</p>
-                        <p className="text-2xl font-bold text-green-400">99.8%</p>
-                        <div className="w-full bg-green-400/20 h-1 rounded-full mt-1"><div className="w-[99.8%] bg-green-400 h-1 rounded-full"></div></div>
-                    </motion.div>
-
-                     <motion.div 
-                        className="absolute bottom-[15%] right-[5%] w-48 h-20 bg-black/30 backdrop-blur-sm border border-primary/20 rounded-lg p-2 text-left"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.7, duration: 0.5 }}
-                    >
-                         <p className="text-xs text-primary/80 font-mono flex items-center gap-1"><LineChart size={14}/> ANALYSE PRÉDICTIVE</p>
-                         <p className="text-3xl font-bold text-primary">x54.72</p>
-                         <p className="text-xs text-muted-foreground">PROCHAIN PIC POTENTIEL</p>
-                    </motion.div>
                 </motion.div>
                 
                 <motion.h1 
@@ -699,8 +677,8 @@ export default function LandingPage() {
                             ></iframe>
                         </div>
                         <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
-                         <div className="flex items-start flex-col sm:flex-row sm:items-end gap-2">
-                            <div className="flex sm:flex-col gap-2 justify-start items-start">
+                         <div className="flex flex-col sm:flex-row items-start sm:items-end gap-2 lg:flex-col lg:items-start">
+                            <div className="flex sm:flex-row lg:flex-col gap-2 justify-start items-start">
                                <button onClick={handleAndroidInstallClick} className="cursor-pointer">
                                     <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
                                 </button>
