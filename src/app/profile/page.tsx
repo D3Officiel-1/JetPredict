@@ -255,11 +255,14 @@ export default function ProfilePage() {
 
 
         <Card className="bg-card/70 backdrop-blur-sm border-border/50">
-            <CardHeader>
-                <CardTitle className="flex items-center gap-3"><Bot/>Liaison Telegram</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">Pour lier votre compte au bot Telegram, envoyez-lui la commande ci-dessous.</p>
+          <CardContent className="p-6">
+            <div className="flex items-start gap-4">
+              <div className="hidden sm:block mt-1">
+                 <Bot className="h-8 w-8 text-primary" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-foreground">Liaison Telegram</h3>
+                <p className="text-sm text-muted-foreground mb-4">Copiez la commande et envoyez-la au bot Telegram pour lier votre compte.</p>
                 <div className="flex items-stretch gap-2">
                     <div className="flex-1 text-center text-sm sm:text-base font-mono tracking-wider bg-muted text-foreground rounded-lg px-4 py-3 border border-dashed border-border flex items-center justify-center truncate">
                         <span className="text-primary mr-2">/link</span>
@@ -282,7 +285,9 @@ export default function ProfilePage() {
                         {isCopied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
                     </Button>
                 </div>
-            </CardContent>
+              </div>
+            </div>
+          </CardContent>
         </Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
