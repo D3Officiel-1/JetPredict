@@ -283,34 +283,29 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground overflow-x-hidden">
         {/* Header */}
-        <header className="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-sm">
-            <div className="relative h-14 flex items-center justify-between px-3 rounded-2xl bg-black/20 backdrop-blur-lg border border-white/10 shadow-2xl shadow-primary/20">
-                <div className="absolute inset-0 rounded-2xl border-t border-white/20 pointer-events-none"></div>
+        <header className="fixed top-0 left-0 right-0 z-50 p-4">
+            <div className="container mx-auto flex items-center justify-between">
                 <Link href="/" className="flex items-center gap-2.5">
                     <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md" />
                     <span className="text-lg font-bold text-primary">Jet Predict</span>
                 </Link>
-                <div className="flex items-center gap-2">
-                    <Link href="/login" passHref>
-                        <Button size="sm" className="rounded-full shadow-lg shadow-primary/20 h-9 px-5">
-                            Commencer
-                            <ChevronRight size={16} className="ml-1" />
-                        </Button>
-                    </Link>
-                </div>
+                <Link href="/login" passHref>
+                    <Button variant="ghost">
+                        Connexion
+                        <ChevronRight size={16} className="ml-1" />
+                    </Button>
+                </Link>
             </div>
         </header>
-
 
       {/* Main Content */}
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center min-h-[100vh] py-20 md:py-32 overflow-hidden">
-            {/* Background elements */}
-            <div className="absolute inset-0 -z-20 bg-gradient-to-br from-[#0A0F1E] to-[#121832]"></div>
+            <div className="absolute inset-0 -z-20 bg-[#0A0F1E]"></div>
             <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-[0.03]"></div>
             
-             <motion.div
+            <motion.div
                 className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 blur-3xl opacity-50"
                 animate={{ x: [-100, 50], y: [-50, 100], scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
                 transition={{ duration: 30, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
@@ -322,55 +317,47 @@ export default function LandingPage() {
             />
 
             <div className="container relative z-10 flex flex-col items-center">
-                 <motion.div
-                    className="relative mb-12 w-full max-w-xl aspect-video"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                 >
-                     <Image
-                        src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
-                        alt="Tableau de bord Jet Predict"
-                        fill
-                        className="object-contain"
-                        priority
-                        data-ai-hint="dashboard futuristic"
-                     />
-                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,#121832_80%)]"></div>
-
+                <motion.div 
+                    className="mb-6"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2, duration: 0.7 }}
+                >
+                    <span className="inline-block bg-primary/10 text-primary text-sm font-semibold px-4 py-1.5 rounded-full border border-primary/20">
+                        Version 2.0 avec IA Avancée
+                    </span>
                 </motion.div>
                 
                 <motion.h1 
-                    className="text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tighter leading-tight"
+                    className="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tighter leading-tight"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.2, duration: 0.7, ease: "easeOut" }}
+                    transition={{ delay: 0.4, duration: 0.7 }}
                 >
                     <span className="block bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-400">Passez au niveau</span>
-                    <span className="block text-primary drop-shadow-[0_0_15px_hsl(var(--primary))]">supérieur.</span>
+                    <span className="block text-primary drop-shadow-[0_0_20px_hsl(var(--primary))]">supérieur.</span>
                 </motion.h1>
                 
                 <motion.p 
                     className="mt-6 max-w-xl text-lg text-muted-foreground"
                      initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4, duration: 0.7, ease: "easeOut" }}
+                    transition={{ delay: 0.6, duration: 0.7 }}
                 >
                     Jet Predict transforme vos paris en stratégies. Obtenez des prédictions de cotes fiables grâce à notre IA et prenez l'avantage.
                 </motion.p>
                 
-                <motion.div
+                 <motion.div
                     className="mt-10 flex flex-wrap justify-center gap-4"
                      initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.7, ease: "easeOut" }}
+                    transition={{ delay: 0.8, duration: 0.7 }}
                 >
                     <Link href="/login" passHref>
                         <Button
                             size="lg"
                             className="font-semibold text-lg py-7 px-8 rounded-full group shadow-[0_0_25px_hsl(var(--primary)/0.4)] transition-all duration-300 ease-in-out hover:shadow-[0_0_40px_hsl(var(--primary)/0.6)] hover:scale-105"
                         >
-                            <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary via-cyan-400 to-primary opacity-0 transition-opacity duration-300 group-hover:opacity-100"></span>
                             <span className="relative flex items-center">
                                 Activer le Protocole
                                 <MoveUpRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:rotate-45" />
@@ -378,8 +365,29 @@ export default function LandingPage() {
                         </Button>
                     </Link>
                 </motion.div>
+                 <motion.div 
+                    className="mt-12"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.0, duration: 1 }}
+                 >
+                    <div className="relative p-1 rounded-2xl bg-gradient-to-br from-primary/50 via-blue-500/30 to-transparent">
+                        <div className="p-1 rounded-[14px] bg-background">
+                            <Image
+                                src="https://i.postimg.cc/XYRCXyF9/Jet-Predict.jpg"
+                                alt="Tableau de bord Jet Predict"
+                                width={1000}
+                                height={625}
+                                className="object-cover rounded-xl shadow-2xl shadow-primary/20"
+                                priority
+                                data-ai-hint="dashboard futuristic"
+                            />
+                        </div>
+                    </div>
+                </motion.div>
             </div>
         </section>
+
 
         {/* Social Proof Section */}
          <section className="py-20 relative">
@@ -678,7 +686,7 @@ export default function LandingPage() {
                         </div>
                         <h3 className="font-semibold text-foreground mb-2 mt-4">Télécharger l'App</h3>
                          <div className="flex flex-col sm:flex-row items-start sm:items-end gap-2 lg:flex-col lg:items-start">
-                            <div className="flex sm:flex-row lg:flex-col gap-2 justify-start items-start">
+                             <div className="flex flex-col lg:flex-row gap-2 justify-start items-start">
                                <button onClick={handleAndroidInstallClick} className="cursor-pointer">
                                     <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
                                 </button>
@@ -790,5 +798,7 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    
 
     
