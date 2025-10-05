@@ -198,6 +198,7 @@ export default function LandingPage() {
   const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const [androidGuideStep, setAndroidGuideStep] = useState(1);
   const [iosGuideStep, setIosGuideStep] = useState(1);
+  const [windowsGuideStep, setWindowsGuideStep] = useState(1);
 
   const androidImages = [
     'https://i.postimg.cc/RVFmN3Gm/android-etape-1.png',
@@ -209,6 +210,11 @@ export default function LandingPage() {
     'https://i.postimg.cc/XYbT9pkn/apple-etape-1.png',
     'https://i.postimg.cc/5t9TkTGF/apple-etape-2.png',
     'https://i.postimg.cc/HW8KKQSV/apple-etape-3.png',
+  ];
+
+  const windowsImages = [
+    'https://i.postimg.cc/5yJwsd7Z/ordinateur-etape-1.png',
+    'https://i.postimg.cc/gkYVRp63/ordinaeur-etape-2.png',
   ];
 
   useEffect(() => {
@@ -246,6 +252,7 @@ export default function LandingPage() {
         await deferredPrompt.userChoice;
         setDeferredPrompt(null);
     } else {
+        setWindowsGuideStep(1);
         setIsWindowsInstallGuideOpen(true);
     }
   };
@@ -995,21 +1002,35 @@ export default function LandingPage() {
                     </DialogTitle>
                 </DialogHeader>
                  <div className="grid md:grid-cols-2 gap-8 p-1 pt-4">
-                     <div className="space-y-6 text-sm">
-                        <InstallStep 
-                            num="1"
-                            instruction={<>Trouvez l'icône d'installation</>}
-                            detail="Dans la barre d'adresse de votre navigateur (Chrome, Edge), cherchez une icône représentant un écran avec une flèche vers le bas."
-                        />
-                        <InstallStep 
-                            num="2"
-                            instruction={<>Cliquez sur "Installer"</>}
-                            detail="Une petite fenêtre apparaîtra pour vous proposer d'installer l'application. Cliquez sur le bouton 'Installer' pour confirmer."
-                        />
+                    <div className="space-y-6 text-sm">
+                        <div onClick={() => setWindowsGuideStep(1)} className={cn("p-2 rounded-lg cursor-pointer", windowsGuideStep === 1 && "bg-muted")}>
+                            <InstallStep
+                                num="1"
+                                instruction={<>Trouvez l'icône d'installation</>}
+                                detail="Dans la barre d'adresse de votre navigateur (Chrome, Edge), cherchez une icône représentant un écran avec une flèche vers le bas."
+                            />
+                        </div>
+                        <div onClick={() => setWindowsGuideStep(2)} className={cn("p-2 rounded-lg cursor-pointer", windowsGuideStep === 2 && "bg-muted")}>
+                             <InstallStep 
+                                num="2"
+                                instruction={<>Cliquez sur "Installer"</>}
+                                detail="Une petite fenêtre apparaîtra pour vous proposer d'installer l'application. Cliquez sur le bouton 'Installer' pour confirmer."
+                            />
+                        </div>
                          <p className="text-xs text-muted-foreground pt-2 pl-14">Alternativement, ouvrez le menu du navigateur (⋮) et sélectionnez "Installer Jet Predict".</p>
                     </div>
-                     <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
-                        <Image src="https://i.postimg.cc/9Q3SPrCz/android.png" alt="Desktop UI" width={300} height={150} />
+                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30 overflow-hidden">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={windowsGuideStep}
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -50 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <Image src={windowsImages[windowsGuideStep - 1]} alt={`Windows Étape ${windowsGuideStep}`} width={300} height={188} className="rounded-lg border border-border" />
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
             </DialogContent>
