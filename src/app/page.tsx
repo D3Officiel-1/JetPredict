@@ -838,8 +838,11 @@ export default function LandingPage() {
                     {/* Links Section */}
                     <div className="flex flex-col gap-2">
                         <h3 className="font-semibold text-foreground mb-2">Explorer</h3>
+                        <Link href="#about" className="text-sm text-muted-foreground hover:text-primary transition-colors">À propos</Link>
                         <Link href="#features" className="text-sm text-muted-foreground hover:text-primary transition-colors">Fonctionnalités</Link>
+                        <Link href="#partners" className="text-sm text-muted-foreground hover:text-primary transition-colors">Partenaires</Link>
                         <Link href="#pricing" className="text-sm text-muted-foreground hover:text-primary transition-colors">Tarifs</Link>
+                        <Link href="#testimonials" className="text-sm text-muted-foreground hover:text-primary transition-colors">Témoignages</Link>
                         <Link href="#faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</Link>
                     </div>
 
