@@ -179,6 +179,14 @@ interface BeforeInstallPromptEvent extends Event {
     prompt(): Promise<void>;
 }
 
+const loadingTexts = [
+    "DÉMARRAGE DU NOYAU...",
+    "ACCÈS AU DATACLUSTER...",
+    "CHARGEMENT DES MODÈLES IA...",
+    "VÉRIFICATION DES PROTOCOLES...",
+    "SYNCHRONISATION TERMINÉE.",
+];
+
 export default function LandingPage() {
   const router = useRouter();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
@@ -187,6 +195,7 @@ export default function LandingPage() {
   const [isAndroidInstallGuideOpen, setIsAndroidInstallGuideOpen] = useState(false);
   const [isIosInstallGuideOpen, setIsIosInstallGuideOpen] = useState(false);
   const [isWindowsInstallGuideOpen, setIsWindowsInstallGuideOpen] = useState(false);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -230,10 +239,14 @@ export default function LandingPage() {
       if (currentUser) {
         router.push('/predict');
       } else {
-        setIsCheckingAuth(false);
+        setTimeout(() => setIsCheckingAuth(false), 3000);
       }
     });
     
+    const textInterval = setInterval(() => {
+        setLoadingTextIndex(prev => (prev < loadingTexts.length - 1 ? prev + 1 : prev));
+    }, 500);
+
     const configDocRef = doc(db, "app_config", "urls");
     const unsubscribeConfig = onSnapshot(configDocRef, (configDoc) => {
         if (configDoc.exists() && configDoc.data().minePredictUrl) {
@@ -246,37 +259,63 @@ export default function LandingPage() {
     return () => {
       unsubscribe();
       unsubscribeConfig();
+      clearInterval(textInterval);
     };
   }, [router]);
   
   if (isCheckingAuth) {
     return (
-      <AnimatePresence>
+      <motion.div 
+          className="flex h-screen w-full flex-col items-center justify-center bg-background text-foreground"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side,hsl(var(--background)),transparent)]"></div>
+
         <motion.div 
-            className="flex h-screen w-full items-center justify-center bg-background"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
+          className="relative w-32 h-32 mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }}
         >
-            <div className="flex flex-col items-center gap-4">
-                <motion.div
-                    animate={{ y: [0, -20, 0], scale: [1, 1.1, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                >
-                    <Image src="https://1play.gamedev-tech.cc/lucky_grm/assets/media/c544881eb170e73349e4c92d1706a96c.svg" alt="Loading..." width={80} height={80} priority />
-                </motion.div>
-                <motion.p 
-                    className="text-sm text-muted-foreground"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.3, duration: 0.5 }}
-                >
-                    Vérification de la session...
-                </motion.p>
-            </div>
+          <motion.div 
+            className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.div 
+            className="absolute inset-2 rounded-full border-2 border-primary/30"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          />
+          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="w-full h-full object-contain" priority />
         </motion.div>
-      </AnimatePresence>
+
+        <div className="relative w-64 h-2 bg-muted/50 rounded-full overflow-hidden">
+          <motion.div 
+            className="absolute top-0 left-0 h-full bg-primary"
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
+          />
+        </div>
+
+        <div className="h-6 mt-4">
+            <AnimatePresence mode="wait">
+                <motion.p
+                    key={loadingTextIndex}
+                    className="font-code text-sm text-primary tracking-widest"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {loadingTexts[loadingTextIndex]}
+                </motion.p>
+            </AnimatePresence>
+        </div>
+      </motion.div>
     );
   }
 
@@ -311,12 +350,12 @@ export default function LandingPage() {
           <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-5 dark:opacity-5"></div>
           
           <motion.div
-              className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 blur-3xl opacity-50 dark:opacity-50"
+              className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 dark:bg-primary/10 blur-3xl opacity-50 dark:opacity-50"
               animate={{ x: [-100, 50], y: [-50, 100], scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
               transition={{ duration: 30, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
           />
           <motion.div
-              className="absolute bottom-0 right-0 w-[50rem] h-[50rem] rounded-full bg-blue-500/10 blur-3xl opacity-50 dark:opacity-50"
+              className="absolute bottom-0 right-0 w-[50rem] h-[50rem] rounded-full bg-blue-500/10 dark:bg-blue-500/10 blur-3xl opacity-50 dark:opacity-50"
               animate={{ x: [100, -50], y: [50, -100], scale: [1, 1.2, 1], opacity: [0.4, 0.2, 0.4] }}
               transition={{ duration: 40, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
           />
@@ -591,8 +630,8 @@ export default function LandingPage() {
                                     width={partner.width}
                                     height={partner.height}
                                     className={cn("object-contain transition-transform group-hover:scale-110 h-10 w-auto", {
-                                        'invert': partner.invertInLight,
-                                        'dark:invert-0': partner.invertInDark,
+                                        'invert dark:invert-0': partner.invertInLight,
+                                        'dark:invert-0': partner.invertInDark && !partner.invertInLight,
                                     })}
                                 />
                             </a>
@@ -644,7 +683,7 @@ export default function LandingPage() {
                                     </div>
                                     
                                     <div className="flex-grow my-4 relative">
-                                        <Quote className="absolute -top-2 left-0 w-16 h-16 text-primary/5 opacity-50" />
+                                        <Quote className="absolute -top-2 left-0 w-16 h-16 text-primary/5 dark:text-primary/10 opacity-50" />
                                         <blockquote className="text-muted-foreground text-base italic relative z-10 pl-6">
                                             {testimonial.quote}
                                         </blockquote>
@@ -665,8 +704,8 @@ export default function LandingPage() {
 
         {/* FAQ Section */}
         <section id="faq" className="py-20 relative overflow-hidden">
-            <div className="absolute inset-0 -z-10 bg-background/50">
-                <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+             <div className="absolute inset-0 -z-10 bg-background/50 dark:bg-background">
+                <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-10"></div>
                 <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.05),transparent)]"></div>
             </div>
             <div className="container mx-auto max-w-3xl">
@@ -699,7 +738,7 @@ export default function LandingPage() {
 
         {/* Final CTA Section */}
         <section className="relative py-24 sm:py-32 overflow-hidden">
-            <div className="absolute inset-0 -z-20 bg-background dark:bg-[#0A0F1E]"></div>
+             <div className="absolute inset-0 -z-20 bg-background dark:bg-[#0A0F1E]"></div>
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_50%,hsl(var(--primary)/0.1),transparent)] dark:bg-[radial-gradient(circle_1000px_at_50%_50%,hsl(var(--primary)/0.15),transparent)]"></div>
             <motion.div
                 className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-24 bg-primary/10 dark:bg-primary/20 blur-3xl"
@@ -756,7 +795,7 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-        <footer className="bg-card/30 border-t border-primary/10">
+        <footer className="bg-card/30 dark:bg-black/20 border-t border-primary/10">
             <div className="container mx-auto py-12 px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
                     {/* Brand Section */}
