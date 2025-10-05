@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import { doc, setDoc, query, collection, where, getDocs, serverTimestamp, writeBatch, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, query, collection, where, getDocs, serverTimestamp, writeBatch, getDoc, updateDoc } from 'firestore/firestore';
 import { app, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -589,8 +589,8 @@ export default function RegisterPage() {
         </motion.div>
       
       <header className="w-full max-w-xl flex items-center justify-between z-10">
-         <Button asChild variant="ghost" onClick={step > 0 ? handlePrevStep : undefined} className={cn(step === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100')}>
-            <span className='cursor-pointer'><ArrowLeft className="mr-2 h-4 w-4" />Retour</span>
+         <Button asChild variant="ghost" disabled={true}>
+            <span />
         </Button>
       </header>
       
@@ -937,5 +937,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
-    
