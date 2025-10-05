@@ -158,10 +158,10 @@ const TelegramIcon = (props: any) => (
     </svg>
 )
 
-const InstallStep = ({ numIcon, instruction, detail }: { numIcon: React.ReactNode, instruction: React.ReactNode, detail: string }) => (
+const InstallStep = ({ num, instruction, detail }: { num: string, instruction: React.ReactNode, detail: string }) => (
     <div className="flex items-start gap-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20 shrink-0 mt-1">
-            {numIcon}
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary border-2 border-primary/20 shrink-0 mt-1 font-bold text-lg">
+            {num}
         </div>
         <div>
             <div className="font-semibold text-foreground">{instruction}</div>
@@ -872,76 +872,96 @@ export default function LandingPage() {
         </footer>
 
         <Dialog open={isAndroidInstallGuideOpen} onOpenChange={setIsAndroidInstallGuideOpen}>
-            <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
+            <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                         <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={24} height={24} />
-                        Guide d'installation pour Android
+                    <DialogTitle className="flex items-center gap-2 text-xl">
+                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/qqwdfy0d632otqf682bu.svg" alt="Android" width={28} height={28} />
+                        Protocole d'Installation : Android
                     </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-6 text-sm py-4">
-                    <InstallStep 
-                        numIcon={<MoreVertical />}
-                        instruction={<>Ouvrez le menu du navigateur</>}
-                        detail="Appuyez sur l'icône de menu (généralement 3 points) en haut à droite de Chrome."
-                    />
-                     <InstallStep 
-                        numIcon={<Download />}
-                        instruction={<>Sélectionnez <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Installer l'application</span></>}
-                        detail="Cette option ajoutera Jet Predict à votre écran d'accueil."
-                    />
+                <div className="grid md:grid-cols-2 gap-8 p-1 pt-4">
+                    <div className="space-y-6 text-sm">
+                        <InstallStep
+                            num="1"
+                            instruction={<>Ouvrez le menu du navigateur</>}
+                            detail="Dans Chrome, appuyez sur l'icône de menu (généralement 3 points) en haut à droite pour afficher les options."
+                        />
+                         <InstallStep
+                            num="2"
+                            instruction={<>Sélectionnez "Installer l'application"</>}
+                            detail="Cette action ajoutera Jet Predict à votre écran d'accueil, vous donnant un accès direct comme une application native."
+                        />
+                         <InstallStep
+                            num="3"
+                            instruction={<>Confirmez et lancez</>}
+                            detail="Validez l'installation. L'icône Jet Predict apparaîtra parmi vos autres applications. Profitez de l'expérience optimisée !"
+                        />
+                    </div>
+                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
+                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/o9gyl6yrq8f6tllqf0t7.svg" alt="Android UI" width={200} height={400} />
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>
 
         <Dialog open={isIosInstallGuideOpen} onOpenChange={setIsIosInstallGuideOpen}>
-            <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
+            <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                        <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={24} height={24} className="dark:invert-0 invert"/>
-                        Guide d'installation pour iOS
+                    <DialogTitle className="flex items-center gap-2 text-xl">
+                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/k7k2pg9c6i0q3j9k8h6n.svg" alt="iOS" width={28} height={28} />
+                        Protocole d'Installation : iOS
                     </DialogTitle>
                 </DialogHeader>
-                <div className="space-y-6 text-sm py-4">
-                    <InstallStep 
-                        numIcon={<Share2 />}
-                        instruction={<>Ouvrez le menu de partage</>}
-                        detail="Appuyez sur l'icône de Partage (un carré avec une flèche vers le haut) dans Safari."
-                    />
-                     <InstallStep 
-                        numIcon={<Smartphone />}
-                        instruction={<>Sélectionnez <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Sur l'écran d'accueil</span></>}
-                        detail="Faites défiler la liste des options et appuyez sur ce bouton."
-                    />
-                    <InstallStep 
-                        numIcon={<CheckCircle />}
-                        instruction={<>Confirmez l'ajout</>}
-                        detail="Appuyez sur 'Ajouter' en haut à droite pour finaliser l'installation."
-                    />
+                 <div className="grid md:grid-cols-2 gap-8 p-1 pt-4">
+                    <div className="space-y-6 text-sm">
+                        <InstallStep 
+                            num="1"
+                            instruction={<>Ouvrez le menu de partage</>}
+                            detail="Dans Safari, appuyez sur l'icône de Partage (un carré avec une flèche vers le haut) située dans la barre de navigation."
+                        />
+                         <InstallStep 
+                            num="2"
+                            instruction={<>Sélectionnez "Sur l'écran d'accueil"</>}
+                            detail="Faites défiler la liste des options de partage vers le bas et appuyez sur ce bouton pour créer un raccourci d'application."
+                        />
+                         <InstallStep 
+                            num="3"
+                            instruction={<>Confirmez l'ajout</>}
+                            detail="Vérifiez le nom de l'application et appuyez sur 'Ajouter' en haut à droite pour finaliser l'installation sur votre appareil."
+                        />
+                    </div>
+                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
+                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/h7j8p3ofk404t8p41y1v.svg" alt="iOS UI" width={200} height={400} />
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>
         
         <Dialog open={isWindowsInstallGuideOpen} onOpenChange={setIsWindowsInstallGuideOpen}>
-            <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
+            <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
-                     <DialogTitle className="flex items-center gap-2">
-                        <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Windows" width={24} height={24} />
-                        Guide d'installation pour Ordinateur
+                     <DialogTitle className="flex items-center gap-2 text-xl">
+                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/pyq5g1yrv6j0c1n8p7z0.svg" alt="Windows" width={28} height={28} />
+                        Protocole d'Installation : Ordinateur
                     </DialogTitle>
                 </DialogHeader>
-                 <div className="space-y-6 text-sm py-4">
-                    <InstallStep 
-                        numIcon={<MonitorDown />}
-                        instruction={<>Trouvez l'icône d'installation</>}
-                        detail="Cherchez l'icône d'installation (un écran avec une flèche) dans la barre d'adresse de votre navigateur (Chrome, Edge)."
-                    />
-                     <InstallStep 
-                        numIcon={<Download />}
-                        instruction={<>Cliquez sur <span className="bg-primary/10 text-primary px-2 py-1 rounded-md">Installer</span></>}
-                        detail="Confirmez l'installation lorsque la fenêtre pop-up apparaît."
-                    />
-                    <p className="text-xs text-muted-foreground pt-2">Alternativement, vous pouvez ouvrir le menu du navigateur (⋮) et sélectionner "Installer Jet Predict".</p>
+                 <div className="grid md:grid-cols-2 gap-8 p-1 pt-4">
+                     <div className="space-y-6 text-sm">
+                        <InstallStep 
+                            num="1"
+                            instruction={<>Trouvez l'icône d'installation</>}
+                            detail="Dans la barre d'adresse de votre navigateur (Chrome, Edge), cherchez une icône représentant un écran avec une flèche vers le bas."
+                        />
+                        <InstallStep 
+                            num="2"
+                            instruction={<>Cliquez sur "Installer"</>}
+                            detail="Une petite fenêtre apparaîtra pour vous proposer d'installer l'application. Cliquez sur le bouton 'Installer' pour confirmer."
+                        />
+                         <p className="text-xs text-muted-foreground pt-2 pl-14">Alternativement, ouvrez le menu du navigateur (⋮) et sélectionnez "Installer Jet Predict".</p>
+                    </div>
+                     <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
+                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591874/g6g1y5f2z7q2y2q3q2w8.svg" alt="Desktop UI" width={300} height={150} />
+                    </div>
                 </div>
             </DialogContent>
         </Dialog>
