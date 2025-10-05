@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { Switch } from '@/components/ui/switch';
 import Header from '@/components/ui/sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Badge } from '@/components/ui/badge';
 
 const SettingItem = ({ icon, title, description, action, disabled = false }: { icon: React.ReactNode, title: string, description: string, action: React.ReactNode, disabled?: boolean }) => (
   <div className={cn(
@@ -480,7 +481,10 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent className="p-4 space-y-4">
                 <div>
-                     <Label className="text-sm font-semibold text-muted-foreground ml-1 mb-2 block">Thème de l'Application</Label>
+                     <div className="flex items-center gap-2 ml-1 mb-2">
+                        <Label className="text-sm font-semibold text-muted-foreground">Thème de l'Application</Label>
+                        <Badge variant="destructive" className="scale-75">Bêta</Badge>
+                     </div>
                      <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-2 border border-border/30">
                         <Button variant={theme === 'light' ? 'default' : 'ghost'} onClick={() => setTheme('light')} className="flex-col h-16 gap-1">
                             <Sun className="h-5 w-5"/>

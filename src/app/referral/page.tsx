@@ -28,6 +28,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import Header from '@/components/ui/sidebar';
 import { motion, AnimatePresence } from "framer-motion";
+import { Badge } from '@/components/ui/badge';
+
 
 interface ReferralUser {
     id: string;
@@ -397,9 +399,12 @@ Merci de traiter ma demande.`;
                            <Button onClick={handleCopyCode} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode} disableSound={true}>
                               {isCopied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
                           </Button>
-                           <Button onClick={handleShareLink} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode}>
-                              <Share2 className="h-5 w-5" />
-                          </Button>
+                           <div className="relative">
+                            <Button onClick={handleShareLink} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode}>
+                                <Share2 className="h-5 w-5" />
+                            </Button>
+                            <Badge variant="destructive" className="absolute -top-2 -right-3 text-xs scale-75">Bêta</Badge>
+                           </div>
                       </div>
                   </div>
 
