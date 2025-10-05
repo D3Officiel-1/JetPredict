@@ -59,7 +59,7 @@ export default function PricingPage() {
   if (isCheckingAuth || !user) {
     return (
       <div className="flex min-h-screen w-full flex-col bg-background items-center justify-center text-center p-4">
-        <Image src="https://1play.gamedev-tech.cc/lucky_grm/assets/media/c544881eb170e73349e4c92d1706a96c.svg" alt="Loading..." width={100} height={100} className="animate-pulse" />
+        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="animate-pulse" />
         <p className="mt-4 text-muted-foreground">Vérification de votre abonnement...</p>
       </div>
     );
