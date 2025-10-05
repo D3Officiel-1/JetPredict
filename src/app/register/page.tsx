@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, ArrowRight, Loader2, PartyPopper, Eye, EyeOff, XCircle, CheckCircle, ChevronUp, ChevronDown, ShieldCheck, Gamepad2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2, PartyPopper, Eye, EyeOff, XCircle, CheckCircle, ChevronUp, ChevronDown, ShieldCheck, Gamepad2, Mail } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -556,8 +556,8 @@ export default function RegisterPage() {
       <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#313b5c22,transparent)] -z-10"></div>
       
       <header className="w-full max-w-xl flex items-center justify-between z-10">
-         <Button asChild variant="ghost" onClick={step > 1 ? handlePrevStep : undefined}>
-            {step > 1 ? (
+         <Button asChild variant="ghost" onClick={step > 0 ? handlePrevStep : undefined}>
+            {step > 0 ? (
                 <span className='cursor-pointer'><ArrowLeft className="mr-2 h-4 w-4" />Retour</span>
             ) : (
                 <span />
@@ -577,21 +577,45 @@ export default function RegisterPage() {
                 className="w-full"
             >
                 {step === 0 && (
-                    <div className="text-center space-y-6">
-                         <div className="mb-8 text-center">
+                    <motion.div 
+                        className="text-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5 }}
+                    >
+                         <motion.div 
+                            className="mb-8 text-center"
+                            initial={{ y: -20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.2, type: 'spring' }}
+                         >
                             <h1 className="text-3xl font-bold tracking-tight">Rejoignez Jet Predict 🚀</h1>
                             <p className="text-muted-foreground mt-2">Créez votre compte pour commencer.</p>
-                        </div>
-                        <div className="space-y-4">
-                           <Button className="w-full" size="lg" onClick={handleGoogleSignIn} disabled={isLoading}>
+                        </motion.div>
+                        <motion.div 
+                            className="space-y-4"
+                            initial={{ y: 20, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.4, type: 'spring' }}
+                        >
+                           <Button className="w-full h-12 text-base" size="lg" onClick={handleGoogleSignIn} disabled={isLoading}>
                                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <GoogleIcon className="mr-2 h-5 w-5"/>}
                                 Continuer avec Google
                             </Button>
-                             <Button variant="outline" className="w-full" size="lg" onClick={() => setStep(1)} disabled={isLoading}>
+                             <div className="relative my-6">
+                                <div className="absolute inset-0 flex items-center">
+                                    <span className="w-full border-t border-border/50" />
+                                </div>
+                                <div className="relative flex justify-center text-xs uppercase">
+                                    <span className="bg-background px-2 text-muted-foreground">Ou</span>
+                                </div>
+                            </div>
+                             <Button variant="outline" className="w-full h-12 text-base" size="lg" onClick={() => setStep(1)} disabled={isLoading}>
+                                <Mail className="mr-2 h-5 w-5"/>
                                 S'inscrire avec un email
                             </Button>
-                        </div>
-                    </div>
+                        </motion.div>
+                    </motion.div>
                 )}
                 {step > 0 && step <= TOTAL_STEPS && (
                   <div className="mb-8 text-center">
