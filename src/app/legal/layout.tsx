@@ -20,7 +20,7 @@ export default function LegalLayout({
               initial={{ y: -100 }}
               animate={{ y: 0 }}
               transition={{ type: 'spring', stiffness: 50, damping: 15 }}
-              className="container mx-auto flex items-center justify-between p-2 rounded-2xl bg-card/50 dark:bg-black/20 backdrop-blur-md border border-border/50 dark:border-white/10"
+              className="container mx-auto flex items-center justify-between p-2 rounded-2xl bg-card/50 backdrop-blur-md border border-border/50"
           >
               <Link href="/" className="flex items-center gap-2.5">
                   <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md" />
