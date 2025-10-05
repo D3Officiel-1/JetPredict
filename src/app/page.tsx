@@ -93,14 +93,14 @@ const faqItems = [
 ];
 
 const partners = [
-    { name: "1xBet", logoUrl: "https://1xbet.ci/genfiles/cms/286-673/desktop/media_asset/f9936c0c6aa355afbb82ce9ea34d772f.svg", width: 120, height: 40, url: "https://1xbet.ci/fr", invert: true },
-    { name: "Chopbet", logoUrl: "https://storage.googleapis.com/chopbet-ci-prod/apple_touch_icon_dark_a11c5711a8/apple_touch_icon_dark_a11c5711a8.png", width: 40, height: 40, url: "https://www.chopbet.com", invert: false },
-    { name: "Betwinner", logoUrl: "https://betwinner.ci/wp-content/uploads/2024/11/betwinner_logo.svg", width: 150, height: 40, url: "https://betwinner.com", invert: true },
-    { name: "Megapari", logoUrl: "https://v3.traincdn.com/genfiles/cms/192-824/desktop/media_asset/39b027cf6619aa7814a4f426943fc3f7.svg", width: 150, height: 40, url: "https://megapari.com", invert: true },
-    { name: "Melbet", logoUrl: "https://v3.traincdn.com/genfiles/cms/8-62/desktop/media_asset/dd77c8f1b5bd23e38cd81fb7d861af10.svg", width: 150, height: 40, url: "https://melbet.com", invert: true },
-    { name: "1Win", logoUrl: "https://1win.fyi/image/catalog/logo/1win-logo.svg", width: 120, height: 30, url: "https://1win.pro", invert: true },
-    { name: "22Bet", logoUrl: "https://22bet.online/wp-content/uploads/2020/11/logo-22Bet.online.svg", width: 150, height: 40, url: "https://22bet.com", invert: true },
-    { name: "888Starz", logoUrl: "https://v3.traincdn.com/genfiles/cms/233-789/desktop/media_asset/374278939704a56cdbe1763120d08c41.svg", width: 150, height: 40, url: "https://888starz.bet", invert: true },
+    { name: "1xBet", logoUrl: "https://1xbet.ci/genfiles/cms/286-673/desktop/media_asset/f9936c0c6aa355afbb82ce9ea34d772f.svg", width: 120, height: 40, url: "https://1xbet.ci/fr", invertInLight: false, invertInDark: true },
+    { name: "Chopbet", logoUrl: "https://storage.googleapis.com/chopbet-ci-prod/apple_touch_icon_dark_a11c5711a8/apple_touch_icon_dark_a11c5711a8.png", width: 40, height: 40, url: "https://www.chopbet.com", invertInLight: false, invertInDark: false },
+    { name: "Betwinner", logoUrl: "https://betwinner.ci/wp-content/uploads/2024/11/betwinner_logo.svg", width: 150, height: 40, url: "https://betwinner.com", invertInLight: false, invertInDark: true },
+    { name: "Megapari", logoUrl: "https://v3.traincdn.com/genfiles/cms/192-824/desktop/media_asset/39b027cf6619aa7814a4f426943fc3f7.svg", width: 150, height: 40, url: "https://megapari.com", invertInLight: false, invertInDark: true },
+    { name: "Melbet", logoUrl: "https://v3.traincdn.com/genfiles/cms/8-62/desktop/media_asset/dd77c8f1b5bd23e38cd81fb7d861af10.svg", width: 150, height: 40, url: "https://melbet.com", invertInLight: false, invertInDark: true },
+    { name: "1Win", logoUrl: "https://1win.fyi/image/catalog/logo/1win-logo.svg", width: 120, height: 30, url: "https://1win.pro", invertInLight: false, invertInDark: true },
+    { name: "22Bet", logoUrl: "https://22bet.online/wp-content/uploads/2020/11/logo-22Bet.online.svg", width: 150, height: 40, url: "https://22bet.com", invertInLight: false, invertInDark: true },
+    { name: "888Starz", logoUrl: "https://v3.traincdn.com/genfiles/cms/233-789/desktop/media_asset/374278939704a56cdbe1763120d08c41.svg", width: 150, height: 40, url: "https://888starz.bet", invertInLight: false, invertInDark: true },
 ];
 
 const XIcon = (props: any) => (
@@ -288,7 +288,7 @@ export default function LandingPage() {
               initial={{ y: -100 }}
               animate={{ y: 0 }}
               transition={{ type: 'spring', stiffness: 50, damping: 15 }}
-              className="container mx-auto flex items-center justify-between p-2 rounded-2xl bg-black/20 backdrop-blur-md border border-white/10"
+              className="container mx-auto flex items-center justify-between p-2 rounded-2xl bg-card/50 dark:bg-black/20 backdrop-blur-md border border-border/50 dark:border-white/10"
           >
               <Link href="/" className="flex items-center gap-2.5">
                   <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={32} height={32} className="h-8 w-auto rounded-md" />
@@ -307,16 +307,16 @@ export default function LandingPage() {
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="relative flex flex-col items-center justify-center text-center min-h-[100vh] py-20 md:py-32 overflow-hidden">
-          <div className="absolute inset-0 -z-20 bg-[#0A0F1E]"></div>
-          <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-5"></div>
+          <div className="absolute inset-0 -z-20 bg-background dark:bg-[#0A0F1E]"></div>
+          <div className="absolute inset-0 -z-10 bg-grid-pattern opacity-5 dark:opacity-5"></div>
           
           <motion.div
-              className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 blur-3xl opacity-50"
+              className="absolute top-0 left-0 w-[40rem] h-[40rem] rounded-full bg-primary/10 blur-3xl opacity-50 dark:opacity-50"
               animate={{ x: [-100, 50], y: [-50, 100], scale: [1, 1.3, 1], opacity: [0.3, 0.5, 0.3] }}
               transition={{ duration: 30, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
           />
           <motion.div
-              className="absolute bottom-0 right-0 w-[50rem] h-[50rem] rounded-full bg-blue-500/10 blur-3xl opacity-50"
+              className="absolute bottom-0 right-0 w-[50rem] h-[50rem] rounded-full bg-blue-500/10 blur-3xl opacity-50 dark:opacity-50"
               animate={{ x: [100, -50], y: [50, -100], scale: [1, 1.2, 1], opacity: [0.4, 0.2, 0.4] }}
               transition={{ duration: 40, ease: "easeInOut", repeat: Infinity, repeatType: "reverse" }}
           />
@@ -339,7 +339,7 @@ export default function LandingPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4, duration: 0.7 }}
               >
-                  <span className="block bg-clip-text text-transparent bg-gradient-to-br from-white to-gray-400">Passez au niveau</span>
+                  <span className="block bg-clip-text text-transparent bg-gradient-to-br from-foreground to-muted-foreground dark:from-white dark:to-gray-400">Passez au niveau</span>
                   <span className="block text-primary drop-shadow-[0_0_20px_hsl(var(--primary))]">supérieur.</span>
               </motion.h1>
               
@@ -359,12 +359,12 @@ export default function LandingPage() {
                 transition={{ delay: 0.7, duration: 0.7 }}
               >
                 <div className="relative inline-block p-1 rounded-2xl bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-pulse shadow-[0_0_20px_rgba(255,165,0,0.5)]">
-                    <div className="bg-background/80 rounded-[14px] px-4 py-3 sm:px-6 sm:py-4 flex flex-col items-center gap-3">
-                        <p className="text-sm sm:text-base font-semibold text-white">
-                            Inscris-toi sur <span className="font-bold text-yellow-300">1Win</span> avec le code <span className="font-bold text-yellow-300">JETPREDICT</span> et gagne <span className="font-bold text-yellow-300">500%</span> de bonus !
+                    <div className="bg-background/80 dark:bg-background/80 rounded-[14px] px-4 py-3 sm:px-6 sm:py-4 flex flex-col items-center gap-3">
+                        <p className="text-sm sm:text-base font-semibold text-foreground dark:text-white">
+                            Inscris-toi sur <span className="font-bold text-yellow-500 dark:text-yellow-300">1Win</span> avec le code <span className="font-bold text-yellow-500 dark:text-yellow-300">JETPREDICT</span> et gagne <span className="font-bold text-yellow-500 dark:text-yellow-300">500%</span> de bonus !
                         </p>
                         <a href="https://1wlucb.life/v3/lucky-jet-updated?p=s5wy" target="_blank" rel="noopener noreferrer">
-                            <Button size="sm" variant="outline" className="bg-transparent text-yellow-300 border-yellow-400/50 hover:bg-yellow-400/10 hover:text-yellow-200">
+                            <Button size="sm" variant="outline" className="bg-transparent text-yellow-600 dark:text-yellow-300 border-yellow-400/50 hover:bg-yellow-400/10 hover:text-yellow-500 dark:hover:text-yellow-200">
                                 S'inscrire sur 1Win
                             </Button>
                         </a>
@@ -415,11 +415,11 @@ export default function LandingPage() {
 
         {/* Social Proof Section */}
         <section className="py-20 relative overflow-hidden">
-            <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:6rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] opacity-5"></div>
+            <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,hsl(var(--border)/0.5)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.5)_1px,transparent_1px)] bg-[size:6rem_4rem] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)] dark:opacity-5"></div>
             <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_50%_200px,hsl(var(--primary)/0.1),transparent)] -z-10"></div>
             <div className="container mx-auto text-center">
                 <motion.h2 
-                    className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50"
+                    className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground dark:from-neutral-50 dark:to-neutral-400 bg-opacity-50"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -443,7 +443,7 @@ export default function LandingPage() {
                     transition={{ duration: 0.7, delay: 0.3 }}
                     viewport={{ once: true }}
                 >
-                    <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
+                    <div className="absolute inset-0 bg-grid-pattern opacity-5 dark:opacity-5 -z-10"></div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 divide-y md:divide-y-0 md:divide-x divide-primary/20">
                         {stats.map((stat, index) => (
                             <motion.div
@@ -499,7 +499,7 @@ export default function LandingPage() {
                 </motion.div>
 
                 <motion.h2 
-                    className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-300"
+                    className="text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground dark:from-white dark:to-gray-300"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
@@ -521,11 +521,11 @@ export default function LandingPage() {
 
 
         {/* Features Section */}
-        <section id="features" className="py-20 relative bg-muted/50 overflow-hidden">
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.1),transparent)]"></div>
+        <section id="features" className="py-20 relative bg-muted/20 dark:bg-muted/50 overflow-hidden">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.05),transparent)] dark:bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.1),transparent)]"></div>
             <div className="container mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Un Arsenal d'Outils à votre Service</h2>
+                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground dark:from-neutral-50 dark:to-neutral-400">Un Arsenal d'Outils à votre Service</h2>
                     <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Chaque fonctionnalité est conçue pour vous donner une longueur d'avance.</p>
                 </div>
                 <div className="grid md:grid-cols-3 gap-8">
@@ -556,7 +556,7 @@ export default function LandingPage() {
         <section id="partners" className="py-20">
             <div className="container mx-auto text-center">
                 <motion.h2 
-                    className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50"
+                    className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground dark:from-neutral-50 dark:to-neutral-400"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
@@ -590,7 +590,10 @@ export default function LandingPage() {
                                     alt={`${partner.name} logo`}
                                     width={partner.width}
                                     height={partner.height}
-                                    className={cn("object-contain transition-transform group-hover:scale-110 h-10 w-auto", partner.invert && "dark:invert-0 invert")}
+                                    className={cn("object-contain transition-transform group-hover:scale-110 h-10 w-auto", {
+                                        'invert': partner.invertInLight,
+                                        'dark:invert-0': partner.invertInDark,
+                                    })}
                                 />
                             </a>
                         </motion.div>
@@ -601,8 +604,8 @@ export default function LandingPage() {
 
         {/* Pricing Section */}
         <section id="pricing" className="py-20 relative overflow-hidden">
-             <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-size-[14px_24px]"></div>
-            <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,hsl(var(--primary)/0.1),transparent)] -z-10"></div>
+             <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,hsl(var(--border)/0.3)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border)/0.3)_1px,transparent_1px)] bg-size-[14px_24px] dark:bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)]"></div>
+            <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,hsl(var(--primary)/0.05),transparent)] dark:bg-[radial-gradient(circle_500px_at_50%_200px,hsl(var(--primary)/0.1),transparent)] -z-10"></div>
             <div className="container mx-auto relative z-10">
               <PricingSection isLandingPage={true} />
             </div>
@@ -610,10 +613,10 @@ export default function LandingPage() {
         
         {/* Testimonials Section */}
         <section id="testimonials" className="py-20 relative">
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_400px,hsl(var(--primary)/0.08),transparent)]"></div>
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_400px,hsl(var(--primary)/0.05),transparent)] dark:bg-[radial-gradient(circle_1000px_at_50%_400px,hsl(var(--primary)/0.08),transparent)]"></div>
             <div className="container mx-auto">
                 <div className="text-center mb-16">
-                    <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Ils nous font confiance</h2>
+                    <h2 className="text-3xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground dark:from-neutral-50 dark:to-neutral-400">Ils nous font confiance</h2>
                     <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">Découvrez ce que nos utilisateurs disent de nos prédictions de paris.</p>
                 </div>
                 <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
@@ -649,7 +652,7 @@ export default function LandingPage() {
 
                                     <div className="flex justify-end mt-auto pt-4">
                                         {[...Array(5)].map((_, i) => (
-                                            <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-600'}`} />
+                                            <Star key={i} className={`w-5 h-5 ${i < testimonial.rating ? 'text-yellow-400 fill-yellow-400' : 'text-gray-400 dark:text-gray-600'}`} />
                                         ))}
                                     </div>
                                 </CardContent>
@@ -668,7 +671,7 @@ export default function LandingPage() {
             </div>
             <div className="container mx-auto max-w-3xl">
                 <div className="text-center mb-12">
-                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-400 bg-opacity-50">Transmission de données</h2>
+                    <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground dark:from-neutral-50 dark:to-neutral-400">Transmission de données</h2>
                     <p className="text-muted-foreground mt-2">Les réponses à vos interrogations les plus fréquentes.</p>
                 </div>
                 <Accordion type="single" collapsible className="w-full space-y-4">
@@ -696,10 +699,10 @@ export default function LandingPage() {
 
         {/* Final CTA Section */}
         <section className="relative py-24 sm:py-32 overflow-hidden">
-            <div className="absolute inset-0 -z-20 bg-[#0A0F1E]"></div>
-            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_50%,hsl(var(--primary)/0.15),transparent)]"></div>
+            <div className="absolute inset-0 -z-20 bg-background dark:bg-[#0A0F1E]"></div>
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_1000px_at_50%_50%,hsl(var(--primary)/0.1),transparent)] dark:bg-[radial-gradient(circle_1000px_at_50%_50%,hsl(var(--primary)/0.15),transparent)]"></div>
             <motion.div
-                className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-24 bg-primary/20 blur-3xl"
+                className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-24 bg-primary/10 dark:bg-primary/20 blur-3xl"
                 animate={{
                     scaleX: [1, 1.5, 1],
                 }}
@@ -713,7 +716,7 @@ export default function LandingPage() {
 
             <div className="container relative z-10 mx-auto text-center">
                 <motion.h2 
-                    className="text-4xl sm:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white to-gray-300 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]"
+                    className="text-4xl sm:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-b from-foreground to-muted-foreground dark:from-white dark:to-gray-300 drop-shadow-[0_0_20px_rgba(128,128,128,0.2)] dark:drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
@@ -796,7 +799,7 @@ export default function LandingPage() {
                                      <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Download on Google Play" width={60} height={35} />
                                  </button>
                                  <button onClick={handleIosInstallClick} className="cursor-pointer">
-                                     <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={60} height={35} className={cn("dark:invert-0 invert")}/>
+                                     <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="Download on the App Store" width={60} height={35} className="dark:invert-0 invert"/>
                                  </button>
                                   <button onClick={handleWindowsInstallClick} className="cursor-pointer">
                                      <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Download for Windows" width={60} height={35} />
@@ -855,7 +858,7 @@ export default function LandingPage() {
             <DialogContent className="bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
-                        <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={24} height={24} className={cn("dark:invert-0 invert")}/>
+                        <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={24} height={24} className="dark:invert-0 invert"/>
                         Guide d'installation pour iOS
                     </DialogTitle>
                 </DialogHeader>
