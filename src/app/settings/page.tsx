@@ -97,11 +97,18 @@ export default function SettingsPage() {
   const [isIosInstallGuideOpen, setIsIosInstallGuideOpen] = useState(false);
   const [isWindowsInstallGuideOpen, setIsWindowsInstallGuideOpen] = useState(false);
   const [androidGuideStep, setAndroidGuideStep] = useState(1);
+  const [iosGuideStep, setIosGuideStep] = useState(1);
 
   const androidImages = [
     'https://i.postimg.cc/RVFmN3Gm/android-etape-1.png',
     'https://i.postimg.cc/xC5rdYzR/android-etape-2.png',
     'https://i.postimg.cc/tCfKJBYK/android-etape-3.png',
+  ];
+
+  const iosImages = [
+    'https://i.postimg.cc/XYbT9pkn/apple-etape-1.png',
+    'https://i.postimg.cc/5t9TkTGF/apple-etape-2.png',
+    'https://i.postimg.cc/HW8KKQSV/apple-etape-3.png',
   ];
 
   const auth = getAuth(app);
@@ -128,7 +135,10 @@ export default function SettingsPage() {
     }
   };
 
-  const handleIosInstallClick = () => setIsIosInstallGuideOpen(true);
+  const handleIosInstallClick = () => {
+      setIosGuideStep(1);
+      setIsIosInstallGuideOpen(true);
+  };
   
   const handleWindowsInstallClick = async () => {
     if (deferredPrompt) {
@@ -659,24 +669,40 @@ export default function SettingsPage() {
                 </DialogHeader>
                  <div className="grid md:grid-cols-2 gap-8 p-1 pt-4">
                     <div className="space-y-6 text-sm">
-                        <InstallStep 
-                            num="1"
-                            instruction={<>Ouvrez le menu de partage</>}
-                            detail="Dans Safari, appuyez sur l'icône de Partage (un carré avec une flèche vers le haut) située dans la barre de navigation."
-                        />
-                         <InstallStep 
-                            num="2"
-                            instruction={<>Sélectionnez "Sur l'écran d'accueil"</>}
-                            detail="Faites défiler la liste des options de partage vers le bas et appuyez sur ce bouton pour créer un raccourci d'application."
-                        />
-                         <InstallStep 
-                            num="3"
-                            instruction={<>Confirmez l'ajout</>}
-                            detail="Vérifiez le nom de l'application et appuyez sur 'Ajouter' en haut à droite pour finaliser l'installation sur votre appareil."
-                        />
+                         <div onClick={() => setIosGuideStep(1)} className={cn("p-2 rounded-lg cursor-pointer", iosGuideStep === 1 && "bg-muted")}>
+                            <InstallStep 
+                                num="1"
+                                instruction={<>Ouvrez le menu de partage</>}
+                                detail="Dans Safari, appuyez sur l'icône de Partage (un carré avec une flèche vers le haut) située dans la barre de navigation."
+                            />
+                        </div>
+                         <div onClick={() => setIosGuideStep(2)} className={cn("p-2 rounded-lg cursor-pointer", iosGuideStep === 2 && "bg-muted")}>
+                            <InstallStep 
+                                num="2"
+                                instruction={<>Sélectionnez "Sur l'écran d'accueil"</>}
+                                detail="Faites défiler la liste des options de partage vers le bas et appuyez sur ce bouton pour créer un raccourci d'application."
+                            />
+                        </div>
+                         <div onClick={() => setIosGuideStep(3)} className={cn("p-2 rounded-lg cursor-pointer", iosGuideStep === 3 && "bg-muted")}>
+                            <InstallStep 
+                                num="3"
+                                instruction={<>Confirmez l'ajout</>}
+                                detail="Vérifiez le nom de l'application et appuyez sur 'Ajouter' en haut à droite pour finaliser l'installation sur votre appareil."
+                            />
+                        </div>
                     </div>
-                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/h7j8p3ofk404t8p41y1v.svg" alt="iOS UI" width={200} height={400} />
+                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30 overflow-hidden">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={iosGuideStep}
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -50 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <Image src={iosImages[iosGuideStep - 1]} alt={`iOS Étape ${iosGuideStep}`} width={200} height={400} className="rounded-lg" />
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
             </DialogContent>
@@ -705,7 +731,7 @@ export default function SettingsPage() {
                          <p className="text-xs text-muted-foreground pt-2 pl-14">Alternativement, ouvrez le menu du navigateur (⋮) et sélectionnez "Installer Jet Predict".</p>
                     </div>
                      <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591874/g6g1y5f2z7q2y2q3q2w8.svg" alt="Desktop UI" width={300} height={150} />
+                        <Image src="https://i.postimg.cc/9Q3SPrCz/android.png" alt="Desktop UI" width={300} height={150} />
                     </div>
                 </div>
             </DialogContent>
