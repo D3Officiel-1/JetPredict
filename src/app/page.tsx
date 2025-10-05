@@ -351,19 +351,24 @@ export default function LandingPage() {
               >
                   Jet Predict transforme vos paris en stratégies. Obtenez des prédictions de cotes fiables grâce à notre IA et prenez l'avantage.
               </motion.p>
-
+              
               <motion.div
                 className="my-8"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.7, duration: 0.7 }}
               >
-                <div className="relative inline-block p-0.5 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-pulse shadow-[0_0_20px_rgba(255,165,0,0.5)]">
-                  <div className="bg-background/80 rounded-full px-4 py-2 sm:px-6 sm:py-3">
-                    <p className="text-sm sm:text-base font-semibold text-white">
-                      Utilisez le code <span className="font-bold text-yellow-300">JETPREDICT</span> et gagnez <span className="font-bold text-yellow-300">500%</span> de bonus !
-                    </p>
-                  </div>
+                <div className="relative inline-block p-1 rounded-2xl bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 animate-pulse shadow-[0_0_20px_rgba(255,165,0,0.5)]">
+                    <div className="bg-background/80 rounded-[14px] px-4 py-3 sm:px-6 sm:py-4 flex flex-col items-center gap-3">
+                        <p className="text-sm sm:text-base font-semibold text-white">
+                            Inscris-toi sur <span className="font-bold text-yellow-300">1Win</span> avec le code <span className="font-bold text-yellow-300">JETPREDICT</span> et gagne <span className="font-bold text-yellow-300">500%</span> de bonus !
+                        </p>
+                        <a href="https://1wlucb.life/v3/lucky-jet-updated?p=s5wy" target="_blank" rel="noopener noreferrer">
+                            <Button size="sm" variant="outline" className="bg-transparent text-yellow-300 border-yellow-400/50 hover:bg-yellow-400/10 hover:text-yellow-200">
+                                S'inscrire sur 1Win
+                            </Button>
+                        </a>
+                    </div>
                 </div>
               </motion.div>
               
