@@ -1,16 +1,18 @@
 
+'use client';
+
 import { Phone, Mail } from "lucide-react";
 
 const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
-    <div className="bg-muted/50 p-6 rounded-xl border border-border/50 transition-all hover:border-primary/50 hover:bg-muted">
-        <div className="flex items-start gap-4">
-            <div className="text-primary mt-1">{icon}</div>
-            <div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">{title}</h3>
-                <div className="text-muted-foreground prose-p:my-1 prose-a:text-primary prose-strong:text-foreground">
-                    {children}
-                </div>
+    <div className="bg-muted/30 border border-border/30 rounded-xl overflow-hidden transition-all hover:border-primary/30 hover:bg-muted/50">
+        <div className="p-4 sm:p-5 flex items-center gap-4 border-b border-border/30 bg-muted/20">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20 shrink-0">
+                {icon}
             </div>
+            <h3 className="text-xl font-semibold text-foreground">{title}</h3>
+        </div>
+        <div className="p-4 sm:p-6 text-muted-foreground prose prose-sm max-w-none prose-p:my-1 prose-a:text-primary prose-a:font-semibold hover:prose-a:underline prose-strong:text-foreground">
+            {children}
         </div>
     </div>
 );
@@ -30,63 +32,63 @@ const WhatsAppIcon = (props: any) => (
 
 export default function ContactPage() {
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-3xl font-bold text-primary">Contact & Service Client</h1>
-        <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 01 novembre 2025</p>
-      </div>
+    <div className="space-y-12">
+        <div className="text-center">
+            <h1 className="text-4xl font-bold text-primary">Contact & Service Client</h1>
+            <p className="text-sm text-muted-foreground mt-2">Dernière mise à jour : 01 novembre 2025</p>
+        </div>
 
-      <div className="space-y-6">
-        <p className="text-muted-foreground">Pour toute question, réclamation ou demande d'information, n'hésitez pas à nous contacter. Notre équipe est à votre disposition pour vous aider.</p>
+        <div className="space-y-6">
+            <p className="text-center text-muted-foreground max-w-3xl mx-auto">Pour toute question, réclamation ou demande d'information, n'hésitez pas à nous contacter. Notre équipe est à votre disposition pour vous aider.</p>
+        </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <InfoCard icon={<Mail size={24} />} title="Par Email">
+            <InfoCard icon={<Mail size={20} />} title="Par Email">
                 <p>Le moyen le plus efficace de nous joindre. Nous répondons sous 24h.</p>
-                <a href="mailto:d3.officiel.2@gmail.com" className="font-semibold text-primary hover:underline">d3.officiel.2@gmail.com</a>
+                <p><a href="mailto:d3.officiel.2@gmail.com">d3.officiel.2@gmail.com</a></p>
             </InfoCard>
 
-            <InfoCard icon={<Phone size={24} />} title="Par Téléphone">
+            <InfoCard icon={<Phone size={20} />} title="Par Téléphone">
                 <p>Pour les demandes urgentes, du lundi au vendredi, de 9h à 17h.</p>
-                <a href="tel:+2250546511723" className="font-semibold text-primary hover:underline">+225 05 46 51 17 23</a>
+                <p><a href="tel:+2250546511723">+225 05 46 51 17 23</a></p>
             </InfoCard>
             
             <InfoCard icon={<WhatsAppIcon />} title="Par WhatsApp">
                 <p>Pour une assistance rapide et directe, contactez-nous sur WhatsApp.</p>
-                <a href="https://wa.me/2250546511723" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">Discuter maintenant</a>
+                <p><a href="https://wa.me/2250546511723" target="_blank" rel="noopener noreferrer">Discuter maintenant</a></p>
             </InfoCard>
             
             <InfoCard icon={<WhatsAppIcon />} title="Notre Chaîne WhatsApp">
                 <p>Rejoignez notre chaîne pour les dernières actualités et mises à jour.</p>
-                <a href="https://www.whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x" target="_blank" rel="noopener noreferrer" className="font-semibold text-primary hover:underline">Rejoindre la chaîne</a>
+                <p><a href="https://www.whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x" target="_blank" rel="noopener noreferrer">Rejoindre la chaîne</a></p>
             </InfoCard>
         </div>
         
-        <div>
-            <h2 className="text-2xl font-semibold text-foreground mb-4 mt-8">Procédure de Réclamation</h2>
-            <div className="bg-muted/50 p-6 rounded-xl border border-border/50">
-                <p className="text-muted-foreground mb-4">Si vous avez une réclamation concernant nos services, veuillez nous l'adresser par email à <a href="mailto:d3.officiel.2@gmail.com" className="text-primary hover:underline">d3.officiel.2@gmail.com</a> en incluant les informations suivantes :</p>
-                <ul className="list-disc list-inside space-y-2 pl-4 text-muted-foreground">
-                    <li>Votre nom d'utilisateur et votre adresse email.</li>
-                    <li>Une description détaillée de l'objet de votre réclamation.</li>
-                    <li>Toute documentation ou capture d'écran pouvant appuyer votre demande.</li>
-                </ul>
-                <p className="text-muted-foreground mt-4">Nous accuserons réception de votre réclamation sous 48 heures et nous nous engageons à vous apporter une réponse complète dans les plus brefs délais.</p>
+        <div className="space-y-8">
+            <div>
+                <h2 className="text-2xl font-semibold text-foreground text-center">Procédure de Réclamation</h2>
+                <div className="mt-4 bg-muted/30 p-6 rounded-xl border border-border/30">
+                    <p className="text-muted-foreground mb-4">Si vous avez une réclamation concernant nos services, veuillez nous l'adresser par email à <a href="mailto:d3.officiel.2@gmail.com" className="text-primary hover:underline">d3.officiel.2@gmail.com</a> en incluant les informations suivantes :</p>
+                    <ul className="list-disc list-inside space-y-2 pl-4 text-muted-foreground">
+                        <li>Votre nom d'utilisateur et votre adresse email.</li>
+                        <li>Une description détaillée de l'objet de votre réclamation.</li>
+                        <li>Toute documentation ou capture d'écran pouvant appuyer votre demande.</li>
+                    </ul>
+                    <p className="text-muted-foreground mt-4">Nous accuserons réception de votre réclamation sous 48 heures et nous nous engageons à vous apporter une réponse complète dans les plus brefs délais.</p>
+                </div>
+            </div>
+            
+            <div>
+                <h2 className="text-2xl font-semibold text-foreground text-center">Adresse Postale</h2>
+                 <div className="mt-4 bg-muted/30 p-6 rounded-xl border border-border/30">
+                    <p className="text-muted-foreground">Pour tout courrier officiel, vous pouvez nous écrire à l'adresse de notre siège social :</p>
+                    <p className="font-semibold text-foreground mt-2">
+                        <strong>Predict Inc.</strong><br />
+                        quartier Anani ,Port Bouet, ABidjan
+                    </p>
+                </div>
             </div>
         </div>
-        
-        <div>
-            <h2 className="text-2xl font-semibold text-foreground mb-4 mt-8">Adresse Postale</h2>
-             <div className="bg-muted/50 p-6 rounded-xl border border-border/50">
-                <p className="text-muted-foreground">Pour tout courrier officiel, vous pouvez nous écrire à l'adresse de notre siège social :</p>
-                <p className="font-semibold text-foreground mt-2">
-                    <strong>Predict Inc.</strong><br />
-                    quartier Anani ,Port Bouet, ABidjan
-                </p>
-            </div>
-        </div>
-      </div>
     </div>
   );
 }
-
-    
