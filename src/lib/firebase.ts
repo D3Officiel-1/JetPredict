@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { getFirestore, doc, updateDoc, enableIndexedDbPersistence } from "firebase/firestore";
 import { getMessaging, getToken, onMessage } from "firebase/messaging";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -69,4 +69,4 @@ export const onMessageListener = () =>
   });
 
 
-export { app, auth, db, GoogleAuthProvider };
+export { app, auth, db };

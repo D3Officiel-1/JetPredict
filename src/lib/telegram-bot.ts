@@ -40,7 +40,7 @@ const PLAN_RISK_LEVELS: Record<PlanId, string[]> = {
 const paymentMethods = ["Wave", "Orange Money", "MTN Money", "Moov Money"];
 
 type UserState = {
-  step: 'awaiting_linking_token' | 'awaiting_username' | 'awaiting_email_login' | 'awaiting_password_login' | 'awaiting_profile_edit' | 'awaiting_firstname' | 'awaiting_lastname' | 'awaiting_username_edit' | 'awaiting_phone' | 'awaiting_favorite_game' | 'awaiting_pronostiqueur_code' | 'awaiting_history' | 'awaiting_registration_email' | 'awaiting_registration_password' | 'awaiting_registration_confirm_password' | 'awaiting_change_password_current' | 'awaiting_change_password_new' | 'awaiting_change_password_confirm' | 'awaiting_change_email_password' | 'awaiting_change_email_new' | 'awaiting_promo_code_decision' | 'awaiting_promo_code_input' | 'awaiting_payment_method';
+  step: 'awaiting_linking_token' | 'awaiting_username' | 'awaiting_email_login' | 'awaiting_password_login' | 'awaiting_profile_edit' | 'awaiting_firstname' | 'awaiting_lastname' | 'awaiting_username_edit' | 'awaiting_favorite_game' | 'awaiting_pronostiqueur_code' | 'awaiting_history' | 'awaiting_registration_email' | 'awaiting_registration_password' | 'awaiting_registration_confirm_password' | 'awaiting_change_password_current' | 'awaiting_change_password_new' | 'awaiting_change_password_confirm' | 'awaiting_change_email_password' | 'awaiting_change_email_new' | 'awaiting_promo_code_decision' | 'awaiting_promo_code_input' | 'awaiting_payment_method';
   data?: any;
 };
 
@@ -93,7 +93,6 @@ const sendProfileEditMenu = async (chatId: number) => {
                 { text: '🆔 Pseudo', callback_data: 'edit_username' }
             ],
             [
-                { text: '📞 Téléphone', callback_data: 'edit_phone' },
                 { text: '🎮 Jeu Préféré', callback_data: 'edit_favorite_game' }
             ],
             [
@@ -355,10 +354,6 @@ bot.on('message', async (msg) => {
                 }
                 if (userDocRef) await updateDoc(userDocRef, { username: text });
                 successMessage = `Nom d'utilisateur mis à jour : *${text}*`;
-                break;
-            case 'awaiting_phone':
-                if (userDocRef) await updateDoc(userDocRef, { phone: text });
-                successMessage = `Téléphone mis à jour : *${text}*`;
                 break;
             case 'awaiting_favorite_game':
                 if (userDocRef) await updateDoc(userDocRef, { favoriteGame: text });
@@ -825,10 +820,6 @@ bot.on('callback_query', async (callbackQuery) => {
             case 'edit_username':
                 userStates[userId] = { step: 'awaiting_username_edit' };
                 await bot.sendMessage(chatId, "✏️ Entrez votre nouveau pseudo (doit être unique) :");
-                break;
-            case 'edit_phone':
-                userStates[userId] = { step: 'awaiting_phone' };
-                await bot.sendMessage(chatId, "✏️ Entrez votre nouveau numéro de téléphone :");
                 break;
             case 'edit_favorite_game':
                 userStates[userId] = { step: 'awaiting_favorite_game' };
