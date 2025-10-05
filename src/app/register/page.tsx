@@ -105,7 +105,14 @@ export default function RegisterPage() {
   const { toast } = useToast();
   const auth = getAuth(app);
   
-  const finalTotalSteps = refCodeFromUrl ? TOTAL_STEPS - 1 : TOTAL_STEPS;
+  const [finalTotalSteps, setFinalTotalSteps] = useState(TOTAL_STEPS);
+
+  useEffect(() => {
+    // This logic needs to be client-side only
+    const params = new URLSearchParams(window.location.search);
+    const hasRef = params.get('ref');
+    setFinalTotalSteps(hasRef ? TOTAL_STEPS - 1 : TOTAL_STEPS);
+  }, []);
 
   const isStepValid = useMemo(() => {
     switch (step) {
