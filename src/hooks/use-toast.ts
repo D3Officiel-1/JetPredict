@@ -16,6 +16,7 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
+  disableSound?: boolean
 }
 
 const actionTypes = {
@@ -151,6 +152,16 @@ function toast({ ...props }: Toast) {
       toast: { ...props, id },
     })
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+
+  if (!props.disableSound) {
+    try {
+      const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/12/12/audio_e6f0105ae1.mp3?filename=livechat-129007.mp3');
+      audio.volume = 0.2;
+      audio.play();
+    } catch (error) {
+      console.error("Failed to play toast sound:", error);
+    }
+  }
 
   dispatch({
     type: "ADD_TOAST",

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -214,9 +215,10 @@ export default function ProfilePage() {
     navigator.clipboard.writeText(commandToCopy).then(() => {
       try {
         const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/12/12/audio_e6f0105ae1.mp3?filename=livechat-129007.mp3');
+        audio.volume = 0.2;
         audio.play();
         if (navigator.vibrate) {
-            navigator.vibrate(200);
+            navigator.vibrate(50);
         }
       } catch (e) {
           console.error("Failed to play sound or vibrate:", e)

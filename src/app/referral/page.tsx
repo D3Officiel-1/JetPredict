@@ -163,6 +163,7 @@ export default function ReferralPage() {
         variant: 'success',
         title: 'Copié !',
         description: 'Code de parrainage copié.',
+        disableSound: true,
       });
       setTimeout(() => setIsCopied(false), 3000);
     });
@@ -299,7 +300,7 @@ Merci de traiter ma demande.`;
                           <div className="relative flex-1 text-center text-2xl font-bold tracking-widest bg-muted text-primary rounded-lg px-6 py-3 border border-dashed border-primary/50 flex items-center justify-center">
                               {referralCode || <Loader2 className="w-5 h-5 animate-spin mx-auto"/>}
                           </div>
-                          <Button onClick={handleCopyCode} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode}>
+                          <Button onClick={handleCopyCode} variant="outline" className="relative px-4 h-auto bg-muted/80" disabled={!referralCode} disableSound={true}>
                               {isCopied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
                           </Button>
                       </div>
@@ -368,7 +369,7 @@ Merci de traiter ma demande.`;
                               <h3 className="text-lg font-semibold text-foreground">Construisez votre réseau</h3>
                               <p className="text-sm max-w-xs mx-auto">Partagez votre code pour recruter des filleuls et commencer à gagner des commissions.</p>
                           </div>
-                          <Button onClick={handleShareCode} variant="outline" disabled={!referralCode}>
+                          <Button onClick={handleShareCode} variant="outline" disabled={!referralCode} disableSound={true}>
                               <Share2 className="mr-2 h-4 w-4" />
                               Partager mon code
                           </Button>

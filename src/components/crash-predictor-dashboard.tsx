@@ -774,6 +774,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       className="h-8 px-2 sm:px-3"
       onClick={handleCopyPredictions}
       disabled={isCopied || !canCopy}
+      disableSound={true}
     >
       {isCopied ? (
         <Check className="h-4 w-4 text-green-500 sm:mr-2" />
@@ -791,6 +792,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       className="h-8 px-2 sm:px-3"
       onClick={handlePictureInPicture}
       disabled={!canAccessPremiumFeatures}
+      disableSound={true}
     >
       <PictureInPicture className="h-4 w-4 sm:mr-2" />
       <span className="hidden sm:inline">Superposer</span>

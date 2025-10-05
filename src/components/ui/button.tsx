@@ -36,16 +36,37 @@ const buttonVariants = cva(
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
-  asChild?: boolean
+  asChild?: boolean;
+  disableSound?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, disableSound = false, onClick, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+
+    const playClickSound = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!disableSound) {
+        try {
+          const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/12/12/audio_e6f0105ae1.mp3?filename=livechat-129007.mp3');
+          audio.volume = 0.2;
+          audio.play();
+          if (navigator.vibrate) {
+              navigator.vibrate(50);
+          }
+        } catch (error) {
+            console.error("Failed to play click sound:", error);
+        }
+      }
+      if(onClick) {
+        onClick(e);
+      }
+    };
+
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, className }), "ripple-effect", "active-bounce")}
         ref={ref}
+        onClick={playClickSound}
         {...props}
       />
     )
