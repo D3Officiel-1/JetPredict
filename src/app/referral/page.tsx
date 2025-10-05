@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -170,7 +169,6 @@ export default function ReferralPage() {
   }, [user, userData]);
 
   const referralCode = userData?.username;
-  const referralLink = `${window.location.origin}/register?ref=${referralCode}`;
 
   const handleCopyCode = () => {
     if (!referralCode) return;
@@ -198,6 +196,7 @@ export default function ReferralPage() {
   
   const handleShareLink = async () => {
      if (!referralCode) return;
+     const referralLink = `${window.location.origin}/register?ref=${referralCode}`;
      const shareData = {
         title: 'Rejoignez Jet Predict !',
         text: `Inscrivez-vous sur Jet Predict avec mon code de parrainage et commencez à gagner !`,
