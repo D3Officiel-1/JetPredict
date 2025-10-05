@@ -1,8 +1,6 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge';
-
 /**
  * Cette route API gère la redirection depuis le bot Telegram vers la page de connexion.
  * Elle capture le `chatId` de Telegram et le transmet en tant que paramètre d'URL
