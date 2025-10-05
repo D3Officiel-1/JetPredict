@@ -4,7 +4,7 @@ export default function CGVPage() {
     <div className="space-y-8">
         <div>
             <h1 className="text-3xl font-bold text-primary">Conditions Générales de Vente (CGV)</h1>
-            <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 01 septembre 2025</p>
+            <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 04 septembre 2025</p>
         </div>
 
         <div className="space-y-6 text-muted-foreground">
