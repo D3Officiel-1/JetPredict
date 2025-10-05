@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 import { motion } from 'framer-motion';
 import { Loader2, ExternalLink } from "lucide-react";
 import Image from "next/image";
@@ -19,25 +20,33 @@ interface MaintenanceConfig {
 export default function MaintenancePage() {
     const [config, setConfig] = useState<MaintenanceConfig | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
 
     useEffect(() => {
         const docRef = doc(db, "applications", "VMrS6ltRDuKImzxAl3lR");
         const unsubscribe = onSnapshot(docRef, (docSnap) => {
             if (docSnap.exists()) {
                 const data = docSnap.data();
+                // Si la maintenance est désactivée, redirigez
+                if (data.status === false) {
+                    router.push('/predict');
+                    return;
+                }
                 setConfig(data.maintenanceConfig || {});
             } else {
-                setConfig({}); // No config found, use defaults
+                // Si le document n'existe pas, on suppose que la maintenance n'est pas active
+                router.push('/predict');
+                return;
             }
             setIsLoading(false);
         }, (error) => {
             console.error("Error fetching maintenance config:", error);
-            setConfig({});
+            setConfig({}); // Assume no maintenance on error, but stay on page
             setIsLoading(false);
         });
 
         return () => unsubscribe();
-    }, []);
+    }, [router]);
 
     const message = config?.message || "Notre service est actuellement en maintenance pour des améliorations. Nous serons de retour très bientôt.";
     const mediaUrl = config?.mediaUrl || "https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png";
