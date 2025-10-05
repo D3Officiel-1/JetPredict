@@ -1,19 +1,26 @@
+
 'use client';
 
 import { Building, Server, UserCircle, Shield, Mail, Phone, Globe } from "lucide-react";
+import { motion } from "framer-motion";
 
-const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
-    <div className="bg-muted/50 p-6 rounded-xl border border-border/50 transition-all hover:border-primary/50 hover:bg-muted">
-        <div className="flex items-start gap-4">
-            <div className="text-primary mt-1">{icon}</div>
-            <div>
-                <h3 className="text-lg font-semibold text-foreground mb-1">{title}</h3>
-                <div className="text-muted-foreground prose-p:my-1 prose-a:text-primary prose-strong:text-foreground">
-                    {children}
-                </div>
+const InfoRow = ({ icon, title, children, delay }: { icon: React.ReactNode, title: string, children: React.ReactNode, delay: number }) => (
+    <motion.div
+        className="flex flex-col sm:flex-row gap-4 py-6 border-b border-border/50"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay }}
+    >
+        <div className="flex items-center gap-4 shrink-0 sm:w-1/3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20 shrink-0">
+                {icon}
             </div>
+            <h3 className="font-semibold text-lg text-foreground">{title}</h3>
         </div>
-    </div>
+        <div className="text-muted-foreground prose-p:my-1 prose-a:text-primary hover:prose-a:underline prose-strong:text-foreground">
+            {children}
+        </div>
+    </motion.div>
 );
 
 
@@ -25,41 +32,41 @@ export default function MentionsLegalesPage() {
         <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 01 septembre 2025</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <InfoCard icon={<Building size={24} />} title="Éditeur du site">
+      <div className="flex flex-col">
+        <InfoRow icon={<Building size={24} />} title="Éditeur du site" delay={0.1}>
           <p>
             <strong>Predict Inc.</strong><br/>
             Société fictive pour la démonstration<br/>
-            quartier Anani ,Port Bouet, ABidjan
+            quartier Anani, Port Bouet, Abidjan
           </p>
-        </InfoCard>
+        </InfoRow>
 
-        <InfoCard icon={<UserCircle size={24} />} title="Directeur de la publication">
+        <InfoRow icon={<UserCircle size={24} />} title="Directeur de la publication" delay={0.2}>
            <p>
                 <strong>M. D3 Officiel</strong><br/>
                 En qualité de CEO de Predict Inc.
            </p>
-        </InfoCard>
+        </InfoRow>
         
-        <InfoCard icon={<Server size={24} />} title="Hébergement">
+        <InfoRow icon={<Server size={24} />} title="Hébergement" delay={0.3}>
            <p>
                 <strong>Firebase Hosting (Google)</strong><br/>
                 Gordon House, Barrow Street<br/>
                 Dublin 4, Irlande<br/>
                 <a href="https://firebase.google.com" target="_blank" rel="noopener noreferrer">firebase.google.com</a>
            </p>
-        </InfoCard>
+        </InfoRow>
 
-        <InfoCard icon={<Shield size={24} />} title="Propriété intellectuelle">
-            <p>Tous les droits de reproduction sont réservés. La reproduction de tout ou partie de ce site est formellement interdite sans autorisation.</p>
-        </InfoCard>
+        <InfoRow icon={<Shield size={24} />} title="Propriété intellectuelle" delay={0.4}>
+            <p>Tous les droits de reproduction sont réservés. La reproduction de tout ou partie de ce site est formellement interdite sans autorisation écrite préalable de l'éditeur.</p>
+        </InfoRow>
+        
+        <InfoRow icon={<Globe size={24} />} title="Limitation de responsabilité" delay={0.5}>
+            <p>JetPredict est un outil d'aide à la décision basé sur des analyses statistiques et ne garantit aucun gain. Le jeu comporte des risques. Jouez toujours de manière responsable et fixez-vous des limites.</p>
+      </InfoRow>
       </div>
 
-       <InfoCard icon={<Globe size={24} />} title="Limitation de responsabilité">
-            <p>JetPredict s'efforce de fournir des informations précises, mais ne peut garantir l'exactitude de toutes les données. Le service est un outil d'aide à la décision et ne garantit aucun gain. Jouez de manière responsable.</p>
-      </InfoCard>
-
-      <div className="text-center text-sm text-muted-foreground pt-4">
+      <div className="text-center text-sm text-muted-foreground pt-4 border-t border-border/50">
         Pour toute question, contactez-nous à <a href="mailto:d3.officiel.2@gmail.com" className="text-primary hover:underline">d3.officiel.2@gmail.com</a>.
       </div>
     </div>
