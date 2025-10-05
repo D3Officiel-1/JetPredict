@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailA
 import { predictCrashPoint, PredictCrashPointInput } from '@/ai/flows/predict-crash-point';
 import { PlanId, PromoCode } from '@/types';
 
-const token = process.env.TELEGRAM_BOT_TOKEN_PROD || process.env.TELEGRAM_BOT_TOKEN_DEV || process.env.TELEGRAM_BOT_TOKEN;
+const token = process.env.TELEGRAM_BOT_TOKEN;
 const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://jetpredict.vercel.app';
 const supportPhoneNumber = "2250546511723"; // Numéro de téléphone pour le support WhatsApp
 const whatsAppChannelUrl = "https://www.whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x";
