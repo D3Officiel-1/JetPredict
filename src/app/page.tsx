@@ -196,6 +196,13 @@ export default function LandingPage() {
   const [isIosInstallGuideOpen, setIsIosInstallGuideOpen] = useState(false);
   const [isWindowsInstallGuideOpen, setIsWindowsInstallGuideOpen] = useState(false);
   const [loadingTextIndex, setLoadingTextIndex] = useState(0);
+  const [androidGuideStep, setAndroidGuideStep] = useState(1);
+
+  const androidImages = [
+    'https://i.postimg.cc/RVFmN3Gm/android-etape-1.png',
+    'https://i.postimg.cc/xC5rdYzR/android-etape-2.png',
+    'https://i.postimg.cc/tCfKJBYK/android-etape-3.png',
+  ];
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -216,6 +223,7 @@ export default function LandingPage() {
       await deferredPrompt.userChoice;
       setDeferredPrompt(null);
     } else {
+      setAndroidGuideStep(1);
       setIsAndroidInstallGuideOpen(true);
     }
   };
@@ -881,28 +889,45 @@ export default function LandingPage() {
                 </DialogHeader>
                 <div className="grid md:grid-cols-2 gap-8 p-1 pt-4">
                     <div className="space-y-6 text-sm">
-                        <InstallStep
-                            num="1"
-                            instruction={<>Ouvrez le menu du navigateur</>}
-                            detail="Dans Chrome, appuyez sur l'icône de menu (généralement 3 points) en haut à droite pour afficher les options."
-                        />
-                         <InstallStep
-                            num="2"
-                            instruction={<>Sélectionnez "Installer l'application"</>}
-                            detail="Cette action ajoutera Jet Predict à votre écran d'accueil, vous donnant un accès direct comme une application native."
-                        />
-                         <InstallStep
-                            num="3"
-                            instruction={<>Confirmez et lancez</>}
-                            detail="Validez l'installation. L'icône Jet Predict apparaîtra parmi vos autres applications. Profitez de l'expérience optimisée !"
-                        />
+                        <div onClick={() => setAndroidGuideStep(1)} className={cn("p-2 rounded-lg cursor-pointer", androidGuideStep === 1 && "bg-muted")}>
+                            <InstallStep
+                                num="1"
+                                instruction={<>Ouvrez le menu du navigateur</>}
+                                detail="Dans Chrome, appuyez sur l'icône de menu (généralement 3 points) en haut à droite pour afficher les options."
+                            />
+                        </div>
+                        <div onClick={() => setAndroidGuideStep(2)} className={cn("p-2 rounded-lg cursor-pointer", androidGuideStep === 2 && "bg-muted")}>
+                            <InstallStep
+                                num="2"
+                                instruction={<>Sélectionnez "Installer l'application"</>}
+                                detail="Cette action ajoutera Jet Predict à votre écran d'accueil, vous donnant un accès direct comme une application native."
+                            />
+                        </div>
+                        <div onClick={() => setAndroidGuideStep(3)} className={cn("p-2 rounded-lg cursor-pointer", androidGuideStep === 3 && "bg-muted")}>
+                            <InstallStep
+                                num="3"
+                                instruction={<>Confirmez et lancez</>}
+                                detail="Validez l'installation. L'icône Jet Predict apparaîtra parmi vos autres applications. Profitez de l'expérience optimisée !"
+                            />
+                        </div>
                     </div>
-                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
-                        <Image src="https://i.postimg.cc/9Q3SPrCz/android.png" alt="Android UI" width={200} height={400} />
+                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30 overflow-hidden">
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={androidGuideStep}
+                                initial={{ opacity: 0, x: 50 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                exit={{ opacity: 0, x: -50 }}
+                                transition={{ duration: 0.3 }}
+                            >
+                                <Image src={androidImages[androidGuideStep - 1]} alt={`Android Étape ${androidGuideStep}`} width={200} height={400} className="rounded-lg" />
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </div>
             </DialogContent>
         </Dialog>
+
 
         <Dialog open={isIosInstallGuideOpen} onOpenChange={setIsIosInstallGuideOpen}>
             <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
