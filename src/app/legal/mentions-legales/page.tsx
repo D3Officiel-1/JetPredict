@@ -29,7 +29,7 @@ export default function MentionsLegalesPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-primary">Mentions Légales</h1>
-        <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 04 septembre 2025</p>
+        <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 01 novembre 2025</p>
       </div>
       
       <div className="flex flex-col">

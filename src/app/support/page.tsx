@@ -113,7 +113,7 @@ export default function SupportPage() {
       <main className="w-full max-w-4xl mx-auto p-4 sm:p-8 space-y-8">
         <div>
             <h1 className="text-3xl font-bold text-primary">Contact & Service Client</h1>
-            <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 01 septembre 2025</p>
+            <p className="text-sm text-muted-foreground mt-1">Dernière mise à jour : 01 novembre 2025</p>
         </div>
         <div className="space-y-6">
             <p className="text-muted-foreground">Pour toute question, réclamation ou demande d'information, n'hésitez pas à nous contacter. Notre équipe est à votre disposition pour vous aider.</p>
