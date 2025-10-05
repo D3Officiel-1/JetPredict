@@ -48,14 +48,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const playClickSound = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!disableSound) {
         try {
-          const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/05/23/audio_2eab2810f1.mp3?filename=screw_pick-345981.mp3');
-          audio.volume = 0.2;
-          audio.play();
           if (navigator.vibrate) {
               navigator.vibrate(50);
           }
         } catch (error) {
-            console.error("Failed to play click sound:", error);
+            console.error("Failed to vibrate:", error);
         }
       }
       if(onClick) {
