@@ -618,7 +618,7 @@ export default function SettingsPage() {
                         />
                     </div>
                     <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/o9gyl6yrq8f6tllqf0t7.svg" alt="Android UI" width={200} height={400} />
+                        <Image src="https://i.postimg.cc/9Q3SPrCz/android.png" alt="Android UI" width={200} height={400} />
                     </div>
                 </div>
             </DialogContent>
