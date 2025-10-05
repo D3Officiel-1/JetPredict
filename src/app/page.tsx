@@ -827,6 +827,7 @@ export default function LandingPage() {
                         <Link href="/legal/cgu" className="text-muted-foreground hover:text-primary transition-colors">Conditions d'utilisation</Link>
                         <Link href="/legal/cgv" className="text-muted-foreground hover:text-primary transition-colors">Conditions de vente</Link>
                         <Link href="/legal/confidentialite" className="text-muted-foreground hover:text-primary transition-colors">Confidentialité</Link>
+                        <Link href="/legal/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link>
                     </div>
 
                     {/* App & Bot Section */}
