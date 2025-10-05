@@ -818,7 +818,9 @@ export default function LandingPage() {
       </main>
 
       {/* Footer */}
-        <footer className="bg-card/30 dark:bg-black/20 border-t border-primary/10">
+        <footer className="relative bg-card/30 dark:bg-black/20 border-t border-primary/10 overflow-hidden">
+            <div className="absolute inset-0 bg-grid-pattern opacity-5 -z-10"></div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side_at_50%_0,hsl(var(--primary)/0.03),transparent)] -z-10"></div>
             <div className="container mx-auto py-12 px-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
                     {/* Brand Section */}
