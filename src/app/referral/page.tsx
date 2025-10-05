@@ -28,7 +28,7 @@ import Image from 'next/image';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { cn } from '@/lib/utils';
 import Header from '@/components/ui/sidebar';
-
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ReferralUser {
     id: string;
@@ -46,6 +46,13 @@ interface Commission {
     date: string;
 }
 
+const loadingTexts = [
+    "ANALYSE DU PROFIL...",
+    "VÉRIFICATION DES ACCÈS...",
+    "SYNCHRONISATION AU NOYAU...",
+    "PROTOCOLES CHARGÉS.",
+];
+
 const paymentMethods = [
     { name: "Wave", logoUrl: "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/62/f6/ac/62f6ac8b-27d7-8a8f-e2c1-9bbc31e22fb1/AppIcon-0-0-1x_U007emarketing-0-1-0-85-220.png/230x0w.webp" },
     { name: "Orange Money", logoUrl: "https://www.orange.ci/particuliers/resources/img/master-logo.svg" },
@@ -60,6 +67,7 @@ export default function ReferralPage() {
   const [commissionHistory, setCommissionHistory] = useState<Commission[]>([]);
   const [balance, setBalance] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const [isCopied, setIsCopied] = useState(false);
   
   const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
@@ -71,6 +79,15 @@ export default function ReferralPage() {
   const { toast } = useToast();
   const router = useRouter();
   const auth = getAuth(app);
+
+  useEffect(() => {
+    if (isLoading) {
+        const textInterval = setInterval(() => {
+            setLoadingTextIndex(prev => (prev < loadingTexts.length - 1 ? prev + 1 : prev));
+        }, 500);
+        return () => clearInterval(textInterval);
+    }
+  }, [isLoading])
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
@@ -262,9 +279,57 @@ Merci de traiter ma demande.`;
   
   if (isLoading || !user) {
     return (
-      <div className="flex min-h-screen w-full flex-col bg-background items-center justify-center">
-        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="animate-pulse" priority />
-      </div>
+      <motion.div 
+          className="flex h-screen w-full flex-col items-center justify-center bg-background text-foreground"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side,hsl(var(--background)),transparent)]"></div>
+
+        <motion.div 
+          className="relative w-32 h-32 mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }}
+        >
+          <motion.div 
+            className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.div 
+            className="absolute inset-2 rounded-full border-2 border-primary/30"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          />
+          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="w-full h-full object-contain" priority />
+        </motion.div>
+
+        <div className="relative w-64 h-2 bg-muted/50 rounded-full overflow-hidden">
+          <motion.div 
+            className="absolute top-0 left-0 h-full bg-primary"
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
+          />
+        </div>
+
+        <div className="h-6 mt-4">
+            <AnimatePresence mode="wait">
+                <motion.p
+                    key={loadingTextIndex}
+                    className="font-code text-sm text-primary tracking-widest"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {loadingTexts[loadingTextIndex]}
+                </motion.p>
+            </AnimatePresence>
+        </div>
+      </motion.div>
     );
   }
 

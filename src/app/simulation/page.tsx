@@ -18,6 +18,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import Image from 'next/image';
+import { motion, AnimatePresence } from "framer-motion";
 
 type GameState = 'IDLE' | 'WAITING' | 'BETTING' | 'IN_PROGRESS' | 'CRASHED';
 type BetState = 'IDLE' | 'PENDING' | 'PLACED' | 'CASHED_OUT' | 'LOST';
@@ -32,6 +33,13 @@ interface BetPanelData {
   isAutoCashout: boolean;
   autoCashoutValue: number;
 }
+
+const loadingTexts = [
+    "ANALYSE DU PROFIL...",
+    "VÉRIFICATION DES ACCÈS...",
+    "SYNCHRONISATION AU NOYAU...",
+    "PROTOCOLES CHARGÉS.",
+];
 
 interface SimulatedPlayer {
     id: number | string;
@@ -457,6 +465,8 @@ export default function SimulationPage() {
   const [history, setHistory] = useState<number[]>(initialHistory);
   const [gameLevel, setGameLevel] = useState<GameLevel | null>(null);
   const [isLevelSelectorOpen, setIsLevelSelectorOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
 
   const [bet1Data, setBet1Data] = useState<BetPanelData>({ betState: 'IDLE', betAmount: 120, winAmount: 0, isAutoBet: false, isAutoCashout: false, autoCashoutValue: 2.00 });
   const [bet2Data, setBet2Data] = useState<BetPanelData>({ betState: 'IDLE', betAmount: 120, winAmount: 0, isAutoBet: false, isAutoCashout: false, autoCashoutValue: 2.00 });
@@ -752,6 +762,15 @@ export default function SimulationPage() {
 
 
   useEffect(() => {
+    if (isLoading) {
+        const textInterval = setInterval(() => {
+            setLoadingTextIndex(prev => (prev < loadingTexts.length - 1 ? prev + 1 : prev));
+        }, 500);
+        return () => clearInterval(textInterval);
+    }
+  }, [isLoading])
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
         router.push('/login');
@@ -782,6 +801,7 @@ export default function SimulationPage() {
                     if (userDoc.exists()) {
                         setUserData(userDoc.data() as {username: string});
                     }
+                     setIsLoading(false);
                 });
                 setUser(currentUser);
                 return () => unsubscribeUser();
@@ -823,11 +843,59 @@ export default function SimulationPage() {
     setIsLevelSelectorOpen(false);
   }
 
-  if (!user) {
+  if (isLoading || !user) {
     return (
-      <div className="flex min-h-screen w-full flex-col bg-[#1a203c] items-center justify-center">
-        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="animate-pulse" />
-      </div>
+       <motion.div 
+          className="flex h-screen w-full flex-col items-center justify-center bg-background text-foreground"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side,hsl(var(--background)),transparent)]"></div>
+
+        <motion.div 
+          className="relative w-32 h-32 mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }}
+        >
+          <motion.div 
+            className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.div 
+            className="absolute inset-2 rounded-full border-2 border-primary/30"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          />
+          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="w-full h-full object-contain" priority />
+        </motion.div>
+
+        <div className="relative w-64 h-2 bg-muted/50 rounded-full overflow-hidden">
+          <motion.div 
+            className="absolute top-0 left-0 h-full bg-primary"
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
+          />
+        </div>
+
+        <div className="h-6 mt-4">
+            <AnimatePresence mode="wait">
+                <motion.p
+                    key={loadingTextIndex}
+                    className="font-code text-sm text-primary tracking-widest"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {loadingTexts[loadingTextIndex]}
+                </motion.p>
+            </AnimatePresence>
+        </div>
+      </motion.div>
     );
   }
   

@@ -14,6 +14,7 @@ import Image from 'next/image';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/ui/sidebar';
+import { motion, AnimatePresence } from "framer-motion";
 
 const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: string, children: React.ReactNode }) => (
     <div className="bg-muted/50 p-6 rounded-xl border border-border/50 transition-all hover:border-primary/50 hover:bg-muted">
@@ -28,6 +29,13 @@ const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: str
         </div>
     </div>
 );
+
+const loadingTexts = [
+    "ANALYSE DU PROFIL...",
+    "VÉRIFICATION DES ACCÈS...",
+    "SYNCHRONISATION AU NOYAU...",
+    "PROTOCOLES CHARGÉS.",
+];
 
 const WhatsAppIcon = (props: any) => (
     <svg
@@ -46,9 +54,19 @@ const WhatsAppIcon = (props: any) => (
 export default function SupportPage() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   const auth = getAuth(app);
   const router = useRouter();
   const { toast } = useToast();
+
+   useEffect(() => {
+    if (isLoading) {
+        const textInterval = setInterval(() => {
+            setLoadingTextIndex(prev => (prev < loadingTexts.length - 1 ? prev + 1 : prev));
+        }, 500);
+        return () => clearInterval(textInterval);
+    }
+  }, [isLoading])
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -102,9 +120,57 @@ export default function SupportPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="flex min-h-screen w-full flex-col bg-background items-center justify-center">
-        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="animate-pulse" priority />
-      </div>
+       <motion.div 
+          className="flex h-screen w-full flex-col items-center justify-center bg-background text-foreground"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side,hsl(var(--background)),transparent)]"></div>
+
+        <motion.div 
+          className="relative w-32 h-32 mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }}
+        >
+          <motion.div 
+            className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.div 
+            className="absolute inset-2 rounded-full border-2 border-primary/30"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          />
+          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="w-full h-full object-contain" priority />
+        </motion.div>
+
+        <div className="relative w-64 h-2 bg-muted/50 rounded-full overflow-hidden">
+          <motion.div 
+            className="absolute top-0 left-0 h-full bg-primary"
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
+          />
+        </div>
+
+        <div className="h-6 mt-4">
+            <AnimatePresence mode="wait">
+                <motion.p
+                    key={loadingTextIndex}
+                    className="font-code text-sm text-primary tracking-widest"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {loadingTexts[loadingTextIndex]}
+                </motion.p>
+            </AnimatePresence>
+        </div>
+      </motion.div>
     );
   }
 
