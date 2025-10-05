@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -47,7 +48,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const playClickSound = (e: React.MouseEvent<HTMLButtonElement>) => {
       if (!disableSound) {
         try {
-          const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/12/12/audio_e6f0105ae1.mp3?filename=livechat-129007.mp3');
+          const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/05/23/audio_2eab2810f1.mp3?filename=screw_pick-345981.mp3');
           audio.volume = 0.2;
           audio.play();
           if (navigator.vibrate) {
