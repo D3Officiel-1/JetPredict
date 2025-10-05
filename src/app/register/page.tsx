@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { getAuth, onAuthStateChanged, User, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { doc, setDoc, query, collection, where, getDocs, serverTimestamp, writeBatch, getDoc, updateDoc } from 'firebase/firestore';
 import { app, db } from '@/lib/firebase';
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,7 @@ const NumberInputWithControls = ({ id, placeholder, value, onChange, min, max, o
 
     return (
         <div className="relative">
-            <Input id={id} type="number" placeholder={placeholder} value={value} onChange={onChange} min={min} max={max} />
+            <Input id={id} type="number" placeholder={placeholder} value={value} onChange={onChange} min={min} max={max} className="bg-background/50"/>
             <div className="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col h-full justify-center">
                 <Button type="button" variant="ghost" size="icon" className="h-4 w-4 text-muted-foreground hover:text-foreground" onClick={() => handleStep(1)}>
                     <ChevronUp className="h-4 w-4" />
@@ -551,17 +551,46 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen text-foreground overflow-hidden p-4 sm:p-8">
+    <div className="relative flex flex-col items-center justify-between min-h-screen bg-background text-foreground overflow-hidden p-4 sm:p-8">
       <div className="absolute inset-0 bg-grid-pattern opacity-10 -z-10"></div>
-      <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#313b5c22,transparent)] -z-10"></div>
+       <motion.div 
+            aria-hidden 
+            className="absolute inset-0 -z-10"
+            initial={{ opacity: 0}}
+            animate={{ opacity: 1, transition: { duration: 1 }}}
+        >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_500px_at_50%_30%,hsl(var(--primary)/0.15),transparent)]"></div>
+            <motion.div
+                className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full filter blur-3xl"
+                animate={{
+                    x: [-20, 20, -20],
+                    y: [-20, 20, -20],
+                }}
+                transition={{
+                    duration: 20,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                }}
+            />
+            <motion.div
+                className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl"
+                animate={{
+                    x: [20, -20, 20],
+                    y: [20, -20, 20],
+                }}
+                transition={{
+                    duration: 25,
+                    ease: "easeInOut",
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                }}
+            />
+        </motion.div>
       
       <header className="w-full max-w-xl flex items-center justify-between z-10">
-         <Button asChild variant="ghost" onClick={step > 0 ? handlePrevStep : undefined}>
-            {step > 0 ? (
-                <span className='cursor-pointer'><ArrowLeft className="mr-2 h-4 w-4" />Retour</span>
-            ) : (
-                <span />
-            )}
+         <Button asChild variant="ghost" onClick={step > 0 ? handlePrevStep : undefined} className={cn(step === 0 ? 'opacity-0 pointer-events-none' : 'opacity-100')}>
+            <span className='cursor-pointer'><ArrowLeft className="mr-2 h-4 w-4" />Retour</span>
         </Button>
       </header>
       
@@ -610,7 +639,7 @@ export default function RegisterPage() {
                                     <span className="bg-background px-2 text-muted-foreground">Ou</span>
                                 </div>
                             </div>
-                             <Button variant="outline" className="w-full h-12 text-base" size="lg" onClick={() => setStep(1)} disabled={isLoading}>
+                             <Button variant="outline" className="w-full h-12 text-base bg-card/50" size="lg" onClick={() => setStep(1)} disabled={isLoading}>
                                 <Mail className="mr-2 h-5 w-5"/>
                                 S'inscrire avec un email
                             </Button>
@@ -636,12 +665,12 @@ export default function RegisterPage() {
                   <div className="space-y-4">
                     <div className="grid gap-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" value={formData.email} onChange={handleChange} required />
+                      <Input id="email" type="email" value={formData.email} onChange={handleChange} required className="bg-background/50"/>
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="password">Mot de passe</Label>
                         <div className="relative">
-                            <Input id="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handlePasswordChange} required className="pr-10" />
+                            <Input id="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handlePasswordChange} required className="pr-10 bg-background/50" />
                             <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                             </button>
@@ -655,7 +684,7 @@ export default function RegisterPage() {
                     <div className="grid gap-2">
                       <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
                        <div className="relative">
-                          <Input id="confirmPassword" type={showPassword ? "text" : "password"} value={formData.confirmPassword} onChange={handlePasswordChange} required className="pr-10" />
+                          <Input id="confirmPassword" type={showPassword ? "text" : "password"} value={formData.confirmPassword} onChange={handlePasswordChange} required className="pr-10 bg-background/50" />
                            <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
                             {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                           </button>
@@ -669,11 +698,11 @@ export default function RegisterPage() {
                      <p className="text-sm text-muted-foreground text-center">Comment devrions-nous vous appeler ?</p>
                     <div className="grid gap-2">
                       <Label htmlFor="firstName">Prénom</Label>
-                      <Input id="firstName" value={formData.firstName} onChange={handleChange} required />
+                      <Input id="firstName" value={formData.firstName} onChange={handleChange} required className="bg-background/50"/>
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="lastName">Nom</Label>
-                      <Input id="lastName" value={formData.lastName} onChange={handleChange} required />
+                      <Input id="lastName" value={formData.lastName} onChange={handleChange} required className="bg-background/50"/>
                     </div>
                   </div>
                 )}
@@ -686,7 +715,7 @@ export default function RegisterPage() {
                                 const emojis = ['👨', '👩', '👤'];
                                 return (
                                     <div key={gender} className="group relative">
-                                        <Label htmlFor={`gender-${gender}`} className="transition-all flex flex-col items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
+                                        <Label htmlFor={`gender-${gender}`} className="transition-all bg-card/50 flex flex-col items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
                                             <RadioGroupItem value={gender} id={`gender-${gender}`} className="sr-only" />
                                             <span className="text-3xl">{emojis[index]}</span>
                                             <span className="font-medium">{gender}</span>
@@ -724,7 +753,7 @@ export default function RegisterPage() {
                         <p className="text-sm text-muted-foreground text-center">Choisissez un pseudo unique (code de parrainage).</p>
                         <div className="grid gap-2">
                             <Label htmlFor="username">Pseudo</Label>
-                            <Input id="username" value={formData.username} onChange={handleChange} required />
+                            <Input id="username" value={formData.username} onChange={handleChange} required className="bg-background/50" />
                             <div className="h-5 mt-1">{renderUsernameFeedback()}</div>
                         </div>
                     </div>
@@ -734,11 +763,11 @@ export default function RegisterPage() {
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Êtes-vous un pronostiqueur ? Si oui, entrez votre code promo pour des sites comme 1xBet.</p>
                         <RadioGroup value={formData.isPronostiqueur} onValueChange={handlePronostiqueurChange} className="grid grid-cols-2 gap-4 pt-4">
-                             <Label htmlFor="pronostiqueur-oui" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
+                             <Label htmlFor="pronostiqueur-oui" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
                               <RadioGroupItem value="oui" id="pronostiqueur-oui" className="sr-only" />
                               Oui
                             </Label>
-                             <Label htmlFor="pronostiqueur-non" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
+                             <Label htmlFor="pronostiqueur-non" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
                               <RadioGroupItem value="non" id="pronostiqueur-non" className="sr-only" />
                               Non
                             </Label>
@@ -767,28 +796,28 @@ export default function RegisterPage() {
                         <p className="text-sm text-muted-foreground text-center">Quel est votre type de jeu de pari favori ?</p>
                         <RadioGroup value={formData.favoriteGame} onValueChange={handleGameSelect} className="grid grid-cols-2 gap-4 pt-4">
                             <div className="group relative">
-                                <Label htmlFor="game-aviator" className="transition-all flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
+                                <Label htmlFor="game-aviator" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
                                     <RadioGroupItem value="aviator" id="game-aviator" className="sr-only" />
                                     <AviatorLogo />
                                     <span>Aviator</span>
                                 </Label>
                             </div>
                             <div className="group relative">
-                                <Label htmlFor="game-luckyjet" className="transition-all flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
+                                <Label htmlFor="game-luckyjet" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
                                     <RadioGroupItem value="luckyjet" id="game-luckyjet" className="sr-only" />
                                     <LuckyJetLogo />
                                     <span>Lucky Jet</span>
                                 </Label>
                             </div>
                             <div className="group relative">
-                                <Label htmlFor="game-paris-sportifs" className="transition-all flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
+                                <Label htmlFor="game-paris-sportifs" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
                                     <RadioGroupItem value="paris-sportifs" id="game-paris-sportifs" className="sr-only" />
                                     <span className="text-2xl">⚽</span>
                                     <span>Paris Sportifs</span>
                                 </Label>
                             </div>
                             <div className="group relative">
-                                <Label htmlFor="game-autre" className="transition-all flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
+                                <Label htmlFor="game-autre" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
                                     <RadioGroupItem value="autre" id="game-autre" className="sr-only" />
                                     <Gamepad2 />
                                     <span>Autre</span>
@@ -800,7 +829,7 @@ export default function RegisterPage() {
                            <motion.div initial={{opacity: 0, height: 0}} animate={{opacity: 1, height: 'auto'}} className="relative pt-4 overflow-hidden">
                                 <Label htmlFor="otherFavoriteGame" className="sr-only">Nom du jeu</Label>
                                 <Gamepad2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none mt-2" />
-                                <Input id="otherFavoriteGame" value={formData.otherFavoriteGame} onChange={handleChange} placeholder="Nom du jeu..." className="pl-10"/>
+                                <Input id="otherFavoriteGame" value={formData.otherFavoriteGame} onChange={handleChange} placeholder="Nom du jeu..." className="pl-10 bg-background/50"/>
                             </motion.div>
                         )}
                     </div>
@@ -811,11 +840,11 @@ export default function RegisterPage() {
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Avez-vous un code de parrainage ?</p>
                         <RadioGroup value={formData.hasReferralCode} onValueChange={handleReferralChange} className="grid grid-cols-2 gap-4 pt-4">
-                             <Label htmlFor="referral-oui" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
+                             <Label htmlFor="referral-oui" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
                               <RadioGroupItem value="oui" id="referral-oui" className="sr-only" />
                               Oui
                             </Label>
-                             <Label htmlFor="referral-non" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
+                             <Label htmlFor="referral-non" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
                               <RadioGroupItem value="non" id="referral-non" className="sr-only" />
                               Non
                             </Label>
@@ -823,7 +852,7 @@ export default function RegisterPage() {
                         {formData.hasReferralCode === 'oui' && (
                             <motion.div initial={{opacity: 0, height: 0}} animate={{opacity: 1, height: 'auto'}} className="grid gap-2 overflow-hidden">
                                 <Label htmlFor="referralCode">Code de parrainage</Label>
-                                <Input id="referralCode" value={formData.referralCode} onChange={handleChange} />
+                                <Input id="referralCode" value={formData.referralCode} onChange={handleChange} className="bg-background/50"/>
                                 <div className="h-5 mt-1">{renderReferralCodeFeedback()}</div>
                             </motion.div>
                         )}
@@ -833,7 +862,7 @@ export default function RegisterPage() {
                 {step === 9 && (
                   <div className="space-y-4">
                     <p className="text-sm text-muted-foreground text-center">Veuillez lire et accepter nos conditions.</p>
-                    <div className="flex items-start space-x-3 p-4 border rounded-md">
+                    <div className="flex items-start space-x-3 p-4 bg-card/50 border rounded-md">
                       <Checkbox id="cguAccepted" checked={formData.cguAccepted} onCheckedChange={handleCguCheckedChange} className="mt-1" />
                       <div className="grid gap-1.5 leading-none">
                         <Label htmlFor="cguAccepted" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
@@ -849,9 +878,13 @@ export default function RegisterPage() {
 
                 {step === TOTAL_STEPS + 1 && (
                     <div className="text-center space-y-6">
-                        <div className="flex justify-center">
+                        <motion.div
+                            initial={{ scale: 0.5, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1, transition: { type: 'spring' } }} 
+                            className="flex justify-center"
+                        >
                             <PartyPopper className="w-20 h-20 text-green-500" />
-                        </div>
+                        </motion.div>
                         <div className="space-y-2">
                             <h1 className="text-2xl font-semibold leading-none tracking-tight">Inscription Réussie ! 🎉</h1>
                             <p className="text-muted-foreground">Un email de vérification a été envoyé à <strong className="text-primary">{formData.email}</strong>.</p>
@@ -869,7 +902,7 @@ export default function RegisterPage() {
        {step > 0 && step <= TOTAL_STEPS && (
         <footer className="w-full max-w-sm z-10 space-y-4">
             <div className="flex w-full items-center gap-4">
-                <Button id="prev-step-button" variant="outline" onClick={handlePrevStep} className="w-1/3">
+                <Button id="prev-step-button" variant="outline" onClick={handlePrevStep} className="w-1/3 bg-card/50">
                     <ArrowLeft className="mr-2 h-4 w-4" /> Précédent
                 </Button>
                 {step === TOTAL_STEPS ? (
@@ -904,5 +937,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
-    
