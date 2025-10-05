@@ -50,10 +50,10 @@ export default function MentionsLegalesPage() {
         
         <InfoRow icon={<Server size={24} />} title="Hébergement" delay={0.3}>
            <p>
-                <strong>Firebase Hosting (Google)</strong><br/>
-                Gordon House, Barrow Street<br/>
-                Dublin 4, Irlande<br/>
-                <a href="https://firebase.google.com" target="_blank" rel="noopener noreferrer">firebase.google.com</a>
+                <strong>Vercel Inc.</strong><br/>
+                340 S Lemon Ave #4133, Walnut, CA 91789<br/>
+                Déployé via GitHub.<br/>
+                <a href="https://vercel.com" target="_blank" rel="noopener noreferrer">vercel.com</a>
            </p>
         </InfoRow>
 
