@@ -7,13 +7,6 @@ import { doc, getDoc, updateDoc, query, collection, where, getDocs, setDoc, serv
 import { app, db } from '@/lib/firebase';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
-import {
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
@@ -198,7 +191,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="relative flex flex-col items-center justify-center min-h-screen bg-background text-foreground overflow-hidden p-4">
+    <div className="relative flex flex-col lg:flex-row items-center justify-center min-h-screen bg-background text-foreground overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-10 -z-10"></div>
         <motion.div 
             aria-hidden 
@@ -244,90 +237,113 @@ export default function LoginPage() {
         </Button>
       </div>
 
-       <motion.div
-         className="w-full max-w-sm"
-         variants={containerVariants}
-         initial="hidden"
-         animate="visible"
-       >
-        <form onSubmit={handleLogin}>
-          <div className="text-center mb-8">
-             <Link href="/" className="flex justify-center mb-4 items-center gap-2">
-                <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} priority />
-                <span className="text-2xl font-bold text-primary">Jet Predict</span>
-            </Link>
-            <h1 className="text-3xl font-bold text-foreground">Connexion</h1>
-            <p className="text-muted-foreground mt-2">
-              Entrez vos identifiants pour accéder à votre compte.
-            </p>
-          </div>
-          <div className="grid gap-4 p-8 bg-card/50 backdrop-blur-lg border border-border/20 rounded-2xl shadow-2xl shadow-primary/10">
-            <Button variant="outline" type="button" onClick={handleGoogleSignIn} disabled={isLoading}>
-                {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <GoogleIcon className="mr-2 h-5 w-5"/>}
-                Continuer avec Google
-            </Button>
+       <div className="w-full flex-1 flex flex-col items-center justify-center p-4 lg:p-8">
+           <div className="w-full h-full lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
+                <div className="hidden lg:flex flex-col items-center justify-center text-center">
+                   <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                   >
+                     <Link href="/" className="flex flex-col items-center gap-4 mb-8">
+                        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={80} height={80} className="h-20 w-auto rounded-xl" priority />
+                        <span className="text-4xl font-bold text-primary tracking-tight">Jet Predict</span>
+                    </Link>
+                    <p className="text-2xl font-semibold text-foreground">Accédez à l'avant-garde de la prédiction.</p>
+                    <p className="mt-2 text-muted-foreground max-w-sm mx-auto">Connectez-vous pour déployer nos modèles d'analyse et prendre l'avantage.</p>
+                   </motion.div>
+                </div>
 
-             <div className="relative my-2">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-border/50" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-card/50 px-2 text-muted-foreground">Ou continuer avec</span>
-                </div>
-            </div>
+                <div className="flex items-center justify-center w-full">
+                     <motion.div
+                        className="w-full max-w-sm"
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        <form onSubmit={handleLogin}>
+                            <div className="text-center mb-8">
+                                <Link href="/" className="flex justify-center mb-4 items-center gap-2 lg:hidden">
+                                    <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Jet Predict Logo" width={36} height={36} className="h-9 w-auto rounded-md" style={{ width: 'auto' }} priority />
+                                    <span className="text-2xl font-bold text-primary">Jet Predict</span>
+                                </Link>
+                                <h1 className="text-3xl font-bold text-foreground">Connexion</h1>
+                                <p className="text-muted-foreground mt-2">
+                                Entrez vos identifiants pour accéder à votre compte.
+                                </p>
+                            </div>
+                            <div className="grid gap-6">
+                                <Button variant="outline" type="button" onClick={handleGoogleSignIn} disabled={isLoading} className="h-12 text-base">
+                                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <GoogleIcon className="mr-2 h-5 w-5"/>}
+                                    Continuer avec Google
+                                </Button>
 
-            <div className="grid gap-2">
-              <Label htmlFor="loginIdentifier">Email ou Pseudo</Label>
-              <Input 
-                id="loginIdentifier" 
-                type="text" 
-                placeholder="Votre email ou pseudo" 
-                required 
-                value={loginIdentifier}
-                onChange={(e) => setLoginIdentifier(e.target.value)}
-                className="bg-background/50"
-              />
-            </div>
-           
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Mot de passe</Label>
-                <Link
-                  href="/forgot-password"
-                  className="text-sm font-medium text-primary hover:underline"
-                >
-                  Mot de passe oublié ?
-                </Link>
-              </div>
-              <div className="relative">
-                <Input 
-                  id="password" 
-                  type={showPassword ? "text" : "password"} 
-                  required 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="bg-background/50 pr-10"
-                />
-                <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
-                  {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
-                </button>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4 mt-4">
-                <Button className="w-full" type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Se connecter
-                </Button>
-                <div className="text-center text-sm">
-                Vous n'avez pas de compte ?{' '}
-                <Link href="/register" className="underline text-primary">
-                    S'inscrire
-                </Link>
+                                <div className="relative">
+                                    <div className="absolute inset-0 flex items-center">
+                                        <span className="w-full border-t border-border/50" />
+                                    </div>
+                                    <div className="relative flex justify-center text-xs uppercase">
+                                        <span className="bg-background px-2 text-muted-foreground">Ou continuer avec</span>
+                                    </div>
+                                </div>
+
+                                <div className="grid gap-2">
+                                <Label htmlFor="loginIdentifier">Email ou Pseudo</Label>
+                                <Input 
+                                    id="loginIdentifier" 
+                                    type="text" 
+                                    placeholder="Votre email ou pseudo" 
+                                    required 
+                                    value={loginIdentifier}
+                                    onChange={(e) => setLoginIdentifier(e.target.value)}
+                                    className="h-12 bg-background/50"
+                                />
+                                </div>
+                            
+                                <div className="grid gap-2">
+                                <div className="flex items-center justify-between">
+                                    <Label htmlFor="password">Mot de passe</Label>
+                                    <Link
+                                    href="/forgot-password"
+                                    className="text-sm font-medium text-primary hover:underline"
+                                    >
+                                    Mot de passe oublié ?
+                                    </Link>
+                                </div>
+                                <div className="relative">
+                                    <Input 
+                                    id="password" 
+                                    type={showPassword ? "text" : "password"} 
+                                    required 
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="h-12 bg-background/50 pr-10"
+                                    />
+                                    <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
+                                    {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                                    </button>
+                                </div>
+                                </div>
+                                <div className="flex flex-col gap-4 mt-2">
+                                    <Button className="w-full h-12 text-base" type="submit" disabled={isLoading}>
+                                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                    Se connecter
+                                    </Button>
+                                    <div className="text-center text-sm">
+                                    Vous n'avez pas de compte ?{' '}
+                                    <Link href="/register" className="underline text-primary">
+                                        S'inscrire
+                                    </Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </motion.div>
                 </div>
-            </div>
-          </div>
-        </form>
-       </motion.div>
+           </div>
+       </div>
     </div>
   );
 }
+
+    
