@@ -7,7 +7,7 @@ import { predictCrashPoint, PredictCrashPointInput } from '@/ai/flows/predict-cr
 import { PlanId, PromoCode } from '@/types';
 
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://jetpredict.vercel.app';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://jet-predict.vercel.app';
 const supportPhoneNumber = "2250546511723"; // Numéro de téléphone pour le support WhatsApp
 const whatsAppChannelUrl = "https://www.whatsapp.com/channel/0029VbBc22V4yltHAKWD0R2x";
 const telegramChannelUrl = "https://t.me/Predict_D3officiel";
