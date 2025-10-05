@@ -750,7 +750,7 @@ export default function SettingsPage() {
                                 exit={{ opacity: 0, x: -50 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <Image src={windowsImages[windowsGuideStep - 1]} alt={`Windows Étape ${windowsGuideStep}`} width={300} height={188} className="rounded-lg border border-border" />
+                                <Image src={windowsImages[windowsGuideStep - 1]} alt={`Windows Étape ${windowsGuideStep}`} width={300} height={150} className="rounded-lg border border-border" />
                             </motion.div>
                         </AnimatePresence>
                     </div>

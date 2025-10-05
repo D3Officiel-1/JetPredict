@@ -1002,7 +1002,7 @@ export default function LandingPage() {
                     </DialogTitle>
                 </DialogHeader>
                  <div className="grid md:grid-cols-2 gap-8 p-1 pt-4">
-                    <div className="space-y-6 text-sm">
+                     <div className="space-y-6 text-sm">
                         <div onClick={() => setWindowsGuideStep(1)} className={cn("p-2 rounded-lg cursor-pointer", windowsGuideStep === 1 && "bg-muted")}>
                             <InstallStep
                                 num="1"
@@ -1019,7 +1019,7 @@ export default function LandingPage() {
                         </div>
                          <p className="text-xs text-muted-foreground pt-2 pl-14">Alternativement, ouvrez le menu du navigateur (⋮) et sélectionnez "Installer Jet Predict".</p>
                     </div>
-                    <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30 overflow-hidden">
+                     <div className="hidden md:flex items-center justify-center bg-muted/30 rounded-lg p-4 border border-border/30 overflow-hidden">
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={windowsGuideStep}
@@ -1028,7 +1028,7 @@ export default function LandingPage() {
                                 exit={{ opacity: 0, x: -50 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <Image src={windowsImages[windowsGuideStep - 1]} alt={`Windows Étape ${windowsGuideStep}`} width={300} height={188} className="rounded-lg border border-border" />
+                                <Image src={windowsImages[windowsGuideStep - 1]} alt={`Windows Étape ${windowsGuideStep}`} width={300} height={150} className="rounded-lg border border-border" />
                             </motion.div>
                         </AnimatePresence>
                     </div>
