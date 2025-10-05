@@ -614,6 +614,17 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
   }, [prediction, currentTime]);
 
   const handlePictureInPicture = async () => {
+    try {
+        const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/05/23/audio_f09f975ac4.mp3?filename=prop_popup-345986.mp3');
+        audio.volume = 0.2;
+        audio.play();
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+    } catch (e) {
+        console.error("Failed to play sound or vibrate:", e);
+    }
+
     if (!canAccessPremiumFeatures) {
         toast({
             variant: "destructive",
