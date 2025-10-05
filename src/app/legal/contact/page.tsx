@@ -11,7 +11,7 @@ const InfoCard = ({ icon, title, children }: { icon: React.ReactNode, title: str
             </div>
             <h3 className="text-xl font-semibold text-foreground">{title}</h3>
         </div>
-        <div className="p-4 sm:p-6 text-muted-foreground prose prose-sm max-w-none prose-p:my-1 prose-a:text-primary prose-a:font-semibold hover:prose-a:underline prose-strong:text-foreground">
+        <div className="p-4 sm:p-6 text-muted-foreground prose prose-sm max-w-none prose-p:my-1 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:font-semibold hover:prose-a:underline prose-strong:text-foreground">
             {children}
         </div>
     </div>
@@ -67,8 +67,8 @@ export default function ContactPage() {
         <div className="space-y-8">
             <div>
                 <h2 className="text-2xl font-semibold text-foreground text-center">Procédure de Réclamation</h2>
-                <div className="mt-4 bg-muted/30 p-6 rounded-xl border border-border/30">
-                    <p className="text-muted-foreground mb-4">Si vous avez une réclamation concernant nos services, veuillez nous l'adresser par email à <a href="mailto:d3.officiel.2@gmail.com" className="text-primary hover:underline">d3.officiel.2@gmail.com</a> en incluant les informations suivantes :</p>
+                <div className="mt-4 bg-muted/30 p-6 rounded-xl border border-border/30 prose prose-sm max-w-none prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline">
+                    <p className="text-muted-foreground mb-4">Si vous avez une réclamation concernant nos services, veuillez nous l'adresser par email à <a href="mailto:d3.officiel.2@gmail.com">d3.officiel.2@gmail.com</a> en incluant les informations suivantes :</p>
                     <ul className="list-disc list-inside space-y-2 pl-4 text-muted-foreground">
                         <li>Votre nom d'utilisateur et votre adresse email.</li>
                         <li>Une description détaillée de l'objet de votre réclamation.</li>

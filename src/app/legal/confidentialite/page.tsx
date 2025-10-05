@@ -12,7 +12,7 @@ const SectionCard = ({ icon, title, children }: { icon: React.ReactNode, title: 
             </div>
             <h2 className="text-xl font-semibold text-foreground">{title}</h2>
         </div>
-        <div className="p-4 sm:p-6 text-muted-foreground prose prose-sm max-w-none prose-p:leading-relaxed prose-ul:list-disc prose-ul:pl-6 prose-a:text-primary hover:prose-a:underline">
+        <div className="p-4 sm:p-6 text-muted-foreground prose prose-sm max-w-none prose-p:leading-relaxed prose-ul:list-disc prose-ul:pl-6 prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline">
             {children}
         </div>
     </div>

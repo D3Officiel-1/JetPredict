@@ -17,7 +17,7 @@ const InfoRow = ({ icon, title, children, delay }: { icon: React.ReactNode, titl
             </div>
             <h3 className="font-semibold text-lg text-foreground">{title}</h3>
         </div>
-        <div className="text-muted-foreground prose-p:my-1 prose-a:text-primary hover:prose-a:underline prose-strong:text-foreground">
+        <div className="text-muted-foreground prose-p:my-1 prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline prose-strong:text-foreground">
             {children}
         </div>
     </motion.div>
@@ -66,8 +66,8 @@ export default function MentionsLegalesPage() {
       </InfoRow>
       </div>
 
-      <div className="text-center text-sm text-muted-foreground pt-4 border-t border-border/50">
-        Pour toute question, contactez-nous à <a href="mailto:d3.officiel.2@gmail.com" className="text-primary hover:underline">d3.officiel.2@gmail.com</a>.
+      <div className="text-center text-sm text-muted-foreground pt-4 border-t border-border/50 prose prose-sm prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline">
+        Pour toute question, contactez-nous à <a href="mailto:d3.officiel.2@gmail.com">d3.officiel.2@gmail.com</a>.
       </div>
     </div>
   );

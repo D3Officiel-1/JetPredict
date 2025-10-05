@@ -12,7 +12,7 @@ const SectionCard = ({ icon, title, children }: { icon: React.ReactNode, title: 
             </div>
             <h2 className="text-xl font-semibold text-foreground">{title}</h2>
         </div>
-        <div className="p-4 sm:p-6 text-muted-foreground prose prose-sm max-w-none prose-p:leading-relaxed prose-ul:list-disc prose-ul:pl-6 prose-a:text-primary hover:prose-a:underline">
+        <div className="p-4 sm:p-6 text-muted-foreground prose prose-sm max-w-none prose-p:leading-relaxed prose-ul:list-disc prose-ul:pl-6 prose-a:text-blue-600 dark:prose-a:text-blue-400 hover:prose-a:underline">
             {children}
         </div>
     </div>
@@ -59,9 +59,9 @@ export default function CGUPage() {
                 <p>
                     La responsabilité de l'éditeur ne peut être engagée en cas de défaillance, panne, difficulté ou interruption de fonctionnement, empêchant l'accès au site ou à une de ses fonctionnalités. Le matériel de connexion au site que vous utilisez est sous votre entière responsabilité.
                 </p>
-                <div className="my-4 p-4 rounded-lg border border-destructive/50 bg-destructive/10 text-foreground dark:text-destructive-foreground/90">
+                <div className="my-4 p-4 rounded-lg border border-destructive/50 bg-destructive/10 text-destructive-foreground">
                     <h4 className="font-bold mb-2 flex items-center gap-2"><AlertTriangle size={16}/> Point Crucial</h4>
-                    <p className="text-foreground/80 dark:text-destructive-foreground/80">
+                    <p className="text-black dark:text-destructive-foreground/80">
                         Jet Predict est un outil d'aide à la décision basé sur des analyses statistiques et ne garantit aucun gain à 100%. L'Utilisateur est seul responsable de ses décisions et des éventuelles pertes financières qui pourraient en résulter. Le jeu comporte des risques : endettement, isolement, dépendance.
                     </p>
                 </div>
