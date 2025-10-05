@@ -20,49 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion } from 'framer-motion';
-
-const countries = [
-    { name: 'Bénin', code: '+229', flag: 'https://flagcdn.com/bj.svg' },
-    { name: 'Botswana', code: '+267', flag: 'https://flagcdn.com/bw.svg' },
-    { name: 'Burkina Faso', code: '+226', flag: 'https://flagcdn.com/bf.svg' },
-    { name: 'Cameroun', code: '+237', flag: 'https://flagcdn.com/cm.svg' },
-    { name: 'Centrafrique (RCA)', code: '+236', flag: 'https://flagcdn.com/cf.svg' },
-    { name: 'Tchad', code: '+235', flag: 'https://flagcdn.com/td.svg' },
-    { name: 'Côte d’Ivoire', code: '+225', flag: 'https://flagcdn.com/ci.svg' },
-    { name: 'Égypte', code: '+20', flag: 'https://flagcdn.com/eg.svg' },
-    { name: 'France', code: '+33', flag: 'https://flagcdn.com/fr.svg' },
-    { name: 'Gabon', code: '+241', flag: 'https://flagcdn.com/ga.svg' },
-    { name: 'Gambie', code: '+220', flag: 'https://flagcdn.com/gm.svg' },
-    { name: 'Ghana', code: '+233', flag: 'https://flagcdn.com/gh.svg' },
-    { name: 'Guinée (Conakry)', code: '+224', flag: 'https://flagcdn.com/gn.svg' },
-    { name: 'Guinée-Bissau', code: '+245', flag: 'https://flagcdn.com/gw.svg' },
-    { name: 'Liberia (Libéria)', code: '+231', flag: 'https://flagcdn.com/lr.svg' },
-    { name: 'Luxembourg', code: '+352', flag: 'https://flagcdn.com/lu.svg' },
-    { name: 'Madagascar', code: '+261', flag: 'https://flagcdn.com/mg.svg' },
-    { name: 'Mali', code: '+223', flag: 'https://flagcdn.com/ml.svg' },
-    { name: 'Mauritanie', code: '+222', flag: 'https://flagcdn.com/mr.svg' },
-    { name: 'Maroc', code: '+212', flag: 'https://flagcdn.com/ma.svg' },
-    { name: 'Moldavie', code: '+373', flag: 'https://flagcdn.com/md.svg' },
-    { name: 'Niger', code: '+227', flag: 'https://flagcdn.com/ne.svg' },
-    { name: 'Nigeria', code: '+234', flag: 'https://flagcdn.com/ng.svg' },
-    { name: 'Pologne', code: '+48', flag: 'https://flagcdn.com/pl.svg' },
-    { name: 'Roumanie', code: '+40', flag: 'https://flagcdn.com/ro.svg' },
-    { name: 'Rwanda', code: '+250', flag: 'https://flagcdn.com/rw.svg' },
-    { name: 'Sénégal', code: '+221', flag: 'https://flagcdn.com/sn.svg' },
-    { name: 'Sierra Leone', code: '+232', flag: 'https://flagcdn.com/sl.svg' },
-    { name: 'Slovaquie', code: '+421', flag: 'https://flagcdn.com/sk.svg' },
-    { name: 'South Africa (Afrique du Sud)', code: '+27', flag: 'https://flagcdn.com/za.svg' },
-    { name: 'South Sudan (Soudan du Sud)', code: '+211', flag: 'https://flagcdn.com/ss.svg' },
-    { name: 'Soudan', code: '+249', flag: 'https://flagcdn.com/sd.svg' },
-    { name: 'Togo', code: '+228', flag: 'https://flagcdn.com/tg.svg' },
-    { name: 'Tunisie', code: '+216', flag: 'https://flagcdn.com/tn.svg' },
-    { name: 'Ouganda (Uganda)', code: '+256', flag: 'https://flagcdn.com/ug.svg' },
-    { name: 'Zambie', code: '+260', flag: 'https://flagcdn.com/zm.svg' },
-    { name: 'Iran', code: '+98', flag: 'https://flagcdn.com/ir.svg' },
-];
 
 const containerVariants = {
   hidden: { opacity: 0, scale: 0.95 },
@@ -85,12 +43,9 @@ const GoogleIcon = (props: any) => (
 
 export default function LoginPage() {
   const [loginIdentifier, setLoginIdentifier] = useState('');
-  const [phone, setPhone] = useState('');
-  const [countryCode, setCountryCode] = useState('+225');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
-  const [activeTab, setActiveTab] = useState('email-user');
   const [showPassword, setShowPassword] = useState(false);
   
   const { toast } = useToast();
@@ -193,16 +148,11 @@ export default function LoginPage() {
       const usersRef = collection(db, "users");
       let q;
 
-      if (activeTab === 'email-user') {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (emailRegex.test(loginIdentifier)) {
-          userEmail = loginIdentifier;
-        } else { // It's a username
-          q = query(usersRef, where("username", "==", loginIdentifier));
-        }
-      } else { // activeTab is 'phone'
-        const fullPhoneNumber = `${countryCode}${phone}`;
-        q = query(usersRef, where("phone", "==", fullPhoneNumber));
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (emailRegex.test(loginIdentifier)) {
+        userEmail = loginIdentifier;
+      } else { // It's a username
+        q = query(usersRef, where("username", "==", loginIdentifier));
       }
       
       if (!userEmail && q) {
@@ -326,50 +276,19 @@ export default function LoginPage() {
                 </div>
             </div>
 
-
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="email-user">Email / Pseudo</TabsTrigger>
-                <TabsTrigger value="phone">Téléphone</TabsTrigger>
-              </TabsList>
-              <TabsContent value="email-user" className="space-y-4 pt-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="loginIdentifier">Email ou Pseudo</Label>
-                  <Input 
-                    id="loginIdentifier" 
-                    type="text" 
-                    placeholder="Votre email ou pseudo" 
-                    required 
-                    value={loginIdentifier}
-                    onChange={(e) => setLoginIdentifier(e.target.value)}
-                    className="bg-background/50"
-                  />
-                </div>
-              </TabsContent>
-              <TabsContent value="phone" className="space-y-4 pt-4">
-                 <div className="grid gap-2">
-                    <Label htmlFor="phone">Numéro de téléphone</Label>
-                    <div className="flex gap-2">
-                        <Select value={countryCode} onValueChange={setCountryCode}>
-                            <SelectTrigger className="w-[120px] bg-background/50">
-                                <SelectValue placeholder="Pays" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {countries.map(country => (
-                                    <SelectItem key={country.code} value={country.code}>
-                                        <div className="flex items-center gap-2">
-                                            <Image src={country.flag} alt={country.name} width={20} height={15} />
-                                            <span>{country.code}</span>
-                                        </div>
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                        <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value.replace(/[^0-9]/g, ''))} placeholder="Numéro" required className="flex-1 bg-background/50" />
-                    </div>
-                </div>
-              </TabsContent>
-            </Tabs>
+            <div className="grid gap-2">
+              <Label htmlFor="loginIdentifier">Email ou Pseudo</Label>
+              <Input 
+                id="loginIdentifier" 
+                type="text" 
+                placeholder="Votre email ou pseudo" 
+                required 
+                value={loginIdentifier}
+                onChange={(e) => setLoginIdentifier(e.target.value)}
+                className="bg-background/50"
+              />
+            </div>
+           
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Mot de passe</Label>

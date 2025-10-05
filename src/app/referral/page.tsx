@@ -55,7 +55,7 @@ const paymentMethods = [
 
 export default function ReferralPage() {
   const [user, setUser] = useState<User | null>(null);
-  const [userData, setUserData] = useState<{ username: string, phone: string } | null>(null);
+  const [userData, setUserData] = useState<{ username: string } | null>(null);
   const [referredUsers, setReferredUsers] = useState<ReferralUser[]>([]);
   const [commissionHistory, setCommissionHistory] = useState<Commission[]>([]);
   const [balance, setBalance] = useState(0);
@@ -64,9 +64,9 @@ export default function ReferralPage() {
   
   const [isWithdrawDialogOpen, setIsWithdrawDialogOpen] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-  const [withdrawalPhoneNumber, setWithdrawalPhoneNumber] = useState('');
   const [withdrawalAmount, setWithdrawalAmount] = useState<string>('');
   const [withdrawalError, setWithdrawalError] = useState<string>('');
+  const [withdrawalPhoneNumber, setWithdrawalPhoneNumber] = useState('');
 
   const { toast } = useToast();
   const router = useRouter();
@@ -88,10 +88,9 @@ export default function ReferralPage() {
       const userDocRef = doc(db, "users", currentUser.uid);
       const unsubscribeUser = onSnapshot(userDocRef, (userDoc) => {
         if (userDoc.exists()) {
-          const data = userDoc.data() as { username: string, solde_referral?: number, phone?: string };
-          setUserData({ username: data.username, phone: data.phone || '' });
+          const data = userDoc.data() as { username: string, solde_referral?: number };
+          setUserData({ username: data.username });
           setBalance(data.solde_referral || 0);
-          setWithdrawalPhoneNumber(data.phone || '');
         }
         setIsLoading(false);
       });

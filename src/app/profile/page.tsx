@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User as UserIcon, Wallet, ShieldCheck, CalendarIcon, Smartphone, Gamepad2, Gift, AtSign, Clock, Edit, Link2, Copy, Check, Bot } from 'lucide-react';
+import { User as UserIcon, Wallet, ShieldCheck, CalendarIcon, Gamepad2, Gift, AtSign, Clock, Edit, Link2, Copy, Check, Bot } from 'lucide-react';
 import Link from 'next/link';
 import type { PlanId } from '@/types';
 import { useToast } from '@/hooks/use-toast';
@@ -28,7 +28,6 @@ import { cn } from '@/lib/utils';
 interface UserData {
   uid?: string;
   email?: string;
-  phone?: string;
   firstName?: string;
   lastName?: string;
   gender?: string;
@@ -363,7 +362,6 @@ export default function ProfilePage() {
                       }}
                     >
                         <InfoRow icon={<UserIcon size={16}/>} label="Nom Complet" value={`${userData.firstName} ${userData.lastName}`} index={0} />
-                        <InfoRow icon={<Smartphone size={16}/>} label="Téléphone" value={userData.phone} index={1} />
                         <InfoRow icon={<Clock size={16}/>} label="Membre Depuis" value={formatDate(userData.createdAt)} index={2} className="sm:col-span-2" />
                     </motion.div>
                 </CardContent>

@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
@@ -14,53 +15,12 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { AviatorLogo, LuckyJetLogo, RocketQueenLogo, AstronautLogo, RocketXLogo, CrashLogo } from '@/components/icons';
+import { AviatorLogo, LuckyJetLogo } from '@/components/icons';
 
-const TOTAL_STEPS = 10;
-
-const countries = [
-    { name: 'Bénin', code: '+229', flag: 'https://flagcdn.com/bj.svg' },
-    { name: 'Botswana', code: '+267', flag: 'https://flagcdn.com/bw.svg' },
-    { name: 'Burkina Faso', code: '+226', flag: 'https://flagcdn.com/bf.svg' },
-    { name: 'Cameroun', code: '+237', flag: 'https://flagcdn.com/cm.svg' },
-    { name: 'Centrafrique (RCA)', code: '+236', flag: 'https://flagcdn.com/cf.svg' },
-    { name: 'Tchad', code: '+235', flag: 'https://flagcdn.com/td.svg' },
-    { name: 'Côte d’Ivoire', code: '+225', flag: 'https://flagcdn.com/ci.svg' },
-    { name: 'Égypte', code: '+20', flag: 'https://flagcdn.com/eg.svg' },
-    { name: 'France', code: '+33', flag: 'https://flagcdn.com/fr.svg' },
-    { name: 'Gabon', code: '+241', flag: 'https://flagcdn.com/ga.svg' },
-    { name: 'Gambie', code: '+220', flag: 'https://flagcdn.com/gm.svg' },
-    { name: 'Ghana', code: '+233', flag: 'https://flagcdn.com/gh.svg' },
-    { name: 'Guinée (Conakry)', code: '+224', flag: 'https://flagcdn.com/gn.svg' },
-    { name: 'Guinée-Bissau', code: '+245', flag: 'https://flagcdn.com/gw.svg' },
-    { name: 'Liberia (Libéria)', code: '+231', flag: 'https://flagcdn.com/lr.svg' },
-    { name: 'Luxembourg', code: '+352', flag: 'https://flagcdn.com/lu.svg' },
-    { name: 'Madagascar', code: '+261', flag: 'https://flagcdn.com/mg.svg' },
-    { name: 'Mali', code: '+223', flag: 'https://flagcdn.com/ml.svg' },
-    { name: 'Mauritanie', code: '+222', flag: 'https://flagcdn.com/mr.svg' },
-    { name: 'Maroc', code: '+212', flag: 'https://flagcdn.com/ma.svg' },
-    { name: 'Moldavie', code: '+373', flag: 'https://flagcdn.com/md.svg' },
-    { name: 'Niger', code: '+227', flag: 'https://flagcdn.com/ne.svg' },
-    { name: 'Nigeria', code: '+234', flag: 'https://flagcdn.com/ng.svg' },
-    { name: 'Pologne', code: '+48', flag: 'https://flagcdn.com/pl.svg' },
-    { name: 'Roumanie', code: '+40', flag: 'https://flagcdn.com/ro.svg' },
-    { name: 'Rwanda', code: '+250', flag: 'https://flagcdn.com/rw.svg' },
-    { name: 'Sénégal', code: '+221', flag: 'https://flagcdn.com/sn.svg' },
-    { name: 'Sierra Leone', code: '+232', flag: 'https://flagcdn.com/sl.svg' },
-    { name: 'Slovaquie', code: '+421', flag: 'https://flagcdn.com/sk.svg' },
-    { name: 'South Africa (Afrique du Sud)', code: '+27', flag: 'https://flagcdn.com/za.svg' },
-    { name: 'South Sudan (Soudan du Sud)', code: '+211', flag: 'https://flagcdn.com/ss.svg' },
-    { name: 'Soudan', code: '+249', flag: 'https://flagcdn.com/sd.svg' },
-    { name: 'Togo', code: '+228', flag: 'https://flagcdn.com/tg.svg' },
-    { name: 'Tunisie', code: '+216', flag: 'https://flagcdn.com/tn.svg' },
-    { name: 'Ouganda (Uganda)', code: '+256', flag: 'https://flagcdn.com/ug.svg' },
-    { name: 'Zambie', code: '+260', flag: 'https://flagcdn.com/zm.svg' },
-    { name: 'Iran', code: '+98', flag: 'https://flagcdn.com/ir.svg' },
-];
+const TOTAL_STEPS = 9;
 
 const NumberInputWithControls = ({ id, placeholder, value, onChange, min, max, onValueChange } : { id: string, placeholder: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, min: number, max: number, onValueChange: (newValue: number) => void }) => {
     const handleStep = (step: number) => {
@@ -108,8 +68,6 @@ export default function RegisterPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    countryCode: '+225',
-    phone: '',
     firstName: '',
     lastName: '',
     gender: '',
@@ -135,7 +93,6 @@ export default function RegisterPage() {
   
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid' | 'taken'>('idle');
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
-  const [isShaking, setIsShaking] = useState(false);
   
   const [referralCodeStatus, setReferralCodeStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
   const [isCheckingPromo, setIsCheckingPromo] = useState(false);
@@ -162,16 +119,10 @@ export default function RegisterPage() {
         const isDomainAllowed = emailDomain && allowedDomains.includes(emailDomain.toLowerCase());
         return allPasswordReqsMet && passwordsMatch && isEmailValid && isDomainAllowed;
       case 2:
-        if (!formData.countryCode) return false;
-        const selectedCountry = countries.find(c => c.code === formData.countryCode);
-        if (!selectedCountry || !formData.phone) return false;
-        const phoneLength = formData.phone.length;
-        return phoneLength >= 7 && phoneLength <= 15;
-      case 3:
         return formData.firstName.trim() !== '' && formData.lastName.trim() !== '';
-      case 4:
+      case 3:
         return formData.gender !== '';
-      case 5:
+      case 4:
         const day = parseInt(formData.dob_day, 10);
         const month = parseInt(formData.dob_month, 10);
         const year = parseInt(formData.dob_year, 10);
@@ -190,24 +141,24 @@ export default function RegisterPage() {
             age--;
         }
         return age >= 18 && age <= 100;
-      case 6:
+      case 5:
         return usernameStatus === 'valid';
-      case 7:
+      case 6:
         if (formData.isPronostiqueur === 'non') return true;
         if (formData.isPronostiqueur === 'oui') {
             return formData.pronostiqueurCode.trim() !== '';
         }
         return false;
-      case 8:
+      case 7:
         if (formData.favoriteGame === 'autre') {
           return formData.otherFavoriteGame.trim() !== '';
         }
         return formData.favoriteGame !== '';
-      case 9:
+      case 8:
         if (formData.hasReferralCode === 'non') return true;
         if (formData.hasReferralCode === 'oui') return referralCodeStatus === 'valid';
         return false;
-      case 10:
+      case 9:
         return formData.cguAccepted;
       default:
         return false;
@@ -217,18 +168,10 @@ export default function RegisterPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value, type, checked } = e.target;
-    if (id === 'phone') {
-        const numericValue = value.replace(/[^0-9]/g, '');
-        setFormData(prev => ({
-            ...prev,
-            [id]: numericValue,
-        }));
-    } else {
-        setFormData(prev => ({
-          ...prev,
-          [id]: type === 'checkbox' ? checked : value,
-        }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [id]: type === 'checkbox' ? checked : value,
+    }));
   };
 
   const handleDobChange = (id: 'dob_day' | 'dob_month' | 'dob_year', newValue: number) => {
@@ -281,7 +224,7 @@ export default function RegisterPage() {
 
     useEffect(() => {
         const handler = setTimeout(() => {
-            if (step === 6) {
+            if (step === 5) {
                 checkUsername(formData.username);
             }
         }, 500);
@@ -314,7 +257,7 @@ export default function RegisterPage() {
 
     useEffect(() => {
         const handler = setTimeout(() => {
-            if (step === 9 && formData.hasReferralCode === 'oui') {
+            if (step === 8 && formData.hasReferralCode === 'oui') {
                 checkReferralCode(formData.referralCode);
             }
         }, 500);
@@ -322,18 +265,9 @@ export default function RegisterPage() {
         return () => clearTimeout(handler);
     }, [formData.referralCode, formData.hasReferralCode, step, checkReferralCode]);
 
-  const vibrateElement = () => {
-    if (typeof window.navigator.vibrate === 'function') {
-      window.navigator.vibrate(200);
-    }
-    setIsShaking(true);
-    setTimeout(() => setIsShaking(false), 200);
-  };
-
   const handleNextStep = useCallback(async () => {
     if (!isStepValid) {
         toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
-        if (step === 2) vibrateElement();
         return;
     }
 
@@ -350,22 +284,7 @@ export default function RegisterPage() {
         isValidForToast = false;
       }
     }
-    if (step === 2) {
-        setIsLoading(true);
-        const selectedCountry = countries.find(c => c.code === formData.countryCode);
-        if (selectedCountry) {
-            const fullPhoneNumber = `${formData.countryCode}${formData.phone}`;
-            const phoneQuery = query(collection(db, "users"), where("phone", "==", fullPhoneNumber));
-            const querySnapshot = await getDocs(phoneQuery);
-            if (!querySnapshot.empty) {
-                toast({ variant: 'destructive', title: 'Ce numéro de téléphone est déjà utilisé.' });
-                vibrateElement();
-                isValidForToast = false;
-            }
-        }
-        setIsLoading(false);
-    }
-
+    
     if (isStepValid && isValidForToast && step < TOTAL_STEPS) {
       setStep(prev => prev + 1);
     } else if (!isStepValid && isValidForToast) {
@@ -423,7 +342,6 @@ export default function RegisterPage() {
       const { user } = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
       await sendEmailVerification(user);
 
-      const fullPhoneNumber = `${formData.countryCode}${formData.phone}`;
       const birthDate = new Date(parseInt(formData.dob_year), parseInt(formData.dob_month) - 1, parseInt(formData.dob_day));
       const finalFavoriteGame = formData.favoriteGame === 'autre' ? formData.otherFavoriteGame : formData.favoriteGame;
       
@@ -435,7 +353,6 @@ export default function RegisterPage() {
       batch.set(userDocRef, {
         uid: user.uid,
         email: user.email,
-        phone: fullPhoneNumber,
         firstName: formData.firstName,
         lastName: formData.lastName,
         gender: formData.gender,
@@ -540,7 +457,7 @@ export default function RegisterPage() {
     };
 
     useEffect(() => {
-        if (step === 4 && formData.gender && isStepValid) {
+        if (step === 3 && formData.gender && isStepValid) {
             const timer = setTimeout(() => handleNextStep(), 300);
             return () => clearTimeout(timer);
         }
@@ -551,7 +468,7 @@ export default function RegisterPage() {
     };
 
     useEffect(() => {
-        if (step === 8 && formData.favoriteGame && formData.favoriteGame !== 'autre' && isStepValid) {
+        if (step === 7 && formData.favoriteGame && formData.favoriteGame !== 'autre' && isStepValid) {
             const timer = setTimeout(() => handleNextStep(), 300);
             return () => clearTimeout(timer);
         }
@@ -562,7 +479,7 @@ export default function RegisterPage() {
     };
     
     useEffect(() => {
-        if (step === 7 && formData.isPronostiqueur === 'non' && isStepValid) {
+        if (step === 6 && formData.isPronostiqueur === 'non' && isStepValid) {
             const timer = setTimeout(() => handleNextStep(), 300);
             return () => clearTimeout(timer);
         }
@@ -574,7 +491,7 @@ export default function RegisterPage() {
     };
 
     useEffect(() => {
-        if (step === 9 && formData.hasReferralCode === 'non' && isStepValid) {
+        if (step === 8 && formData.hasReferralCode === 'non' && isStepValid) {
             const timer = setTimeout(() => handleNextStep(), 300);
             return () => clearTimeout(timer);
         }
@@ -684,15 +601,14 @@ export default function RegisterPage() {
                   <div className="mb-8 text-center">
                       <p className="text-sm font-semibold text-primary mb-2">Étape {step} sur {TOTAL_STEPS}</p>
                       {step === 1 && <h1 className="text-3xl font-bold tracking-tight">Créez votre compte 🚀</h1>}
-                      {step === 2 && <h1 className="text-3xl font-bold tracking-tight">Votre téléphone 📱</h1>}
-                      {step === 3 && <h1 className="text-3xl font-bold tracking-tight">Votre Nom 👤</h1>}
-                      {step === 4 && <h1 className="text-3xl font-bold tracking-tight">Votre Genre 🧑</h1>}
-                      {step === 5 && <h1 className="text-3xl font-bold tracking-tight">Date de naissance 🎂</h1>}
-                      {step === 6 && <h1 className="text-3xl font-bold tracking-tight">Nom d'utilisateur 🆔</h1>}
-                      {step === 7 && <h1 className="text-3xl font-bold tracking-tight">Pronostiqueur ? ✨</h1>}
-                      {step === 8 && <h1 className="text-3xl font-bold tracking-tight">Jeu Préféré 🎮</h1>}
-                      {step === 9 && <h1 className="text-3xl font-bold tracking-tight">Parrainage 🤝</h1>}
-                      {step === 10 && <h1 className="text-3xl font-bold tracking-tight">Finalisation ✅</h1>}
+                      {step === 2 && <h1 className="text-3xl font-bold tracking-tight">Votre Nom 👤</h1>}
+                      {step === 3 && <h1 className="text-3xl font-bold tracking-tight">Votre Genre 🧑</h1>}
+                      {step === 4 && <h1 className="text-3xl font-bold tracking-tight">Date de naissance 🎂</h1>}
+                      {step === 5 && <h1 className="text-3xl font-bold tracking-tight">Nom d'utilisateur 🆔</h1>}
+                      {step === 6 && <h1 className="text-3xl font-bold tracking-tight">Pronostiqueur ? ✨</h1>}
+                      {step === 7 && <h1 className="text-3xl font-bold tracking-tight">Jeu Préféré 🎮</h1>}
+                      {step === 8 && <h1 className="text-3xl font-bold tracking-tight">Parrainage 🤝</h1>}
+                      {step === 9 && <h1 className="text-3xl font-bold tracking-tight">Finalisation ✅</h1>}
                   </div>
                 )}
                 
@@ -730,33 +646,6 @@ export default function RegisterPage() {
 
                 {step === 2 && (
                   <div className="space-y-4">
-                    <p className="text-sm text-muted-foreground text-center">Ce numéro sera lié à votre compte. L'indicatif est obligatoire.</p>
-                    <div className={cn("grid gap-2", isShaking && 'animate-shake')}>
-                        <Label htmlFor="phone">Pays et Numéro de téléphone</Label>
-                        <div className="flex gap-2">
-                            <Select value={formData.countryCode} onValueChange={(value) => setFormData(p => ({ ...p, countryCode: value, phone: '' }))}>
-                                <SelectTrigger className="w-[120px]">
-                                    <SelectValue placeholder="Pays" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    {countries.map(country => (
-                                        <SelectItem key={country.code} value={country.code}>
-                                            <div className="flex items-center gap-2">
-                                                <Image src={country.flag} alt={country.name} width={20} height={15} />
-                                                <span>{country.code}</span>
-                                            </div>
-                                        </SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                            <Input id="phone" type="tel" value={formData.phone} onChange={handleChange} placeholder="Numéro" required className="flex-1" />
-                        </div>
-                    </div>
-                  </div>
-                )}
-
-                {step === 3 && (
-                  <div className="space-y-4">
                      <p className="text-sm text-muted-foreground text-center">Comment devrions-nous vous appeler ?</p>
                     <div className="grid gap-2">
                       <Label htmlFor="firstName">Prénom</Label>
@@ -769,7 +658,7 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                {step === 4 && (
+                {step === 3 && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Veuillez spécifier votre genre.</p>
                         <RadioGroup value={formData.gender} onValueChange={handleGenderSelect} className="grid grid-cols-3 gap-4 pt-4">
@@ -790,7 +679,7 @@ export default function RegisterPage() {
                 )}
 
 
-                {step === 5 && (
+                {step === 4 && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Pour vérifier que vous avez l'âge légal.</p>
                         <div className="grid grid-cols-3 gap-2">
@@ -810,7 +699,7 @@ export default function RegisterPage() {
                     </div>
                 )}
                 
-                {step === 6 && (
+                {step === 5 && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Choisissez un pseudo unique (code de parrainage).</p>
                         <div className="grid gap-2">
@@ -821,7 +710,7 @@ export default function RegisterPage() {
                     </div>
                 )}
 
-                {step === 7 && (
+                {step === 6 && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Êtes-vous un pronostiqueur ? Si oui, entrez votre code promo pour des sites comme 1xBet.</p>
                         <RadioGroup value={formData.isPronostiqueur} onValueChange={handlePronostiqueurChange} className="grid grid-cols-2 gap-4 pt-4">
@@ -853,7 +742,7 @@ export default function RegisterPage() {
                     </div>
                 )}
                 
-                {step === 8 && (
+                {step === 7 && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Quel est votre type de jeu de pari favori ?</p>
                         <RadioGroup value={formData.favoriteGame} onValueChange={handleGameSelect} className="grid grid-cols-2 gap-4 pt-4">
@@ -898,7 +787,7 @@ export default function RegisterPage() {
                 )}
 
 
-                {step === 9 && (
+                {step === 8 && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Avez-vous un code de parrainage ?</p>
                         <RadioGroup value={formData.hasReferralCode} onValueChange={handleReferralChange} className="grid grid-cols-2 gap-4 pt-4">
@@ -921,7 +810,7 @@ export default function RegisterPage() {
                     </div>
                 )}
 
-                {step === 10 && (
+                {step === 9 && (
                   <div className="space-y-4">
                     <p className="text-sm text-muted-foreground text-center">Veuillez lire et accepter nos conditions.</p>
                     <div className="flex items-start space-x-3 p-4 border rounded-md">
