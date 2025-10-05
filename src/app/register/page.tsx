@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
@@ -12,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowRight, Loader2, PartyPopper, Eye, EyeOff, XCircle, CheckCircle, ChevronUp, ChevronDown, ShieldCheck, Gamepad2, Mail } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -61,6 +62,10 @@ const GoogleIcon = (props: any) => (
 );
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const refCodeFromUrl = searchParams.get('ref');
+
   const [step, setStep] = useState(0); // 0 is initial choice
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -78,8 +83,8 @@ export default function RegisterPage() {
     pronostiqueurCode: '',
     favoriteGame: '',
     otherFavoriteGame: '',
-    hasReferralCode: '',
-    referralCode: '',
+    hasReferralCode: refCodeFromUrl ? 'oui' : '',
+    referralCode: refCodeFromUrl || '',
     cguAccepted: false,
   });
 
@@ -93,13 +98,14 @@ export default function RegisterPage() {
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid' | 'taken'>('idle');
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   
-  const [referralCodeStatus, setReferralCodeStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
+  const [referralCodeStatus, setReferralCodeStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>(refCodeFromUrl ? 'valid' : 'idle');
   const [isCheckingPromo, setIsCheckingPromo] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const router = useRouter();
   const auth = getAuth(app);
+  
+  const finalTotalSteps = refCodeFromUrl ? TOTAL_STEPS - 1 : TOTAL_STEPS;
 
   const isStepValid = useMemo(() => {
     switch (step) {
@@ -154,6 +160,7 @@ export default function RegisterPage() {
         }
         return formData.favoriteGame !== '';
       case 8:
+        if (refCodeFromUrl) return true;
         if (formData.hasReferralCode === 'non') return true;
         if (formData.hasReferralCode === 'oui') return referralCodeStatus === 'valid';
         return false;
@@ -162,7 +169,7 @@ export default function RegisterPage() {
       default:
         return false;
     }
-  }, [step, formData, passwordValidation, usernameStatus, referralCodeStatus]);
+  }, [step, formData, passwordValidation, usernameStatus, referralCodeStatus, refCodeFromUrl]);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,13 +263,13 @@ export default function RegisterPage() {
 
     useEffect(() => {
         const handler = setTimeout(() => {
-            if (step === 8 && formData.hasReferralCode === 'oui') {
+            if (step === 8 && formData.hasReferralCode === 'oui' && !refCodeFromUrl) {
                 checkReferralCode(formData.referralCode);
             }
         }, 500);
 
         return () => clearTimeout(handler);
-    }, [formData.referralCode, formData.hasReferralCode, step, checkReferralCode]);
+    }, [formData.referralCode, formData.hasReferralCode, step, checkReferralCode, refCodeFromUrl]);
 
   const handleNextStep = useCallback(async () => {
     if (!isStepValid) {
@@ -284,20 +291,30 @@ export default function RegisterPage() {
       }
     }
     
+    let nextStep = step + 1;
+    if (refCodeFromUrl && nextStep === 8) {
+      nextStep++; // Skip referral code step if ref is in URL
+    }
+
     if (isStepValid && isValidForToast && step < TOTAL_STEPS) {
-      setStep(prev => prev + 1);
+      setStep(nextStep);
     } else if (!isStepValid && isValidForToast) {
       toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
     }
-  }, [isStepValid, step, formData, passwordValidation, toast]);
+  }, [isStepValid, step, formData, passwordValidation, toast, refCodeFromUrl]);
 
   const handlePrevStep = useCallback(() => {
+    let prevStep = step - 1;
+    if (refCodeFromUrl && prevStep === 8) {
+        prevStep--; // Also skip on going back
+    }
+
     if (step > 1) {
-      setStep(prev => prev - 1);
+      setStep(prevStep);
     } else if (step === 1) {
       setStep(0);
     }
-  }, [step]);
+  }, [step, refCodeFromUrl]);
   
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -383,7 +400,7 @@ export default function RegisterPage() {
       });
 
       await batch.commit();
-      setStep(TOTAL_STEPS + 1); 
+      setStep(finalTotalSteps + 1); 
       
     } catch (error: any) {
       console.error(error);
@@ -430,6 +447,7 @@ export default function RegisterPage() {
                 createdAt: serverTimestamp(),
                 isOnline: true,
                 solde_referral: 0,
+                referralCode: refCodeFromUrl, // Add referral code from URL
             });
             await setDoc(doc(db, "users", user.uid, "pricing", "jetpredict"), {
                 actif_jetpredict: false,
@@ -644,9 +662,9 @@ export default function RegisterPage() {
                         </motion.div>
                     </motion.div>
                 )}
-                {step > 0 && step <= TOTAL_STEPS && (
+                {step > 0 && step <= finalTotalSteps && (
                   <div className="mb-8 text-center">
-                      <p className="text-sm font-semibold text-primary mb-2">Étape {step} sur {TOTAL_STEPS}</p>
+                      <p className="text-sm font-semibold text-primary mb-2">Étape {refCodeFromUrl && step > 7 ? step - 1 : step} sur {finalTotalSteps}</p>
                       {step === 1 && <h1 className="text-3xl font-bold tracking-tight">Créez votre compte 🚀</h1>}
                       {step === 2 && <h1 className="text-3xl font-bold tracking-tight">Votre Nom 👤</h1>}
                       {step === 3 && <h1 className="text-3xl font-bold tracking-tight">Votre Genre 🧑</h1>}
@@ -654,7 +672,7 @@ export default function RegisterPage() {
                       {step === 5 && <h1 className="text-3xl font-bold tracking-tight">Nom d'utilisateur 🆔</h1>}
                       {step === 6 && <h1 className="text-3xl font-bold tracking-tight">Pronostiqueur ? ✨</h1>}
                       {step === 7 && <h1 className="text-3xl font-bold tracking-tight">Jeu Préféré 🎮</h1>}
-                      {step === 8 && <h1 className="text-3xl font-bold tracking-tight">Parrainage 🤝</h1>}
+                      {step === 8 && !refCodeFromUrl && <h1 className="text-3xl font-bold tracking-tight">Parrainage 🤝</h1>}
                       {step === 9 && <h1 className="text-3xl font-bold tracking-tight">Finalisation ✅</h1>}
                   </div>
                 )}
@@ -834,7 +852,7 @@ export default function RegisterPage() {
                 )}
 
 
-                {step === 8 && (
+                {step === 8 && !refCodeFromUrl && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Avez-vous un code de parrainage ?</p>
                         <RadioGroup value={formData.hasReferralCode} onValueChange={handleReferralChange} className="grid grid-cols-2 gap-4 pt-4">
@@ -874,7 +892,7 @@ export default function RegisterPage() {
                   </div>
                 )}
 
-                {step === TOTAL_STEPS + 1 && (
+                {step === finalTotalSteps + 1 && (
                     <div className="text-center space-y-6">
                         <motion.div
                             initial={{ scale: 0.5, opacity: 0 }}
@@ -897,13 +915,13 @@ export default function RegisterPage() {
         </AnimatePresence>
       </main>
 
-       {step > 0 && step <= TOTAL_STEPS && (
+       {step > 0 && step <= finalTotalSteps && (
         <footer className="w-full max-w-sm z-10 space-y-4">
             <div className="flex w-full items-center gap-4">
                 <Button id="prev-step-button" variant="outline" onClick={handlePrevStep} className="w-full bg-card/50">
                     Précédent
                 </Button>
-                {step === TOTAL_STEPS ? (
+                {step === finalTotalSteps ? (
                     <Button id="next-step-button" onClick={handleRegister} className="w-full" disabled={!isStepValid || isLoading}>
                         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Créer mon compte'}
                     </Button>
