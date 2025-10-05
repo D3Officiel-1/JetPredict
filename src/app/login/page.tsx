@@ -13,7 +13,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const containerVariants = {
   hidden: { opacity: 0, scale: 0.95 },
@@ -33,6 +33,14 @@ const GoogleIcon = (props: any) => (
   </svg>
 );
 
+const loadingTexts = [
+    "DÉMARRAGE DU NOYAU...",
+    "ACCÈS AU DATACLUSTER...",
+    "CHARGEMENT DES MODÈLES IA...",
+    "VÉRIFICATION DES PROTOCOLES...",
+    "SYNCHRONISATION TERMINÉE.",
+];
+
 
 export default function LoginPage() {
   const [loginIdentifier, setLoginIdentifier] = useState('');
@@ -40,6 +48,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   
   const { toast } = useToast();
   const router = useRouter();
@@ -50,10 +59,18 @@ export default function LoginPage() {
       if (user) {
         router.push('/predict');
       } else {
-        setIsCheckingAuth(false);
+        setTimeout(() => setIsCheckingAuth(false), 3000);
       }
     });
-    return () => unsubscribe();
+
+    const textInterval = setInterval(() => {
+        setLoadingTextIndex(prev => (prev < loadingTexts.length - 1 ? prev + 1 : prev));
+    }, 500);
+
+    return () => {
+        unsubscribe();
+        clearInterval(textInterval);
+    };
   }, [auth, router]);
 
   const handleSuccessfulLogin = async (user: any, isNewUser: boolean = false) => {
@@ -184,9 +201,57 @@ export default function LoginPage() {
 
   if (isCheckingAuth) {
     return (
-      <div className="flex min-h-screen w-full flex-col bg-background items-center justify-center">
-        <Image src="https://1play.gamedev-tech.cc/lucky_grm/assets/media/c544881eb170e73349e4c92d1706a96c.svg" alt="Loading..." width={100} height={100} className="animate-pulse" priority />
-      </div>
+      <motion.div 
+          className="flex h-screen w-full flex-col items-center justify-center bg-background text-foreground"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side,hsl(var(--background)),transparent)]"></div>
+
+        <motion.div 
+          className="relative w-32 h-32 mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }}
+        >
+          <motion.div 
+            className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.div 
+            className="absolute inset-2 rounded-full border-2 border-primary/30"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          />
+          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="w-full h-full object-contain" priority />
+        </motion.div>
+
+        <div className="relative w-64 h-2 bg-muted/50 rounded-full overflow-hidden">
+          <motion.div 
+            className="absolute top-0 left-0 h-full bg-primary"
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
+          />
+        </div>
+
+        <div className="h-6 mt-4">
+            <AnimatePresence mode="wait">
+                <motion.p
+                    key={loadingTextIndex}
+                    className="font-code text-sm text-primary tracking-widest"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {loadingTexts[loadingTextIndex]}
+                </motion.p>
+            </AnimatePresence>
+        </div>
+      </motion.div>
     );
   }
 
