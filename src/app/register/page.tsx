@@ -296,12 +296,12 @@ export default function RegisterPage() {
       nextStep++; // Skip referral code step if ref is in URL
     }
 
-    if (isStepValid && isValidForToast && step < TOTAL_STEPS) {
+    if (isStepValid && isValidForToast && step < finalTotalSteps) {
       setStep(nextStep);
     } else if (!isStepValid && isValidForToast) {
       toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
     }
-  }, [isStepValid, step, formData, passwordValidation, toast, refCodeFromUrl]);
+  }, [isStepValid, step, formData, passwordValidation, toast, refCodeFromUrl, finalTotalSteps]);
 
   const handlePrevStep = useCallback(() => {
     let prevStep = step - 1;
@@ -953,4 +953,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
