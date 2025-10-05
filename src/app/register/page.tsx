@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, ArrowRight, Loader2, PartyPopper, Eye, EyeOff, XCircle, CheckCircle, ChevronUp, ChevronDown, ShieldCheck, Gamepad2, Mail } from 'lucide-react';
+import { ArrowRight, Loader2, PartyPopper, Eye, EyeOff, XCircle, CheckCircle, ChevronUp, ChevronDown, ShieldCheck, Gamepad2, Mail } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -589,9 +589,7 @@ export default function RegisterPage() {
         </motion.div>
       
       <header className="w-full max-w-xl flex items-center justify-between z-10">
-         <Button asChild variant="ghost" disabled={step === 0}>
-           {step === 0 ? <span/> : <Link href="/login"><ArrowLeft className="mr-2 h-4 w-4" />Retour</Link>}
-        </Button>
+         <div />
       </header>
       
       <main className="w-full max-w-sm z-10 flex-1 flex flex-col justify-center">
@@ -902,15 +900,15 @@ export default function RegisterPage() {
        {step > 0 && step <= TOTAL_STEPS && (
         <footer className="w-full max-w-sm z-10 space-y-4">
             <div className="flex w-full items-center gap-4">
-                <Button id="prev-step-button" variant="outline" onClick={handlePrevStep} className="w-1/3 bg-card/50">
-                    <ArrowLeft className="mr-2 h-4 w-4" /> Précédent
+                <Button id="prev-step-button" variant="outline" onClick={handlePrevStep} className="w-full bg-card/50">
+                    Précédent
                 </Button>
                 {step === TOTAL_STEPS ? (
-                    <Button id="next-step-button" onClick={handleRegister} className="w-2/3" disabled={!isStepValid || isLoading}>
+                    <Button id="next-step-button" onClick={handleRegister} className="w-full" disabled={!isStepValid || isLoading}>
                         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Créer mon compte'}
                     </Button>
                 ) : (
-                    <Button id="next-step-button" onClick={handleNextStep} className="w-2/3" disabled={!isStepValid || isLoading || isCheckingUsername || isCheckingPromo}>
+                    <Button id="next-step-button" onClick={handleNextStep} className="w-full" disabled={!isStepValid || isLoading || isCheckingUsername || isCheckingPromo}>
                         {(isLoading || isCheckingUsername || isCheckingPromo) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Suivant <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
