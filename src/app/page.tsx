@@ -903,7 +903,7 @@ export default function LandingPage() {
             <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-xl">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/qqwdfy0d632otqf682bu.svg" alt="Android" width={28} height={28} />
+                        <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={28} height={28} />
                         Protocole d'Installation : Android
                     </DialogTitle>
                 </DialogHeader>
@@ -953,7 +953,7 @@ export default function LandingPage() {
             <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-xl">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/k7k2pg9c6i0q3j9k8h6n.svg" alt="iOS" width={28} height={28} />
+                        <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={28} height={28} className="dark:invert-0 invert"/>
                         Protocole d'Installation : iOS
                     </DialogTitle>
                 </DialogHeader>
@@ -1002,7 +1002,7 @@ export default function LandingPage() {
             <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                      <DialogTitle className="flex items-center gap-2 text-xl">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/pyq5g1yrv6j0c1n8p7z0.svg" alt="Windows" width={28} height={28} />
+                        <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Windows" width={28} height={28} />
                         Protocole d'Installation : Ordinateur
                     </DialogTitle>
                 </DialogHeader>

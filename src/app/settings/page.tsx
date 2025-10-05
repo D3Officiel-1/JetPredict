@@ -441,15 +441,15 @@ export default function SettingsPage() {
                     <Label className="text-sm font-semibold text-muted-foreground ml-1 mb-2 block">Installer l'Application</Label>
                     <div className="grid grid-cols-3 gap-2 rounded-lg bg-muted/30 p-4 border border-border/30 items-end">
                         <button onClick={handleAndroidInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-                            <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/qqwdfy0d632otqf682bu.svg" alt="Android" width={40} height={40} />
+                            <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={40} height={40} />
                             <span>Android</span>
                         </button>
                         <button onClick={handleIosInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-                            <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/k7k2pg9c6i0q3j9k8h6n.svg" alt="iOS" width={40} height={40}/>
+                            <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={40} height={40} className="dark:invert-0 invert"/>
                              <span>iOS</span>
                         </button>
                          <button onClick={handleWindowsInstallClick} className="flex flex-col items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-                            <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/pyq5g1yrv6j0c1n8p7z0.svg" alt="Desktop" width={40} height={40}/>
+                            <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Desktop" width={40} height={40}/>
                              <span>Desktop</span>
                         </button>
                     </div>
@@ -620,7 +620,7 @@ export default function SettingsPage() {
             <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-xl">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/qqwdfy0d632otqf682bu.svg" alt="Android" width={28} height={28} />
+                        <Image src="https://1win-partners.com/panel/assets/images/android-BwQlK3Xs.svg" alt="Android" width={28} height={28} />
                         Protocole d'Installation : Android
                     </DialogTitle>
                 </DialogHeader>
@@ -670,7 +670,7 @@ export default function SettingsPage() {
             <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2 text-xl">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/k7k2pg9c6i0q3j9k8h6n.svg" alt="iOS" width={28} height={28} />
+                        <Image src="https://1win-partners.com/panel/assets/images/ios-LCbvsU86.svg" alt="iOS" width={28} height={28} className="dark:invert-0 invert"/>
                         Protocole d'Installation : iOS
                     </DialogTitle>
                 </DialogHeader>
@@ -719,7 +719,7 @@ export default function SettingsPage() {
             <DialogContent className="sm:max-w-2xl bg-card/90 backdrop-blur-sm border-primary/20">
                 <DialogHeader>
                      <DialogTitle className="flex items-center gap-2 text-xl">
-                        <Image src="https://res.cloudinary.com/dazt6g3o1/image/upload/v1721591873/pyq5g1yrv6j0c1n8p7z0.svg" alt="Windows" width={28} height={28} />
+                        <Image src="https://i.postimg.cc/g0zDTFgZ/windows.png" alt="Windows" width={28} height={28} />
                         Protocole d'Installation : Ordinateur
                     </DialogTitle>
                 </DialogHeader>
