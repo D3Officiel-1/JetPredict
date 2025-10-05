@@ -838,19 +838,19 @@ export default function LandingPage() {
                     {/* Links Section */}
                     <div className="flex flex-col gap-2">
                         <h3 className="font-semibold text-foreground mb-2">Explorer</h3>
-                        <Link href="#features" className="text-muted-foreground hover:text-primary transition-colors">Fonctionnalités</Link>
-                        <Link href="#pricing" className="text-muted-foreground hover:text-primary transition-colors">Tarifs</Link>
-                        <Link href="#faq" className="text-muted-foreground hover:text-primary transition-colors">FAQ</Link>
+                        <Link href="#features" className="text-sm text-muted-foreground hover:text-primary transition-colors">Fonctionnalités</Link>
+                        <Link href="#pricing" className="text-sm text-muted-foreground hover:text-primary transition-colors">Tarifs</Link>
+                        <Link href="#faq" className="text-sm text-muted-foreground hover:text-primary transition-colors">FAQ</Link>
                     </div>
 
                      {/* Legal Section */}
                     <div className="flex flex-col gap-2">
                         <h3 className="font-semibold text-foreground mb-2">Légal</h3>
-                        <Link href="/legal/mentions-legales" className="text-muted-foreground hover:text-primary transition-colors">Mentions Légales</Link>
-                        <Link href="/legal/cgu" className="text-muted-foreground hover:text-primary transition-colors">Conditions d'utilisation</Link>
-                        <Link href="/legal/cgv" className="text-muted-foreground hover:text-primary transition-colors">Conditions de vente</Link>
-                        <Link href="/legal/confidentialite" className="text-muted-foreground hover:text-primary transition-colors">Confidentialité</Link>
-                        <Link href="/legal/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link>
+                        <Link href="/legal/mentions-legales" className="text-sm text-muted-foreground hover:text-primary transition-colors">Mentions Légales</Link>
+                        <Link href="/legal/cgu" className="text-sm text-muted-foreground hover:text-primary transition-colors">Conditions d'utilisation</Link>
+                        <Link href="/legal/cgv" className="text-sm text-muted-foreground hover:text-primary transition-colors">Conditions de vente</Link>
+                        <Link href="/legal/confidentialite" className="text-sm text-muted-foreground hover:text-primary transition-colors">Confidentialité</Link>
+                        <Link href="/legal/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">Contact</Link>
                     </div>
 
                     {/* App & Bot Section */}
