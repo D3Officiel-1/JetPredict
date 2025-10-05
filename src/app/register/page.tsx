@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState, useMemo, useEffect, useCallback } from 'react';
@@ -561,10 +560,7 @@ export default function RegisterPage() {
             {step > 1 ? (
                 <span className='cursor-pointer'><ArrowLeft className="mr-2 h-4 w-4" />Retour</span>
             ) : (
-                <Link href="/">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Accueil
-                </Link>
+                <span />
             )}
         </Button>
       </header>
@@ -884,3 +880,5 @@ export default function RegisterPage() {
     </div>
   );
 }
+
+    

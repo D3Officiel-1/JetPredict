@@ -228,15 +228,6 @@ export default function LoginPage() {
             />
         </motion.div>
       
-      <div className="absolute top-4 left-4 z-20">
-        <Button asChild variant="ghost">
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Retour
-          </Link>
-        </Button>
-      </div>
-
        <div className="w-full flex-1 flex flex-col items-center justify-center p-4 lg:p-8">
            <div className="w-full h-full lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
                 <div className="hidden lg:flex flex-col items-center justify-center text-center">
@@ -345,5 +336,7 @@ export default function LoginPage() {
     </div>
   );
 }
+
+    
 
     
