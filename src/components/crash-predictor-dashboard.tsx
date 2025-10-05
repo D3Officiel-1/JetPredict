@@ -427,10 +427,21 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     }
       
     navigator.clipboard.writeText(textToCopy).then(() => {
+      try {
+        const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/09/02/audio_4e70a465f7.mp3?filename=new-notification-3-398649.mp3');
+        audio.volume = 0.2;
+        audio.play();
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+      } catch (e) {
+          console.error("Failed to play sound or vibrate:", e)
+      }
       toast({
         variant: 'success',
         title: "Copié !",
         description: "Les prédictions ont été copiées.",
+        disableSound: true,
       });
       setIsCopied(true);
       setTimeout(() => setIsCopied(false), 2000);

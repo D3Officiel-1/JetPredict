@@ -214,7 +214,7 @@ export default function ProfilePage() {
 
     navigator.clipboard.writeText(commandToCopy).then(() => {
       try {
-        const audio = new Audio('https://cdn.pixabay.com/download/audio/2022/12/12/audio_e6f0105ae1.mp3?filename=livechat-129007.mp3');
+        const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/09/02/audio_4e70a465f7.mp3?filename=new-notification-3-398649.mp3');
         audio.volume = 0.2;
         audio.play();
         if (navigator.vibrate) {

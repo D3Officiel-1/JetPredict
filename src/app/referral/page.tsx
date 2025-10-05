@@ -158,6 +158,16 @@ export default function ReferralPage() {
   const handleCopyCode = () => {
     if (!referralCode) return;
     navigator.clipboard.writeText(referralCode).then(() => {
+      try {
+        const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/09/02/audio_4e70a465f7.mp3?filename=new-notification-3-398649.mp3');
+        audio.volume = 0.2;
+        audio.play();
+        if (navigator.vibrate) {
+            navigator.vibrate(50);
+        }
+      } catch (e) {
+          console.error("Failed to play sound or vibrate:", e)
+      }
       setIsCopied(true);
       toast({
         variant: 'success',
