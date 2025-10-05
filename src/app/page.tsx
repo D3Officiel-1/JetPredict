@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import type { PlanId, PricingConfig } from "@/types";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { PricingSection } from "@/components/pricing-section";
+import { Badge } from "@/components/ui/badge";
 
 
 const features = [
@@ -875,7 +876,10 @@ export default function LandingPage() {
                              </div>
                         </div>
                         <div>
-                           <h3 className="font-semibold text-foreground mb-2">Notre Bot Telegram</h3>
+                           <div className="flex items-center gap-2 mb-2">
+                                <h3 className="font-semibold text-foreground">Notre Bot Telegram</h3>
+                                <Badge variant="destructive" className="scale-75">Bêta</Badge>
+                           </div>
                             <iframe
                               src="/api/telegram-widget"
                               style={{border: 'none', width: '180px', height: '50px'}}

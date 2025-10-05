@@ -24,6 +24,7 @@ import { useToast } from '@/hooks/use-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '@/components/ui/sidebar';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/components/ui/badge';
 
 interface UserData {
   uid?: string;
@@ -230,9 +231,6 @@ export default function ProfilePage() {
 
     navigator.clipboard.writeText(commandToCopy).then(() => {
       try {
-        const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/09/02/audio_4e70a465f7.mp3?filename=new-notification-3-398649.mp3');
-        audio.volume = 0.2;
-        audio.play();
         if (navigator.vibrate) {
             navigator.vibrate(50);
         }
@@ -370,7 +368,10 @@ export default function ProfilePage() {
               <Bot className="h-8 w-8" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-lg text-foreground">Liaison de Compte Telegram</h3>
+              <div className="flex items-center gap-2">
+                <h3 className="font-bold text-lg text-foreground">Liaison de Compte Telegram</h3>
+                <Badge variant="destructive" className="scale-75">Bêta</Badge>
+              </div>
               <p className="text-sm text-muted-foreground mt-1">Copiez cette commande et envoyez-la à notre bot Telegram pour synchroniser votre compte.</p>
             </div>
           </div>
