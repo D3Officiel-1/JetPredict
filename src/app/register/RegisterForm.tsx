@@ -9,11 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowRight, Loader2, PartyPopper, Eye, EyeOff, XCircle, CheckCircle, ChevronUp, ChevronDown, ShieldCheck, Gamepad2, Mail } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Loader2, PartyPopper, Eye, EyeOff, XCircle, CheckCircle, ShieldCheck, Gamepad2, Mail, User, Cake, VenetianMask } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Checkbox } from '@/components/ui/checkbox';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -21,34 +20,19 @@ import { AviatorLogo, LuckyJetLogo } from '@/components/icons';
 
 const TOTAL_STEPS_BASE = 9;
 
-const NumberInputWithControls = ({ id, placeholder, value, onChange, min, max, onValueChange } : { id: string, placeholder: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, min: number, max: number, onValueChange: (newValue: number) => void }) => {
-    const handleStep = (step: number) => {
-        const currentValue = parseInt(value, 10) || 0;
-        let newValue = currentValue + step;
-        if (newValue < min) newValue = max;
-        if (newValue > max) newValue = min;
-        onValueChange(newValue);
-    };
-
-    return (
-        <div className="relative">
-            <Input id={id} type="number" placeholder={placeholder} value={value} onChange={onChange} min={min} max={max} className="bg-background/50"/>
-            <div className="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col h-full justify-center">
-                <Button type="button" variant="ghost" size="icon" className="h-4 w-4 text-muted-foreground hover:text-foreground" onClick={() => handleStep(1)}>
-                    <ChevronUp className="h-4 w-4" />
-                </Button>
-                <Button type="button" variant="ghost" size="icon" className="h-4 w-4 text-muted-foreground hover:text-foreground" onClick={() => handleStep(-1)}>
-                    <ChevronDown className="h-4 w-4" />
-                </Button>
-            </div>
-        </div>
-    )
-};
-
 const stepVariants = {
-  hidden: { opacity: 0, x: 50 },
-  visible: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -50 },
+  enter: (direction: number) => ({
+    x: direction > 0 ? 100 : -100,
+    opacity: 0
+  }),
+  center: {
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? 100 : -100,
+    opacity: 0
+  })
 };
 
 const GoogleIcon = (props: any) => (
@@ -60,10 +44,25 @@ const GoogleIcon = (props: any) => (
   </svg>
 );
 
+const RadioCard = ({ id, value, children, selectedValue, onSelect, className }: { id: string, value: string, children: React.ReactNode, selectedValue: string, onSelect: (value: string) => void, className?: string }) => {
+    const isSelected = selectedValue === value;
+    return (
+        <div className="relative" onClick={() => onSelect(value)}>
+            {isSelected && <motion.div layoutId="radio-card-border" className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary via-cyan-400 to-primary blur opacity-75" />}
+            <div className={cn("relative h-full flex flex-col items-center justify-center gap-2 p-4 border-2 rounded-lg cursor-pointer transition-all", isSelected ? 'bg-card border-primary' : 'bg-card/50 border-border hover:border-primary/50', className)}>
+                {children}
+            </div>
+        </div>
+    );
+};
+
+
 export default function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [refCodeFromUrl, setRefCodeFromUrl] = useState('');
+  
+  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     const ref = searchParams.get('ref');
@@ -193,10 +192,6 @@ export default function RegisterForm() {
     }));
   };
 
-  const handleDobChange = (id: 'dob_day' | 'dob_month' | 'dob_year', newValue: number) => {
-    setFormData(prev => ({...prev, [id]: String(newValue)}));
-  };
-
     const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
         setFormData(prev => ({ ...prev, [id]: value }));
@@ -284,50 +279,38 @@ export default function RegisterForm() {
         return () => clearTimeout(handler);
     }, [formData.referralCode, formData.hasReferralCode, step, checkReferralCode, refCodeFromUrl]);
 
-  const handleNextStep = useCallback(async () => {
-    if (!isStepValid) {
-        toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
-        return;
-    }
+    const handleNextStep = useCallback(() => {
+        if (!isStepValid) {
+            toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
+            return;
+        }
 
-    let isValidForToast = true; 
-    if (step === 1) {
-      if (formData.password !== formData.confirmPassword) {
-        toast({ variant: 'destructive', title: 'Les mots de passe ne correspondent pas.' });
-        isValidForToast = false;
-      }
-      
-      const { minLength, uppercase, lowercase, number } = passwordValidation;
-      if (!minLength || !uppercase || !lowercase || !number) {
-        toast({ variant: 'destructive', title: 'Veuillez respecter tous les critères.' });
-        isValidForToast = false;
-      }
-    }
-    
-    let nextStep = step + 1;
-    if (refCodeFromUrl && step === 7) {
-      nextStep = 9; // Skip referral code step (8) if ref is in URL
-    }
+        let nextStep = step + 1;
+        if (refCodeFromUrl && step === 7) {
+            nextStep = 9; // Skip referral code step (8) if ref is in URL
+        }
 
-    if (isStepValid && isValidForToast && step < finalTotalSteps) {
-      setStep(nextStep);
-    } else if (step === finalTotalSteps) {
-        await handleRegister();
-    }
-  }, [isStepValid, step, formData, passwordValidation, toast, refCodeFromUrl, finalTotalSteps]);
+        setDirection(1); // Set direction for animation
+        if (isStepValid && step < finalTotalSteps) {
+            setStep(nextStep);
+        } else if (step === finalTotalSteps) {
+            handleRegister();
+        }
+    }, [isStepValid, step, refCodeFromUrl, finalTotalSteps, toast]);
 
-  const handlePrevStep = useCallback(() => {
-    let prevStep = step - 1;
-    if (refCodeFromUrl && step === 9) {
-        prevStep = 7; // Skip back over referral step
-    }
-
-    if (step > 1) {
-      setStep(prevStep);
-    } else if (step === 1) {
-      setStep(0);
-    }
-  }, [step, refCodeFromUrl]);
+    const handlePrevStep = useCallback(() => {
+        let prevStep = step - 1;
+        if (refCodeFromUrl && step === 9) {
+            prevStep = 7; // Skip back over referral step
+        }
+        
+        setDirection(-1); // Set direction for animation
+        if (step > 1) {
+            setStep(prevStep);
+        } else if (step === 1) {
+            setStep(0);
+        }
+    }, [step, refCodeFromUrl]);
   
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -337,20 +320,13 @@ export default function RegisterForm() {
 
         if (event.key === 'Enter') {
             event.preventDefault();
-            const nextButton = document.getElementById('next-step-button');
-            if (nextButton) {
-                nextButton.click();
-            } else {
-                 handleNextStep();
-            }
-        } else if (event.key === ' ') {
+            handleNextStep();
+        } else if (event.key === 'ArrowLeft') {
             event.preventDefault();
-            const prevButton = document.getElementById('prev-step-button');
-            if (prevButton) {
-                prevButton.click();
-            } else {
-                handlePrevStep();
-            }
+            handlePrevStep();
+        } else if (event.key === 'ArrowRight') {
+            event.preventDefault();
+            handleNextStep();
         }
     };
 
@@ -413,6 +389,7 @@ export default function RegisterForm() {
       });
 
       await batch.commit();
+      setDirection(1);
       setStep(finalTotalSteps + 1); 
       
     } catch (error: any) {
@@ -482,54 +459,33 @@ export default function RegisterForm() {
     }
   };
   
-    const handleGenderSelect = (value: string) => {
-        setFormData(p => ({ ...p, gender: value }));
-    };
+  useEffect(() => {
+    if (step === 3 && formData.gender && isStepValid) {
+        const timer = setTimeout(handleNextStep, 300);
+        return () => clearTimeout(timer);
+    }
+}, [formData.gender, step, isStepValid, handleNextStep]);
 
-    useEffect(() => {
-        if (step === 3 && formData.gender && isStepValid) {
-            const timer = setTimeout(() => handleNextStep(), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [formData.gender, step, isStepValid, handleNextStep]);
-  
-    const handleGameSelect = (value: string) => {
-        setFormData(p => ({ ...p, favoriteGame: value, otherFavoriteGame: '' }));
-    };
+useEffect(() => {
+    if (step === 7 && formData.favoriteGame && formData.favoriteGame !== 'autre' && isStepValid) {
+        const timer = setTimeout(handleNextStep, 300);
+        return () => clearTimeout(timer);
+    }
+}, [formData.favoriteGame, step, isStepValid, handleNextStep]);
 
-    useEffect(() => {
-        if (step === 7 && formData.favoriteGame && formData.favoriteGame !== 'autre' && isStepValid) {
-            const timer = setTimeout(() => handleNextStep(), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [formData.favoriteGame, step, isStepValid, handleNextStep]);
+useEffect(() => {
+    if (step === 6 && formData.isPronostiqueur === 'non' && isStepValid) {
+        const timer = setTimeout(handleNextStep, 300);
+        return () => clearTimeout(timer);
+    }
+}, [formData.isPronostiqueur, step, isStepValid, handleNextStep]);
 
-    const handlePronostiqueurChange = (value: string) => {
-        setFormData(p => ({...p, isPronostiqueur: value, pronostiqueurCode: ''}));
-    };
-    
-    useEffect(() => {
-        if (step === 6 && formData.isPronostiqueur === 'non' && isStepValid) {
-            const timer = setTimeout(() => handleNextStep(), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [formData.isPronostiqueur, step, isStepValid, handleNextStep]);
-    
-    const handleReferralChange = (value: string) => {
-        setFormData(p => ({...p, hasReferralCode: value, referralCode: ''}));
-        setReferralCodeStatus('idle');
-    };
-
-    useEffect(() => {
-        if (step === 8 && formData.hasReferralCode === 'non' && isStepValid) {
-            const timer = setTimeout(() => handleNextStep(), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [formData.hasReferralCode, step, isStepValid, handleNextStep]);
-
-    const handleCguCheckedChange = (checked: boolean) => {
-        setFormData(p => ({...p, cguAccepted: !!checked}));
-    };
+useEffect(() => {
+    if (step === 8 && formData.hasReferralCode === 'non' && isStepValid) {
+        const timer = setTimeout(handleNextStep, 300);
+        return () => clearTimeout(timer);
+    }
+}, [formData.hasReferralCode, step, isStepValid, handleNextStep]);
 
     const handleOpenMail = () => {
         const email = formData.email;
@@ -581,8 +537,22 @@ export default function RegisterForm() {
       }
   };
 
+  const StepTitle = ({title, icon}: {title: string, icon: React.ReactNode}) => (
+      <motion.div
+        className="mb-8 text-center"
+        initial={{ y: -20, opacity: 0}}
+        animate={{ y: 0, opacity: 1}}
+        transition={{ delay: 0.2 }}
+      >
+          <div className="flex items-center justify-center gap-3">
+            <div className="p-2 rounded-full bg-primary/10 border border-primary/20 text-primary">{icon}</div>
+            <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+          </div>
+      </motion.div>
+  )
+
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen bg-background text-foreground overflow-hidden p-4 sm:p-8">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-background text-foreground overflow-hidden p-4 sm:p-8">
       <div className="absolute inset-0 bg-grid-pattern opacity-10 -z-10"></div>
        <motion.div 
             aria-hidden 
@@ -591,63 +561,50 @@ export default function RegisterForm() {
             animate={{ opacity: 1, transition: { duration: 1 }}}
         >
             <div className="absolute inset-0 bg-[radial-gradient(circle_500px_at_50%_30%,hsl(var(--primary)/0.15),transparent)]"></div>
-            <motion.div
-                className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full filter blur-3xl"
-                animate={{
-                    x: [-20, 20, -20],
-                    y: [-20, 20, -20],
-                }}
-                transition={{
-                    duration: 20,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                }}
-            />
-            <motion.div
-                className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full filter blur-3xl"
-                animate={{
-                    x: [20, -20, 20],
-                    y: [20, -20, 20],
-                }}
-                transition={{
-                    duration: 25,
-                    ease: "easeInOut",
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                }}
-            />
         </motion.div>
       
-      <header className="w-full max-w-xl flex items-center justify-between z-10">
-         <div />
-      </header>
-      
       <main className="w-full max-w-sm z-10 flex-1 flex flex-col justify-center">
-        <AnimatePresence mode="wait">
-            <motion.div
-                key={step}
-                variants={stepVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-                className="w-full"
-            >
+        {step > 0 && step <= finalTotalSteps && (
+          <div className="w-full mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-sm font-semibold text-primary">Étape {refCodeFromUrl && step > 7 ? step - 1 : step} sur {finalTotalSteps}</p>
+                 <Link href="/login" className="text-sm text-muted-foreground hover:text-primary transition-colors">Déjà un compte ?</Link>
+              </div>
+              <div className="w-full bg-muted/50 rounded-full h-1.5">
+                  <motion.div
+                      className="bg-primary h-1.5 rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: `${(step / finalTotalSteps) * 100}%` }}
+                      transition={{ duration: 0.5, ease: 'easeInOut' }}
+                  />
+              </div>
+          </div>
+        )}
+
+        <div className="relative overflow-hidden w-full h-[550px]">
+            <AnimatePresence initial={false} custom={direction}>
+                <motion.div
+                    key={step}
+                    custom={direction}
+                    variants={stepVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                        x: { type: "spring", stiffness: 300, damping: 30 },
+                        opacity: { duration: 0.2 }
+                    }}
+                    className="absolute w-full"
+                >
                 {step === 0 && (
-                    <motion.div 
-                        className="text-center"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.5 }}
-                    >
+                    <div className="text-center">
                          <motion.div 
                             className="mb-8 text-center"
                             initial={{ y: -20, opacity: 0 }}
                             animate={{ y: 0, opacity: 1 }}
                             transition={{ delay: 0.2, type: 'spring' }}
                          >
-                            <h1 className="text-3xl font-bold tracking-tight">Rejoignez Jet Predict 🚀</h1>
+                            <h1 className="text-3xl font-bold tracking-tight">Rejoignez Jet Predict</h1>
                             <p className="text-muted-foreground mt-2">Créez votre compte pour commencer.</p>
                         </motion.div>
                         <motion.div 
@@ -668,25 +625,30 @@ export default function RegisterForm() {
                                     <span className="bg-background px-2 text-muted-foreground">Ou</span>
                                 </div>
                             </div>
-                             <Button variant="outline" className="w-full h-12 text-base bg-card/50" size="lg" onClick={() => setStep(1)} disabled={isLoading}>
+                             <Button variant="outline" className="w-full h-12 text-base bg-card/50" size="lg" onClick={() => { setDirection(1); setStep(1); }} disabled={isLoading}>
                                 <Mail className="mr-2 h-5 w-5"/>
                                 S'inscrire avec un email
                             </Button>
+                             <div className="pt-4 text-center text-sm text-muted-foreground">
+                                Vous avez déjà un compte ?{' '}
+                                <Link href="/login" className="underline text-primary">
+                                    Se connecter
+                                </Link>
+                                </div>
                         </motion.div>
-                    </motion.div>
+                    </div>
                 )}
                 {step > 0 && step <= finalTotalSteps && (
-                  <div className="mb-8 text-center">
-                      <p className="text-sm font-semibold text-primary mb-2">Étape {refCodeFromUrl && step > 7 ? step - 1 : step} sur {finalTotalSteps}</p>
-                      {step === 1 && <h1 className="text-3xl font-bold tracking-tight">Créez votre compte 🚀</h1>}
-                      {step === 2 && <h1 className="text-3xl font-bold tracking-tight">Votre Nom 👤</h1>}
-                      {step === 3 && <h1 className="text-3xl font-bold tracking-tight">Votre Genre 🧑</h1>}
-                      {step === 4 && <h1 className="text-3xl font-bold tracking-tight">Date de naissance 🎂</h1>}
-                      {step === 5 && <h1 className="text-3xl font-bold tracking-tight">Nom d'utilisateur 🆔</h1>}
-                      {step === 6 && <h1 className="text-3xl font-bold tracking-tight">Pronostiqueur ? ✨</h1>}
-                      {step === 7 && <h1 className="text-3xl font-bold tracking-tight">Jeu Préféré 🎮</h1>}
-                      {step === 8 && !refCodeFromUrl && <h1 className="text-3xl font-bold tracking-tight">Parrainage 🤝</h1>}
-                      {step === 9 && <h1 className="text-3xl font-bold tracking-tight">Finalisation ✅</h1>}
+                    <div className="p-1">
+                      {step === 1 && <StepTitle title="Infos de Connexion" icon={<Mail />} />}
+                      {step === 2 && <StepTitle title="Votre Identité" icon={<User />} />}
+                      {step === 3 && <StepTitle title="Votre Genre" icon={<VenetianMask />} />}
+                      {step === 4 && <StepTitle title="Date de Naissance" icon={<Cake />} />}
+                      {step === 5 && <StepTitle title="Nom d'Utilisateur" icon={<VenetianMask />} />}
+                      {step === 6 && <StepTitle title="Code Pronostiqueur" icon={<ShieldCheck />} />}
+                      {step === 7 && <StepTitle title="Jeu Préféré" icon={<Gamepad2 />} />}
+                      {step === 8 && !refCodeFromUrl && <StepTitle title="Parrainage" icon={<User />} />}
+                      {step === 9 && <StepTitle title="Finalisation" icon={<CheckCircle />} />}
                   </div>
                 )}
                 
@@ -694,26 +656,26 @@ export default function RegisterForm() {
                   <div className="space-y-4">
                     <div className="grid gap-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" value={formData.email} onChange={handleChange} required className="bg-background/50"/>
+                      <Input id="email" type="email" value={formData.email} onChange={handleChange} required className="bg-background/50 h-12"/>
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="password">Mot de passe</Label>
                         <div className="relative">
-                            <Input id="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handlePasswordChange} required className="pr-10 bg-background/50" />
+                            <Input id="password" type={showPassword ? "text" : "password"} value={formData.password} onChange={handlePasswordChange} required className="pr-10 bg-background/50 h-12" />
                             <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
                                 {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                             </button>
                         </div>
                        <div className="grid grid-cols-4 gap-2 pt-2">
                           {[...Array(4)].map((_, i) => (
-                            <div key={i} className={cn("h-1.5 rounded-full transition-colors", Object.values(passwordValidation)[i] ? "bg-green-500" : "bg-destructive")}></div>
+                            <div key={i} className={cn("h-1 rounded-full transition-colors", Object.values(passwordValidation)[i] ? "bg-green-500" : "bg-destructive")}></div>
                           ))}
                         </div>
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="confirmPassword">Confirmer le mot de passe</Label>
                        <div className="relative">
-                          <Input id="confirmPassword" type={showPassword ? "text" : "password"} value={formData.confirmPassword} onChange={handlePasswordChange} required className="pr-10 bg-background/50" />
+                          <Input id="confirmPassword" type={showPassword ? "text" : "password"} value={formData.confirmPassword} onChange={handlePasswordChange} required className="pr-10 bg-background/50 h-12" />
                            <button type="button" className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(p => !p)}>
                             {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
                           </button>
@@ -727,51 +689,55 @@ export default function RegisterForm() {
                      <p className="text-sm text-muted-foreground text-center">Comment devrions-nous vous appeler ?</p>
                     <div className="grid gap-2">
                       <Label htmlFor="firstName">Prénom</Label>
-                      <Input id="firstName" value={formData.firstName} onChange={handleChange} required className="bg-background/50"/>
+                      <Input id="firstName" value={formData.firstName} onChange={handleChange} required className="bg-background/50 h-12"/>
                     </div>
                     <div className="grid gap-2">
                       <Label htmlFor="lastName">Nom</Label>
-                      <Input id="lastName" value={formData.lastName} onChange={handleChange} required className="bg-background/50"/>
+                      <Input id="lastName" value={formData.lastName} onChange={handleChange} required className="bg-background/50 h-12"/>
                     </div>
                   </div>
                 )}
 
                 {step === 3 && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Veuillez spécifier votre genre.</p>
-                        <RadioGroup value={formData.gender} onValueChange={handleGenderSelect} className="grid grid-cols-3 gap-4 pt-4">
-                            {['Masculin', 'Féminin', 'Autre'].map((gender, index) => {
-                                const emojis = ['👨', '👩', '👤'];
-                                return (
-                                    <div key={gender} className="group relative">
-                                        <Label htmlFor={`gender-${gender}`} className="transition-all bg-card/50 flex flex-col items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
-                                            <RadioGroupItem value={gender} id={`gender-${gender}`} className="sr-only" />
-                                            <span className="text-3xl">{emojis[index]}</span>
+                        <p className="text-sm text-muted-foreground text-center">Cette information nous aide à personnaliser votre expérience.</p>
+                         <AnimatePresence>
+                            <motion.div
+                                key="gender-cards"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="grid grid-cols-3 gap-4 pt-4"
+                            >
+                                {['Masculin', 'Féminin', 'Autre'].map((gender, index) => {
+                                    const emojis = ['👨', '👩', '👤'];
+                                    return (
+                                        <RadioCard key={gender} id={`gender-${gender}`} value={gender} selectedValue={formData.gender} onSelect={(val) => setFormData(p => ({...p, gender: val}))} className="h-28">
+                                            <span className="text-4xl">{emojis[index]}</span>
                                             <span className="font-medium">{gender}</span>
-                                        </Label>
-                                    </div>
-                                )
-                            })}
-                        </RadioGroup>
+                                        </RadioCard>
+                                    )
+                                })}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 )}
 
 
                 {step === 4 && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Pour vérifier que vous avez l'âge légal.</p>
-                        <div className="grid grid-cols-3 gap-2">
-                            <div>
-                                <Label htmlFor="dob_day">Jour</Label>
-                                 <NumberInputWithControls id="dob_day" placeholder="JJ" value={formData.dob_day} onChange={handleChange} min={1} max={31} onValueChange={(v) => handleDobChange('dob_day', v)} />
+                        <p className="text-sm text-muted-foreground text-center">Pour vérifier que vous avez l'âge légal pour jouer.</p>
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="space-y-1">
+                                <Label htmlFor="dob_day" className="text-xs text-muted-foreground">Jour</Label>
+                                <Input id="dob_day" type="number" placeholder="JJ" value={formData.dob_day} onChange={handleChange} className="bg-background/50 h-16 text-center text-2xl"/>
                             </div>
-                            <div>
-                                <Label htmlFor="dob_month">Mois</Label>
-                                 <NumberInputWithControls id="dob_month" placeholder="MM" value={formData.dob_month} onChange={handleChange} min={1} max={12} onValueChange={(v) => handleDobChange('dob_month', v)} />
+                            <div className="space-y-1">
+                                <Label htmlFor="dob_month" className="text-xs text-muted-foreground">Mois</Label>
+                                <Input id="dob_month" type="number" placeholder="MM" value={formData.dob_month} onChange={handleChange} className="bg-background/50 h-16 text-center text-2xl"/>
                             </div>
-                            <div>
-                                <Label htmlFor="dob_year">Année</Label>
-                                <NumberInputWithControls id="dob_year" placeholder="AAAA" value={formData.dob_year} onChange={handleChange} min={new Date().getFullYear() - 100} max={new Date().getFullYear() - 18} onValueChange={(v) => handleDobChange('dob_year', v)} />
+                            <div className="space-y-1">
+                                <Label htmlFor="dob_year" className="text-xs text-muted-foreground">Année</Label>
+                                <Input id="dob_year" type="number" placeholder="AAAA" value={formData.dob_year} onChange={handleChange} className="bg-background/50 h-16 text-center text-2xl"/>
                             </div>
                         </div>
                     </div>
@@ -779,10 +745,10 @@ export default function RegisterForm() {
                 
                 {step === 5 && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Choisissez un pseudo unique (code de parrainage).</p>
+                        <p className="text-sm text-muted-foreground text-center">Ce sera votre identifiant unique et votre code de parrainage.</p>
                         <div className="grid gap-2">
                             <Label htmlFor="username">Pseudo</Label>
-                            <Input id="username" value={formData.username} onChange={handleChange} required className="bg-background/50" />
+                            <Input id="username" value={formData.username} onChange={handleChange} required className="bg-background/50 h-12"/>
                             <div className="h-5 mt-1">{renderUsernameFeedback()}</div>
                         </div>
                     </div>
@@ -790,31 +756,15 @@ export default function RegisterForm() {
 
                 {step === 6 && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Êtes-vous un pronostiqueur ? Si oui, entrez votre code promo pour des sites comme 1xBet.</p>
-                        <RadioGroup value={formData.isPronostiqueur} onValueChange={handlePronostiqueurChange} className="grid grid-cols-2 gap-4 pt-4">
-                             <Label htmlFor="pronostiqueur-oui" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="oui" id="pronostiqueur-oui" className="sr-only" />
-                              Oui
-                            </Label>
-                             <Label htmlFor="pronostiqueur-non" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="non" id="pronostiqueur-non" className="sr-only" />
-                              Non
-                            </Label>
-                        </RadioGroup>
+                        <p className="text-sm text-muted-foreground text-center">Si vous êtes pronostiqueur, entrez votre code promo affilié (ex: 1xBet).</p>
+                        <div className="grid grid-cols-2 gap-4 pt-4">
+                            <RadioCard id="pronostiqueur-oui" value="oui" selectedValue={formData.isPronostiqueur} onSelect={(val) => setFormData(p => ({...p, isPronostiqueur: val, pronostiqueurCode: ''}))} className="h-24">Oui</RadioCard>
+                            <RadioCard id="pronostiqueur-non" value="non" selectedValue={formData.isPronostiqueur} onSelect={(val) => setFormData(p => ({...p, isPronostiqueur: val, pronostiqueurCode: ''}))} className="h-24">Non</RadioCard>
+                        </div>
                         {formData.isPronostiqueur === 'oui' && (
-                            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="space-y-4 pt-4">
-                                <div className="relative p-4 border-dashed border-2 border-border">
-                                    <div className="flex items-center gap-4">
-                                        <ShieldCheck className="text-primary h-8 w-8 shrink-0"/>
-                                        <Input 
-                                            id="pronostiqueurCode" 
-                                            value={formData.pronostiqueurCode} 
-                                            onChange={handleChange} 
-                                            placeholder="VOTRE-CODE-PROMO"
-                                            className="text-center tracking-widest font-bold text-lg bg-transparent border-0 h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                        />
-                                    </div>
-                                </div>
+                            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="space-y-2 pt-4">
+                                <Label htmlFor="pronostiqueurCode">Votre Code Promo</Label>
+                                <Input id="pronostiqueurCode" value={formData.pronostiqueurCode} onChange={handleChange} placeholder="VOTRE-CODE" className="bg-background/50 h-12 text-center tracking-widest font-bold"/>
                             </motion.div>
                         )}
                     </div>
@@ -823,42 +773,17 @@ export default function RegisterForm() {
                 {step === 7 && (
                     <div className="space-y-4">
                         <p className="text-sm text-muted-foreground text-center">Quel est votre type de jeu de pari favori ?</p>
-                        <RadioGroup value={formData.favoriteGame} onValueChange={handleGameSelect} className="grid grid-cols-2 gap-4 pt-4">
-                            <div className="group relative">
-                                <Label htmlFor="game-aviator" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
-                                    <RadioGroupItem value="aviator" id="game-aviator" className="sr-only" />
-                                    <AviatorLogo />
-                                    <span>Aviator</span>
-                                </Label>
-                            </div>
-                            <div className="group relative">
-                                <Label htmlFor="game-luckyjet" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
-                                    <RadioGroupItem value="luckyjet" id="game-luckyjet" className="sr-only" />
-                                    <LuckyJetLogo />
-                                    <span>Lucky Jet</span>
-                                </Label>
-                            </div>
-                            <div className="group relative">
-                                <Label htmlFor="game-paris-sportifs" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
-                                    <RadioGroupItem value="paris-sportifs" id="game-paris-sportifs" className="sr-only" />
-                                    <span className="text-2xl">⚽</span>
-                                    <span>Paris Sportifs</span>
-                                </Label>
-                            </div>
-                            <div className="group relative">
-                                <Label htmlFor="game-autre" className="transition-all bg-card/50 flex items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
-                                    <RadioGroupItem value="autre" id="game-autre" className="sr-only" />
-                                    <Gamepad2 />
-                                    <span>Autre</span>
-                                </Label>
-                            </div>
-                        </RadioGroup>
+                        <div className="grid grid-cols-2 gap-4 pt-4">
+                            <RadioCard id="game-aviator" value="aviator" selectedValue={formData.favoriteGame} onSelect={(val) => setFormData(p => ({...p, favoriteGame: val}))} className="h-24"><AviatorLogo /><span className="font-semibold">Aviator</span></RadioCard>
+                            <RadioCard id="game-luckyjet" value="luckyjet" selectedValue={formData.favoriteGame} onSelect={(val) => setFormData(p => ({...p, favoriteGame: val}))} className="h-24"><LuckyJetLogo /><span className="font-semibold">Lucky Jet</span></RadioCard>
+                            <RadioCard id="game-paris-sportifs" value="paris-sportifs" selectedValue={formData.favoriteGame} onSelect={(val) => setFormData(p => ({...p, favoriteGame: val}))} className="h-24"><span className="text-4xl">⚽</span><span className="font-semibold">Paris Sportifs</span></RadioCard>
+                            <RadioCard id="game-autre" value="autre" selectedValue={formData.favoriteGame} onSelect={(val) => setFormData(p => ({...p, favoriteGame: val, otherFavoriteGame: ''}))} className="h-24"><Gamepad2 size={32}/><span className="font-semibold">Autre</span></RadioCard>
+                        </div>
 
                         {formData.favoriteGame === 'autre' && (
-                           <motion.div initial={{opacity: 0, height: 0}} animate={{opacity: 1, height: 'auto'}} className="relative pt-4 overflow-hidden">
-                                <Label htmlFor="otherFavoriteGame" className="sr-only">Nom du jeu</Label>
-                                <Gamepad2 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-primary pointer-events-none mt-2" />
-                                <Input id="otherFavoriteGame" value={formData.otherFavoriteGame} onChange={handleChange} placeholder="Nom du jeu..." className="pl-10 bg-background/50"/>
+                           <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="relative pt-4 overflow-hidden">
+                                <Label htmlFor="otherFavoriteGame">Nom du jeu</Label>
+                                <Input id="otherFavoriteGame" value={formData.otherFavoriteGame} onChange={handleChange} placeholder="Ex: Rocket Queen" className="bg-background/50 h-12"/>
                             </motion.div>
                         )}
                     </div>
@@ -867,21 +792,15 @@ export default function RegisterForm() {
 
                 {step === 8 && !refCodeFromUrl && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Avez-vous un code de parrainage ?</p>
-                        <RadioGroup value={formData.hasReferralCode} onValueChange={handleReferralChange} className="grid grid-cols-2 gap-4 pt-4">
-                             <Label htmlFor="referral-oui" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="oui" id="referral-oui" className="sr-only" />
-                              Oui
-                            </Label>
-                             <Label htmlFor="referral-non" className="p-4 bg-card/50 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="non" id="referral-non" className="sr-only" />
-                              Non
-                            </Label>
-                        </RadioGroup>
+                        <p className="text-sm text-muted-foreground text-center">Si un ami vous a invité, entrez son pseudo ici.</p>
+                         <div className="grid grid-cols-2 gap-4 pt-4">
+                            <RadioCard id="referral-oui" value="oui" selectedValue={formData.hasReferralCode} onSelect={(val) => setFormData(p => ({...p, hasReferralCode: val, referralCode: ''}))} className="h-24">Oui</RadioCard>
+                            <RadioCard id="referral-non" value="non" selectedValue={formData.hasReferralCode} onSelect={(val) => setFormData(p => ({...p, hasReferralCode: val, referralCode: ''}))} className="h-24">Non</RadioCard>
+                        </div>
                         {formData.hasReferralCode === 'oui' && (
-                            <motion.div initial={{opacity: 0, height: 0}} animate={{opacity: 1, height: 'auto'}} className="grid gap-2 overflow-hidden">
-                                <Label htmlFor="referralCode">Code de parrainage</Label>
-                                <Input id="referralCode" value={formData.referralCode} onChange={handleChange} className="bg-background/50"/>
+                            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="space-y-2 pt-4 overflow-hidden">
+                                <Label htmlFor="referralCode">Pseudo du parrain</Label>
+                                <Input id="referralCode" value={formData.referralCode} onChange={handleChange} className="bg-background/50 h-12"/>
                                 <div className="h-5 mt-1">{renderReferralCodeFeedback()}</div>
                             </motion.div>
                         )}
@@ -890,12 +809,12 @@ export default function RegisterForm() {
 
                 {step === 9 && (
                   <div className="space-y-4">
-                    <p className="text-sm text-muted-foreground text-center">Veuillez lire et accepter nos conditions.</p>
-                    <div className="flex items-start space-x-3 p-4 bg-card/50 border rounded-md">
-                      <Checkbox id="cguAccepted" checked={formData.cguAccepted} onCheckedChange={handleCguCheckedChange} className="mt-1" />
+                    <p className="text-sm text-muted-foreground text-center">Dernière étape avant de décoller.</p>
+                    <div className="flex items-start space-x-3 p-4 bg-card/50 border rounded-md mt-4">
+                      <Checkbox id="cguAccepted" checked={formData.cguAccepted} onCheckedChange={(checked) => setFormData(p => ({...p, cguAccepted: !!checked}))} className="mt-1" />
                       <div className="grid gap-1.5 leading-none">
                         <Label htmlFor="cguAccepted" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                          J'accepte les conditions
+                          J'accepte les conditions générales
                         </Label>
                         <p className="text-sm text-muted-foreground">
                           Vous acceptez nos <Link href="/legal/cgu" className="underline text-primary" target="_blank">Conditions d'utilisation</Link> et <Link href="/legal/confidentialite" className="underline text-primary" target="_blank">Politique de confidentialité</Link>.
@@ -915,7 +834,7 @@ export default function RegisterForm() {
                             <PartyPopper className="w-20 h-20 text-green-500" />
                         </motion.div>
                         <div className="space-y-2">
-                            <h1 className="text-2xl font-semibold leading-none tracking-tight">Inscription Réussie ! 🎉</h1>
+                            <h1 className="text-2xl font-semibold leading-none tracking-tight">Inscription Réussie !</h1>
                             <p className="text-muted-foreground">Un email de vérification a été envoyé à <strong className="text-primary">{formData.email}</strong>.</p>
                         </div>
                         <p className="text-center text-muted-foreground">Consultez votre boîte mail (et vos spams) pour valider votre compte.</p>
@@ -924,44 +843,30 @@ export default function RegisterForm() {
                         </Button>
                     </div>
                 )}
-            </motion.div>
-        </AnimatePresence>
+                </motion.div>
+            </AnimatePresence>
+        </div>
       </main>
 
        {step > 0 && step <= finalTotalSteps && (
-        <footer className="w-full max-w-sm z-10 space-y-4">
+        <footer className="w-full max-w-sm z-10 space-y-4 pt-4">
             <div className="flex w-full items-center gap-4">
-                <Button id="prev-step-button" variant="outline" onClick={handlePrevStep} className="w-full bg-card/50">
+                <Button variant="outline" onClick={handlePrevStep} className="w-full bg-card/50 h-12">
+                    <ArrowLeft className="mr-2 h-4 w-4" />
                     Précédent
                 </Button>
                 {step === finalTotalSteps ? (
-                    <Button id="next-step-button" onClick={handleRegister} className="w-full" disabled={!isStepValid || isLoading}>
+                    <Button onClick={handleRegister} className="w-full h-12" disabled={!isStepValid || isLoading}>
                         {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Créer mon compte'}
                     </Button>
                 ) : (
-                    <Button id="next-step-button" onClick={handleNextStep} className="w-full" disabled={!isStepValid || isLoading || isCheckingUsername || isCheckingPromo}>
+                    <Button onClick={handleNextStep} className="w-full h-12" disabled={!isStepValid || isLoading || isCheckingUsername || isCheckingPromo}>
                         {(isLoading || isCheckingUsername || isCheckingPromo) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                         Suivant <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                 )}
             </div>
-             <div className="text-center text-sm text-muted-foreground">
-              Vous avez déjà un compte ?{' '}
-              <Link href="/login" className="underline text-primary">
-                Se connecter
-              </Link>
-            </div>
         </footer>
-      )}
-      {step === 0 && (
-         <footer className="w-full max-w-sm z-10 space-y-4">
-             <div className="text-center text-sm text-muted-foreground">
-              Vous avez déjà un compte ?{' '}
-              <Link href="/login" className="underline text-primary">
-                Se connecter
-              </Link>
-            </div>
-         </footer>
       )}
     </div>
   );
