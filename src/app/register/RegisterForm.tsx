@@ -63,7 +63,21 @@ const GoogleIcon = (props: any) => (
 export default function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const refCodeFromUrl = searchParams.get('ref');
+  const [refCodeFromUrl, setRefCodeFromUrl] = useState('');
+
+  useEffect(() => {
+    const ref = searchParams.get('ref');
+    if (ref) {
+      setRefCodeFromUrl(ref);
+      // Automatically set formData for referral
+      setFormData(prev => ({
+        ...prev,
+        hasReferralCode: 'oui',
+        referralCode: ref,
+      }));
+      setReferralCodeStatus('valid');
+    }
+  }, [searchParams]);
 
   const [step, setStep] = useState(0); // 0 is initial choice
   const [showPassword, setShowPassword] = useState(false);
@@ -82,8 +96,8 @@ export default function RegisterForm() {
     pronostiqueurCode: '',
     favoriteGame: '',
     otherFavoriteGame: '',
-    hasReferralCode: refCodeFromUrl ? 'oui' : '',
-    referralCode: refCodeFromUrl || '',
+    hasReferralCode: '',
+    referralCode: '',
     cguAccepted: false,
   });
 
@@ -97,7 +111,7 @@ export default function RegisterForm() {
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid' | 'taken'>('idle');
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   
-  const [referralCodeStatus, setReferralCodeStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>(refCodeFromUrl ? 'valid' : 'idle');
+  const [referralCodeStatus, setReferralCodeStatus] = useState<'idle' | 'checking' | 'valid' | 'invalid'>('idle');
   const [isCheckingPromo, setIsCheckingPromo] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
