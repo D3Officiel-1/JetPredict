@@ -487,7 +487,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
     ctx.scale(dpr, dpr);
 
     const now = new Date();
-    const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+    const timeString = now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     
     const primaryColor = 'hsl(195, 100%, 50%)';
     const fgColor = 'hsl(240, 27%, 93%)';
@@ -610,7 +610,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
         }
     });
 
-  }, [prediction, currentTime]);
+  }, [prediction]);
 
   const handlePictureInPicture = useCallback(async (options?: { autoTriggered?: boolean }) => {
     try {
@@ -923,10 +923,13 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 md:gap-8">
            <Card className="relative flex flex-col bg-card/50 border-border/30 backdrop-blur-md">
                 <CardHeader className="flex flex-row items-center justify-between p-4 sm:p-6">
-                    <CardTitle className="flex items-center gap-2 font-bold text-lg">
-                        <Target className="h-5 w-5 text-primary" />
-                        Prochaines Prédictions
-                    </CardTitle>
+                    <div className="space-y-1">
+                        <CardTitle className="flex items-center gap-2 font-bold text-lg">
+                            <Target className="h-5 w-5 text-primary" />
+                            Prochaines Prédictions
+                        </CardTitle>
+                        <p className="font-mono text-xs text-muted-foreground">{currentTime.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}</p>
+                    </div>
                     {prediction?.predictions && prediction.predictions.length > 0 && (
                         <div className="flex items-center gap-1 sm:gap-2">
                             <TooltipProvider>
@@ -1122,10 +1125,19 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                                 <div className="absolute inset-x-0 bottom-0 h-[30%] bg-gradient-to-t from-primary/10 to-transparent -z-10"></div>
                                 <div className="absolute inset-0 border-[6px] border-primary/20 rounded-2xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '3s' }}></div>
 
-                                <div>
-                                    <p className="text-muted-foreground mb-1">Prédiction pour</p>
-                                    <div className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
-                                        <h2 className="text-2xl sm:text-4xl font-bold text-primary font-code">{fullScreenPredictionData.time}</h2>
+                                <div className="flex flex-col sm:flex-row items-center gap-4">
+                                    <div className="flex flex-col items-center">
+                                        <p className="text-muted-foreground mb-1">Prédiction pour</p>
+                                        <div className="inline-block px-4 py-1.5 bg-primary/10 border border-primary/20 rounded-full">
+                                            <h2 className="text-2xl sm:text-4xl font-bold text-primary font-code">{fullScreenPredictionData.time}</h2>
+                                        </div>
+                                    </div>
+                                    <div className="hidden sm:block h-12 w-px bg-border"></div>
+                                    <div className="flex flex-col items-center">
+                                        <p className="text-muted-foreground mb-1">Heure Actuelle</p>
+                                        <div className="inline-block px-4 py-1.5 bg-muted/50 border border-border/50 rounded-full">
+                                            <h2 className="text-2xl sm:text-4xl font-bold text-foreground font-code">{currentTime.toLocaleTimeString('fr-FR')}</h2>
+                                        </div>
                                     </div>
                                 </div>
                                 
