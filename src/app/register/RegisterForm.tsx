@@ -82,14 +82,18 @@ const RadioCard = ({ id, value, children, selectedValue, onSelect, className }: 
 export default function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [refCodeFromUrl, setRefCodeFromUrl] = useState('');
   
   const [direction, setDirection] = useState(0);
+  const [step, setStep] = useState(0);
+
+  const [refCodeFromUrl, setRefCodeFromUrl] = useState('');
+  const [finalTotalSteps, setFinalTotalSteps] = useState(TOTAL_STEPS_BASE);
 
   useEffect(() => {
     const ref = searchParams.get('ref');
     if (ref) {
       setRefCodeFromUrl(ref);
+      setFinalTotalSteps(TOTAL_STEPS_BASE - 1);
       setFormData(prev => ({
         ...prev,
         hasReferralCode: 'oui',
@@ -99,7 +103,6 @@ export default function RegisterForm() {
     }
   }, [searchParams]);
 
-  const [step, setStep] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -138,8 +141,6 @@ export default function RegisterForm() {
   const { toast } = useToast();
   const auth = getAuth(app);
   
-  const finalTotalSteps = useMemo(() => refCodeFromUrl ? TOTAL_STEPS_BASE - 1 : TOTAL_STEPS_BASE, [refCodeFromUrl]);
-
   const isStepValid = useMemo(() => {
     switch (step) {
       case 1:
