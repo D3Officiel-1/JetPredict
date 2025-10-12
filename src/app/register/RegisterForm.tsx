@@ -22,16 +22,19 @@ const TOTAL_STEPS_BASE = 9;
 
 const stepVariants = {
   enter: (direction: number) => ({
-    x: direction > 0 ? 100 : -100,
-    opacity: 0
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+    scale: 0.95,
   }),
   center: {
     x: 0,
-    opacity: 1
+    opacity: 1,
+    scale: 1,
   },
   exit: (direction: number) => ({
-    x: direction < 0 ? 100 : -100,
-    opacity: 0
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0,
+    scale: 0.95,
   })
 };
 
@@ -47,12 +50,31 @@ const GoogleIcon = (props: any) => (
 const RadioCard = ({ id, value, children, selectedValue, onSelect, className }: { id: string, value: string, children: React.ReactNode, selectedValue: string, onSelect: (value: string) => void, className?: string }) => {
     const isSelected = selectedValue === value;
     return (
-        <div className="relative" onClick={() => onSelect(value)}>
-            {isSelected && <motion.div layoutId="radio-card-border" className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary via-cyan-400 to-primary blur opacity-75" />}
-            <div className={cn("relative h-full flex flex-col items-center justify-center gap-2 p-4 border-2 rounded-lg cursor-pointer transition-all", isSelected ? 'bg-card border-primary' : 'bg-card/50 border-border hover:border-primary/50', className)}>
+        <motion.div 
+            className="relative" 
+            onClick={() => onSelect(value)}
+            whileHover={{ y: -5, scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+        >
+            <AnimatePresence>
+                {isSelected && (
+                    <motion.div 
+                        layoutId="radio-card-border" 
+                        className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary via-cyan-400 to-primary blur-sm opacity-75"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.75 }}
+                        exit={{ opacity: 0 }}
+                    />
+                )}
+            </AnimatePresence>
+            <div className={cn(
+                "relative h-full flex flex-col items-center justify-center gap-2 p-4 border-2 rounded-lg cursor-pointer transition-all duration-300",
+                isSelected ? 'bg-card border-primary shadow-lg shadow-primary/20' : 'bg-card/50 border-border hover:border-primary/50',
+                className
+            )}>
                 {children}
             </div>
-        </div>
+        </motion.div>
     );
 };
 
@@ -68,7 +90,6 @@ export default function RegisterForm() {
     const ref = searchParams.get('ref');
     if (ref) {
       setRefCodeFromUrl(ref);
-      // Automatically set formData for referral
       setFormData(prev => ({
         ...prev,
         hasReferralCode: 'oui',
@@ -78,7 +99,7 @@ export default function RegisterForm() {
     }
   }, [searchParams]);
 
-  const [step, setStep] = useState(0); // 0 is initial choice
+  const [step, setStep] = useState(0);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -287,10 +308,10 @@ export default function RegisterForm() {
 
         let nextStep = step + 1;
         if (refCodeFromUrl && step === 7) {
-            nextStep = 9; // Skip referral code step (8) if ref is in URL
+            nextStep = 9; 
         }
 
-        setDirection(1); // Set direction for animation
+        setDirection(1); 
         if (isStepValid && step < finalTotalSteps) {
             setStep(nextStep);
         } else if (step === finalTotalSteps) {
@@ -301,10 +322,10 @@ export default function RegisterForm() {
     const handlePrevStep = useCallback(() => {
         let prevStep = step - 1;
         if (refCodeFromUrl && step === 9) {
-            prevStep = 7; // Skip back over referral step
+            prevStep = 7;
         }
         
-        setDirection(-1); // Set direction for animation
+        setDirection(-1);
         if (step > 1) {
             setStep(prevStep);
         } else if (step === 1) {
@@ -437,7 +458,7 @@ export default function RegisterForm() {
                 createdAt: serverTimestamp(),
                 isOnline: true,
                 solde_referral: 0,
-                referralCode: refCodeFromUrl, // Add referral code from URL
+                referralCode: refCodeFromUrl, 
             });
             await setDoc(doc(db, "users", user.uid, "pricing", "jetpredict"), {
                 actif_jetpredict: false,
