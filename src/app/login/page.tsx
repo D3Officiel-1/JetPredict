@@ -12,7 +12,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Loader2, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const containerVariants = {
@@ -53,6 +53,14 @@ export default function LoginPage() {
   const { toast } = useToast();
   const router = useRouter();
   const auth = getAuth(app);
+  const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    const chatId = searchParams.get('chatId');
+    if (chatId) {
+      localStorage.setItem('telegramChatId', chatId);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -75,6 +83,16 @@ export default function LoginPage() {
 
   const handleSuccessfulLogin = async (user: any, isNewUser: boolean = false) => {
       const userDocRef = doc(db, "users", user.uid);
+      const chatId = localStorage.getItem('telegramChatId');
+      
+      const updateData: { isOnline: boolean; photoURL: string; telegramChatId?: string } = {
+        isOnline: true,
+        photoURL: user.photoURL,
+      };
+
+      if (chatId) {
+          updateData.telegramChatId = chatId;
+      }
       
       if (isNewUser) {
           const [firstName, ...lastName] = (user.displayName || '').split(' ');
@@ -88,6 +106,7 @@ export default function LoginPage() {
               createdAt: serverTimestamp(),
               isOnline: true,
               solde_referral: 0,
+              telegramChatId: chatId || null,
           });
 
           const pricingDocRef = doc(db, "users", user.uid, "pricing", "jetpredict");
@@ -97,7 +116,7 @@ export default function LoginPage() {
               startdate: null,
               findate: null,
           });
-          
+          if (chatId) localStorage.removeItem('telegramChatId');
           router.push('/register/google');
 
       } else { // Existing user
@@ -112,11 +131,12 @@ export default function LoginPage() {
               setIsLoading(false);
               return;
           }
-          await updateDoc(userDocRef, { isOnline: true, photoURL: user.photoURL });
+          await updateDoc(userDocRef, updateData);
           toast({
             variant: 'success',
             title: 'Connexion réussie',
           });
+          if (chatId) localStorage.removeItem('telegramChatId');
           router.push('/predict');
       }
   };
