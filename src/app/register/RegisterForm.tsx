@@ -602,7 +602,7 @@ useEffect(() => {
           </div>
         )}
 
-        <div className="relative overflow-hidden w-full h-[550px]">
+        <div className="relative overflow-hidden w-full flex-1 flex items-center">
             <AnimatePresence initial={false} custom={direction}>
                 <motion.div
                     key={step}
@@ -617,6 +617,7 @@ useEffect(() => {
                     }}
                     className="absolute w-full"
                 >
+                <div className="min-h-[450px]">
                 {step === 0 && (
                     <div className="text-center">
                          <motion.div 
@@ -864,6 +865,7 @@ useEffect(() => {
                         </Button>
                     </div>
                 )}
+                </div>
                 </motion.div>
             </AnimatePresence>
         </div>
