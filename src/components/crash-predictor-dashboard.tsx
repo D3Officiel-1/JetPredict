@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import { useState, useEffect, useTransition, useMemo, Fragment, useRef, useCallback } from "react";
@@ -854,7 +853,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
                         {level.icon}
                       </div>
                       <h4 className="font-bold text-foreground">{level.name}</h4>
-                      <p className="text-xs text-muted-foreground">{level.description}</p>
+                      <p className="text-xs text-muted-foreground hidden lg:block">{level.description}</p>
                       {!isAllowed && (
                           <div className="absolute top-2 right-2 flex items-center justify-center bg-background/80 rounded-full p-1.5 border border-border">
                             <Lock className="h-4 w-4 text-yellow-400" />
