@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { doc, getDoc, updateDoc, query, collection, where, getDocs, setDoc, serverTimestamp } from "firebase/firestore";
 import { app, db } from '@/lib/firebase';
@@ -41,14 +41,11 @@ const loadingTexts = [
     "SYNCHRONISATION TERMINÉE.",
 ];
 
-
-export default function LoginPage() {
+function LoginContent() {
   const [loginIdentifier, setLoginIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
-  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
   
   const { toast } = useToast();
   const router = useRouter();
@@ -62,30 +59,11 @@ export default function LoginPage() {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        router.push('/predict');
-      } else {
-        setTimeout(() => setIsCheckingAuth(false), 3000);
-      }
-    });
-
-    const textInterval = setInterval(() => {
-        setLoadingTextIndex(prev => (prev < loadingTexts.length - 1 ? prev + 1 : prev));
-    }, 500);
-
-    return () => {
-        unsubscribe();
-        clearInterval(textInterval);
-    };
-  }, [auth, router]);
-
   const handleSuccessfulLogin = async (user: any, isNewUser: boolean = false) => {
       const userDocRef = doc(db, "users", user.uid);
       const chatId = localStorage.getItem('telegramChatId');
       
-      const updateData: { isOnline: boolean; photoURL: string; telegramChatId?: string } = {
+      const updateData: { isOnline: boolean; photoURL?: string | null; telegramChatId?: string } = {
         isOnline: true,
         photoURL: user.photoURL,
       };
@@ -218,62 +196,6 @@ export default function LoginPage() {
       setIsLoading(false);
     }
   };
-
-  if (isCheckingAuth) {
-    return (
-      <motion.div 
-          className="flex h-screen w-full flex-col items-center justify-center bg-background text-foreground"
-          initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-      >
-        <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side,hsl(var(--background)),transparent)]"></div>
-
-        <motion.div 
-          className="relative w-32 h-32 mb-8"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }}
-        >
-          <motion.div 
-            className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-          />
-          <motion.div 
-            className="absolute inset-2 rounded-full border-2 border-primary/30"
-            animate={{ rotate: -360 }}
-            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
-          />
-          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="w-full h-full object-contain" priority />
-        </motion.div>
-
-        <div className="relative w-64 h-2 bg-muted/50 rounded-full overflow-hidden">
-          <motion.div 
-            className="absolute top-0 left-0 h-full bg-primary"
-            initial={{ width: '0%' }}
-            animate={{ width: '100%' }}
-            transition={{ duration: 2.5, ease: 'easeInOut' }}
-          />
-        </div>
-
-        <div className="h-6 mt-4">
-            <AnimatePresence mode="wait">
-                <motion.p
-                    key={loadingTextIndex}
-                    className="font-code text-sm text-primary tracking-widest"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                >
-                    {loadingTexts[loadingTextIndex]}
-                </motion.p>
-            </AnimatePresence>
-        </div>
-      </motion.div>
-    );
-  }
 
   return (
     <div className="relative flex flex-col lg:flex-row items-center justify-center min-h-screen bg-background text-foreground overflow-hidden">
@@ -419,5 +341,93 @@ export default function LoginPage() {
            </div>
        </div>
     </div>
+  )
+}
+
+export default function LoginPage() {
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+  const [loadingTextIndex, setLoadingTextIndex] = useState(0);
+  const router = useRouter();
+  const auth = getAuth(app);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push('/predict');
+      } else {
+        setTimeout(() => setIsCheckingAuth(false), 3000);
+      }
+    });
+
+    const textInterval = setInterval(() => {
+        setLoadingTextIndex(prev => (prev < loadingTexts.length - 1 ? prev + 1 : prev));
+    }, 500);
+
+    return () => {
+        unsubscribe();
+        clearInterval(textInterval);
+    };
+  }, [auth, router]);
+
+  if (isCheckingAuth) {
+    return (
+      <motion.div 
+          className="flex h-screen w-full flex-col items-center justify-center bg-background text-foreground"
+          initial={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-10 dark:opacity-5"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_farthest-side,hsl(var(--background)),transparent)]"></div>
+
+        <motion.div 
+          className="relative w-32 h-32 mb-8"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1, transition: { duration: 0.5, delay: 0.2 } }}
+        >
+          <motion.div 
+            className="absolute inset-0 rounded-full border-2 border-dashed border-primary/50"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
+          />
+          <motion.div 
+            className="absolute inset-2 rounded-full border-2 border-primary/30"
+            animate={{ rotate: -360 }}
+            transition={{ duration: 15, repeat: Infinity, ease: 'linear' }}
+          />
+          <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="w-full h-full object-contain" priority />
+        </motion.div>
+
+        <div className="relative w-64 h-2 bg-muted/50 rounded-full overflow-hidden">
+          <motion.div 
+            className="absolute top-0 left-0 h-full bg-primary"
+            initial={{ width: '0%' }}
+            animate={{ width: '100%' }}
+            transition={{ duration: 2.5, ease: 'easeInOut' }}
+          />
+        </div>
+
+        <div className="h-6 mt-4">
+            <AnimatePresence mode="wait">
+                <motion.p
+                    key={loadingTextIndex}
+                    className="font-code text-sm text-primary tracking-widest"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                >
+                    {loadingTexts[loadingTextIndex]}
+                </motion.p>
+            </AnimatePresence>
+        </div>
+      </motion.div>
+    );
+  }
+
+  return (
+    <Suspense fallback={<div className="flex h-screen w-full items-center justify-center"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>}>
+      <LoginContent />
+    </Suspense>
   );
 }
