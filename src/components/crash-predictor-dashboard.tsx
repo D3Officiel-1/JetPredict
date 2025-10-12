@@ -612,25 +612,29 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
   }, [prediction, currentTime]);
 
-  const handlePictureInPicture = async () => {
+  const handlePictureInPicture = useCallback(async (options?: { autoTriggered?: boolean }) => {
     try {
-        const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/05/23/audio_f09f975ac4.mp3?filename=prop_popup-345986.mp3');
-        audio.volume = 0.2;
-        audio.play();
-        if (navigator.vibrate) {
-            navigator.vibrate(50);
+        if (!options?.autoTriggered) {
+             const audio = new Audio('https://cdn.pixabay.com/download/audio/2025/05/23/audio_f09f975ac4.mp3?filename=prop_popup-345986.mp3');
+            audio.volume = 0.2;
+            audio.play();
+            if (navigator.vibrate) {
+                navigator.vibrate(50);
+            }
         }
     } catch (e) {
         console.error("Failed to play sound or vibrate:", e);
     }
 
     if (!canAccessPremiumFeatures) {
-        toast({
-            variant: "destructive",
-            title: "Accès Premium Requis",
-            description: "Passez au forfait Semaine ou Mois pour utiliser la superposition.",
-        });
-        router.push('/pricing');
+        if (!options?.autoTriggered) {
+             toast({
+                variant: "destructive",
+                title: "Accès Premium Requis",
+                description: "Passez au forfait Semaine ou Mois pour utiliser la superposition.",
+            });
+            router.push('/pricing');
+        }
         return;
     }
     
@@ -662,7 +666,27 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
 
     if (pipCanvasInterval) clearInterval(pipCanvasInterval);
     pipCanvasInterval = setInterval(drawPipCanvas, 1000);
-  };
+  }, [canAccessPremiumFeatures, drawPipCanvas, router, toast]);
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'hidden') {
+                const autoPipSettings = localStorage.getItem('autoPipSettings');
+                const isEnabled = autoPipSettings ? JSON.parse(autoPipSettings).enabled : true;
+
+                if (isEnabled && canAccessPremiumFeatures && prediction?.predictions && prediction.predictions.length > 0) {
+                    handlePictureInPicture({ autoTriggered: true });
+                }
+            } else if (document.visibilityState === 'visible' && document.pictureInPictureElement) {
+                 document.exitPictureInPicture();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+    }, [canAccessPremiumFeatures, prediction, handlePictureInPicture]);
 
 
   const handlePredictionClick = (p: SinglePrediction) => {
@@ -811,7 +835,7 @@ CODE PROMO ${userData.pronostiqueurCode} 🎁\n\n`;
       variant="outline"
       size="sm"
       className="h-8 px-2 sm:px-3"
-      onClick={handlePictureInPicture}
+      onClick={() => handlePictureInPicture()}
       disabled={!canAccessPremiumFeatures}
       disableSound={true}
     >

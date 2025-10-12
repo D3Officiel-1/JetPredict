@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { ArrowLeft, KeyRound, Mail, Trash2, LogOut, Palette, Loader2, ShieldAlert, Eye, EyeOff, Download, Bell, Vibrate, Music, Sun, Moon, Laptop, MoreVertical, Share2, Smartphone, MonitorDown, CheckCircle, AppWindow, Compass } from 'lucide-react';
+import { ArrowLeft, KeyRound, Mail, Trash2, LogOut, Palette, Loader2, ShieldAlert, Eye, EyeOff, Download, Bell, Vibrate, Music, Sun, Moon, Laptop, MoreVertical, Share2, Smartphone, MonitorDown, CheckCircle, AppWindow, Compass, PictureInPicture } from 'lucide-react';
 import Link from 'next/link';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -24,6 +24,7 @@ import { Switch } from '@/components/ui/switch';
 import Header from '@/components/ui/sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
+import type { PlanId } from '@/types';
 
 const SettingItem = ({ icon, title, description, action, disabled = false }: { icon: React.ReactNode, title: string, description: string, action: React.ReactNode, disabled?: boolean }) => (
   <div className={cn(
@@ -80,6 +81,7 @@ const loadingTexts = [
 
 export default function SettingsPage() {
   const [user, setUser] = useState<User | null>(null);
+  const [planId, setPlanId] = useState<PlanId | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState<'email' | 'password' | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -98,6 +100,7 @@ export default function SettingsPage() {
   });
 
   const [isFabEnabled, setIsFabEnabled] = useState(true);
+  const [isAutoPipEnabled, setIsAutoPipEnabled] = useState(true);
 
   const { theme, setTheme } = useTheme();
 
@@ -184,7 +187,14 @@ export default function SettingsPage() {
                  setIsFabEnabled(!parsedState.isDisabled);
             }
         }
-    } catch(e) { console.error("Failed to parse FAB state from localStorage", e); }
+        const autoPipSettingsRaw = localStorage.getItem('autoPipSettings');
+        if (autoPipSettingsRaw) {
+            const parsedState = JSON.parse(autoPipSettingsRaw);
+            if (typeof parsedState.enabled === 'boolean') {
+                setIsAutoPipEnabled(parsedState.enabled);
+            }
+        }
+    } catch(e) { console.error("Failed to parse settings from localStorage", e); }
 
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       if (!currentUser) {
@@ -213,6 +223,7 @@ export default function SettingsPage() {
       const unsubscribePricing = onSnapshot(pricingDocRef, async (pricingDoc) => {
         if (pricingDoc.exists()) {
             const pricingData = pricingDoc.data();
+            setPlanId(pricingData.idplan_jetpredict);
             const isStillActive = pricingData.actif_jetpredict === true;
             const expirationDate = pricingData.findate?.toDate();
 
@@ -265,6 +276,15 @@ export default function SettingsPage() {
       } catch(e) {
           console.error("Failed to update FAB state in localStorage", e);
       }
+  };
+
+  const handleAutoPipChange = (enabled: boolean) => {
+    setIsAutoPipEnabled(enabled);
+    try {
+        localStorage.setItem('autoPipSettings', JSON.stringify({ enabled }));
+    } catch(e) {
+        console.error("Failed to update AutoPiP setting in localStorage", e);
+    }
   };
 
   const handleLogout = async () => {
@@ -338,6 +358,7 @@ export default function SettingsPage() {
     }
   }, [isModalOpen])
 
+  const canAccessPremiumFeatures = planId === 'weekly' || planId === 'monthly';
 
   if (isLoading || !user) {
     return (
@@ -480,6 +501,13 @@ export default function SettingsPage() {
                 <CardTitle>Contrôle de l'Interface</CardTitle>
             </CardHeader>
             <CardContent className="p-4 space-y-4">
+                 <SettingItem 
+                    icon={<PictureInPicture size={24} />}
+                    title="Superposition Automatique" 
+                    description="Activer la mini-vue en quittant l'app."
+                    action={<Switch checked={isAutoPipEnabled} onCheckedChange={handleAutoPipChange} />}
+                    disabled={!canAccessPremiumFeatures}
+                />
                 <div>
                      <div className="flex items-center gap-2 ml-1 mb-2">
                         <Label className="text-sm font-semibold text-muted-foreground">Thème de l'Application</Label>
