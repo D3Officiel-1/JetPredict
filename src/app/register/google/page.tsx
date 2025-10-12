@@ -9,49 +9,70 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, ArrowRight, Loader2, PartyPopper, XCircle, CheckCircle, ChevronUp, ChevronDown, ShieldCheck } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { ArrowLeft, ArrowRight, Loader2, XCircle, CheckCircle, ShieldCheck, User as UserIcon, Cake, VenetianMask } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { motion, AnimatePresence } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import Image from 'next/image';
 
 const TOTAL_STEPS = 4;
 
-const NumberInputWithControls = ({ id, placeholder, value, onChange, min, max, onValueChange } : { id: string, placeholder: string, value: string, onChange: (e: React.ChangeEvent<HTMLInputElement>) => void, min: number, max: number, onValueChange: (newValue: number) => void }) => {
-    const handleStep = (step: number) => {
-        const currentValue = parseInt(value, 10) || 0;
-        let newValue = currentValue + step;
-        if (newValue < min) newValue = max;
-        if (newValue > max) newValue = min;
-        onValueChange(newValue);
-    };
-
-    return (
-        <div className="relative">
-            <Input id={id} type="number" placeholder={placeholder} value={value} onChange={onChange} min={min} max={max} />
-            <div className="absolute right-1 top-1/2 -translate-y-1/2 flex flex-col h-full justify-center">
-                <Button type="button" variant="ghost" size="icon" className="h-4 w-4 text-muted-foreground hover:text-foreground" onClick={() => handleStep(1)}>
-                    <ChevronUp className="h-4 w-4" />
-                </Button>
-                <Button type="button" variant="ghost" size="icon" className="h-4 w-4 text-muted-foreground hover:text-foreground" onClick={() => handleStep(-1)}>
-                    <ChevronDown className="h-4 w-4" />
-                </Button>
-            </div>
-        </div>
-    )
+const stepVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+    scale: 0.95,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+    scale: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0,
+    scale: 0.95,
+  })
 };
 
-const stepVariants = {
-  hidden: { opacity: 0, x: 50 },
-  visible: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -50 },
+const RadioCard = ({ id, value, children, selectedValue, onSelect, className }: { id: string, value: string, children: React.ReactNode, selectedValue: string, onSelect: (value: string) => void, className?: string }) => {
+    const isSelected = selectedValue === value;
+    return (
+        <motion.div 
+            className="relative" 
+            onClick={() => onSelect(value)}
+            whileHover={{ y: -5, scale: 1.05 }}
+            transition={{ type: 'spring', stiffness: 300 }}
+        >
+            <AnimatePresence>
+                {isSelected && (
+                    <motion.div 
+                        layoutId="radio-card-border" 
+                        className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-primary via-cyan-400 to-primary blur-sm opacity-75"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.75 }}
+                        exit={{ opacity: 0 }}
+                    />
+                )}
+            </AnimatePresence>
+            <div className={cn(
+                "relative h-full flex flex-col items-center justify-center gap-2 p-4 border-2 rounded-lg cursor-pointer transition-all duration-300",
+                isSelected ? 'bg-card border-primary shadow-lg shadow-primary/20' : 'bg-card/50 border-border hover:border-primary/50',
+                className
+            )}>
+                {children}
+            </div>
+        </motion.div>
+    );
 };
 
 export default function RegisterGooglePage() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isFinishing, setIsFinishing] = useState(false);
   const [step, setStep] = useState(1);
+  const [direction, setDirection] = useState(0);
+
   const [formData, setFormData] = useState({
     gender: '',
     dob_day: '',
@@ -81,7 +102,6 @@ export default function RegisterGooglePage() {
       const userDocSnap = await getDoc(userDocRef);
 
       if (userDocSnap.exists() && userDocSnap.data().gender) {
-          // If gender is set, profile is complete, redirect
           router.push('/predict');
           return;
       }
@@ -94,6 +114,7 @@ export default function RegisterGooglePage() {
   }, [auth, router]);
 
   const handleNextStep = useCallback(() => {
+    setDirection(1);
     if (step < TOTAL_STEPS) {
       setStep(prev => prev + 1);
     }
@@ -135,48 +156,67 @@ export default function RegisterGooglePage() {
     }
   }, [step, formData, referralCodeStatus]);
   
-    useEffect(() => {
-        if (step === 1 && formData.gender && isStepValid) {
-            const timer = setTimeout(() => handleNextStep(), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [formData.gender, step, isStepValid, handleNextStep]);
+  const handleAutoNext = useCallback(() => {
+    if (isStepValid) {
+        const timer = setTimeout(() => handleNextStep(), 300);
+        return () => clearTimeout(timer);
+    }
+  }, [isStepValid, handleNextStep]);
 
     useEffect(() => {
-        if (step === 3 && formData.isPronostiqueur === 'non' && isStepValid) {
-            const timer = setTimeout(() => handleNextStep(), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [formData.isPronostiqueur, step, isStepValid, handleNextStep]);
+        if (step === 1 && formData.gender) handleAutoNext();
+    }, [formData.gender, step, handleAutoNext]);
 
     useEffect(() => {
-        if (step === 4 && formData.hasReferralCode === 'non' && isStepValid) {
-            const timer = setTimeout(() => handleNextStep(), 300);
-            return () => clearTimeout(timer);
-        }
-    }, [formData.hasReferralCode, step, isStepValid, handleNextStep]);
+        if (step === 3 && formData.isPronostiqueur === 'non') handleAutoNext();
+    }, [formData.isPronostiqueur, step, handleAutoNext]);
+
+    useEffect(() => {
+        if (step === 4 && formData.hasReferralCode === 'non') handleAutoNext();
+    }, [formData.hasReferralCode, step, handleAutoNext]);
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData(prev => ({ ...prev, [id]: value }));
   };
-
-  const handleDobChange = (id: 'dob_day' | 'dob_month' | 'dob_year', newValue: number) => {
-    setFormData(prev => ({...prev, [id]: String(newValue)}));
+  
+  const handlePrevStep = () => {
+    setDirection(-1);
+    if (step > 1) {
+      setStep(prev => prev - 1);
+    }
   };
 
-  const handleGenderSelect = (value: string) => {
-    setFormData(p => ({ ...p, gender: value }));
-  };
+  const handleFinish = async () => {
+    if (!isStepValid || !user) {
+      toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
+      return;
+    }
+    setIsFinishing(true);
+    try {
+      const userDocRef = doc(db, "users", user.uid);
+      const birthDate = new Date(parseInt(formData.dob_year), parseInt(formData.dob_month) - 1, parseInt(formData.dob_day));
+      
+      const telegramLinkToken = user.uid + '-' + Date.now();
 
-  const handlePronostiqueurChange = (value: string) => {
-    setFormData(p => ({...p, isPronostiqueur: value, pronostiqueurCode: ''}));
-  };
+      await updateDoc(userDocRef, {
+        gender: formData.gender,
+        dob: birthDate,
+        pronostiqueurCode: formData.pronostiqueurCode,
+        referralCode: formData.referralCode,
+        telegramLinkToken: telegramLinkToken,
+      });
 
-  const handleReferralChange = (value: string) => {
-    setFormData(p => ({...p, hasReferralCode: value, referralCode: ''}));
-    setReferralCodeStatus('idle');
+      toast({ variant: 'success', title: 'Profil complété !' });
+      router.push('/pricing');
+
+    } catch (error) {
+      console.error(error);
+      toast({ variant: 'destructive', title: "Impossible de sauvegarder les informations." });
+    } finally {
+      setIsFinishing(false);
+    }
   };
 
   const checkReferralCode = useCallback(async (code: string) => {
@@ -211,217 +251,201 @@ export default function RegisterGooglePage() {
   }, [formData.referralCode, formData.hasReferralCode, step, checkReferralCode]);
 
 
-  const handleNextStepWithValidation = () => {
-    if (isStepValid) {
-        handleNextStep();
-    } else {
-      toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
-    }
-  };
-
-  const handlePrevStep = () => {
-    if (step > 1) {
-      setStep(prev => prev - 1);
-    }
-  };
-
-  const handleFinish = async () => {
-    if (!isStepValid || !user) {
-      toast({ variant: 'destructive', title: 'Veuillez remplir tous les champs correctement.' });
-      return;
-    }
-    setIsLoading(true);
-    try {
-      const userDocRef = doc(db, "users", user.uid);
-      const birthDate = new Date(parseInt(formData.dob_year), parseInt(formData.dob_month) - 1, parseInt(formData.dob_day));
-      
-      // Generate a unique token for Telegram linking
-      const telegramLinkToken = user.uid + '-' + Date.now();
-
-      await updateDoc(userDocRef, {
-        gender: formData.gender,
-        dob: birthDate,
-        pronostiqueurCode: formData.pronostiqueurCode,
-        referralCode: formData.referralCode,
-        telegramLinkToken: telegramLinkToken,
-      });
-
-      toast({ variant: 'success', title: 'Profil complété !' });
-      router.push('/pricing');
-
-    } catch (error) {
-      console.error(error);
-      toast({ variant: 'destructive', title: "Impossible de sauvegarder les informations." });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const renderReferralCodeFeedback = () => {
-    const status = referralCodeStatus;
-    switch (status) {
-        case 'checking':
-            return <p className="text-sm text-muted-foreground flex items-center"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Vérification...</p>;
-        case 'valid':
-            return <p className="text-sm text-green-500 flex items-center"><CheckCircle className="mr-2 h-4 w-4" /> Code valide !</p>;
-        case 'invalid':
-            return <p className="text-sm text-destructive flex items-center"><XCircle className="mr-2 h-4 w-4" /> Ce code est invalide.</p>;
-        default:
-            return <p className="text-sm text-muted-foreground">Entrez un code de parrainage.</p>;
-    }
-  };
+    const renderReferralCodeFeedback = () => {
+        switch (referralCodeStatus) {
+            case 'checking':
+                return <p className="text-sm text-muted-foreground flex items-center"><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Vérification...</p>;
+            case 'valid':
+                return <p className="text-sm text-green-500 flex items-center"><CheckCircle className="mr-2 h-4 w-4" /> Code valide !</p>;
+            case 'invalid':
+                return <p className="text-sm text-destructive flex items-center"><XCircle className="mr-2 h-4 w-4" /> Ce code est invalide.</p>;
+            default:
+                return <p className="text-sm text-muted-foreground">Entrez un code de parrainage.</p>;
+        }
+    };
+    
+    const StepTitle = ({title, icon}: {title: string, icon: React.ReactNode}) => (
+      <motion.div
+        className="mb-8 text-center"
+        initial={{ y: -20, opacity: 0}}
+        animate={{ y: 0, opacity: 1}}
+        transition={{ delay: 0.2 }}
+      >
+          <div className="flex items-center justify-center gap-3">
+            <div className="p-2 rounded-full bg-primary/10 border border-primary/20 text-primary">{icon}</div>
+            <h1 className="text-3xl font-bold tracking-tight">{title}</h1>
+          </div>
+      </motion.div>
+  )
 
   if (isLoading || !user) {
     return (
       <div className="flex min-h-screen w-full flex-col bg-background items-center justify-center">
-        <Image src="https://1play.gamedev-tech.cc/lucky_grm/assets/media/c544881eb170e73349e4c92d1706a96c.svg" alt="Loading..." width={100} height={100} className="animate-pulse" priority />
+        <Image src="https://i.postimg.cc/jS25XGKL/Capture-d-cran-2025-09-03-191656-4-removebg-preview.png" alt="Loading..." width={100} height={100} className="animate-pulse" priority />
       </div>
     );
   }
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen text-foreground overflow-hidden p-4 sm:p-8">
+    <div className="relative flex flex-col items-center justify-center min-h-screen bg-background text-foreground overflow-hidden p-4 sm:p-8">
       <div className="absolute inset-0 bg-grid-pattern opacity-10 -z-10"></div>
-      <div className="absolute -bottom-2 left-0 right-0 top-0 bg-[radial-gradient(circle_500px_at_50%_200px,#313b5c22,transparent)] -z-10"></div>
-      
-      <header className="w-full max-w-xl flex items-center justify-between z-10">
-         <Button asChild variant="ghost" disabled={true}>
-            <span />
-        </Button>
-      </header>
+       <motion.div 
+            aria-hidden 
+            className="absolute inset-0 -z-10"
+            initial={{ opacity: 0}}
+            animate={{ opacity: 1, transition: { duration: 1 }}}
+        >
+            <div className="absolute inset-0 bg-[radial-gradient(circle_500px_at_50%_30%,hsl(var(--primary)/0.15),transparent)]"></div>
+        </motion.div>
       
       <main className="w-full max-w-sm z-10 flex-1 flex flex-col justify-center">
-        <AnimatePresence mode="wait">
-            <motion.div
-                key={step}
-                variants={stepVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                transition={{ duration: 0.3 }}
-                className="w-full"
-            >
-                <div className="mb-8 text-center">
-                    <p className="text-sm font-semibold text-primary mb-2">Étape {step} sur {TOTAL_STEPS}</p>
-                    <h1 className="text-3xl font-bold tracking-tight">Complétez votre profil</h1>
-                </div>
+        {step <= TOTAL_STEPS && (
+          <div className="w-full mb-8">
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-sm font-semibold text-primary">Étape {step} sur {TOTAL_STEPS}</p>
+                 <span className="text-sm text-muted-foreground">{user.displayName || user.email}</span>
+              </div>
+              <div className="w-full bg-muted/50 rounded-full h-1.5">
+                  <motion.div
+                      className="bg-primary h-1.5 rounded-full"
+                      initial={{ width: '0%' }}
+                      animate={{ width: `${(step / TOTAL_STEPS) * 100}%` }}
+                      transition={{ duration: 0.5, ease: 'easeInOut' }}
+                  />
+              </div>
+          </div>
+        )}
 
+        <div className="relative overflow-hidden w-full flex-1 flex items-center">
+            <AnimatePresence initial={false} custom={direction}>
+                <motion.div
+                    key={step}
+                    custom={direction}
+                    variants={stepVariants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{
+                        x: { type: "spring", stiffness: 300, damping: 30 },
+                        opacity: { duration: 0.2 }
+                    }}
+                    className="absolute w-full"
+                >
+                <div className="min-h-[350px]">
+                {step <= TOTAL_STEPS && (
+                    <div className="p-1">
+                      {step === 1 && <StepTitle title="Votre Genre" icon={<VenetianMask />} />}
+                      {step === 2 && <StepTitle title="Date de Naissance" icon={<Cake />} />}
+                      {step === 3 && <StepTitle title="Code Pronostiqueur" icon={<ShieldCheck />} />}
+                      {step === 4 && <StepTitle title="Parrainage" icon={<UserIcon />} />}
+                  </div>
+                )}
+                
                 {step === 1 && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Veuillez spécifier votre genre.</p>
-                        <RadioGroup value={formData.gender} onValueChange={handleGenderSelect} className="grid grid-cols-3 gap-4 pt-4">
-                            {['Masculin', 'Féminin', 'Autre'].map((gender, index) => {
-                                const emojis = ['👨', '👩', '👤'];
-                                return (
-                                    <div key={gender} className="group relative">
-                                        <Label htmlFor={`gender-${gender}`} className="transition-all flex flex-col items-center justify-center gap-2 p-4 border rounded-lg cursor-pointer has-[:checked]:border-primary has-[:checked]:shadow-lg has-[:checked]:shadow-primary/20 has-[:checked]:bg-card">
-                                            <RadioGroupItem value={gender} id={`gender-${gender}`} className="sr-only" />
-                                            <span className="text-3xl">{emojis[index]}</span>
+                        <p className="text-sm text-muted-foreground text-center">Cette information nous aide à personnaliser votre expérience.</p>
+                         <AnimatePresence>
+                            <motion.div
+                                key="gender-cards"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                className="grid grid-cols-3 gap-4 pt-4"
+                            >
+                                {['Masculin', 'Féminin', 'Autre'].map((gender, index) => {
+                                    const emojis = ['👨', '👩', '👤'];
+                                    return (
+                                        <RadioCard key={gender} id={`gender-${gender}`} value={gender} selectedValue={formData.gender} onSelect={(val) => setFormData(p => ({...p, gender: val}))} className="h-28">
+                                            <span className="text-4xl">{emojis[index]}</span>
                                             <span className="font-medium">{gender}</span>
-                                        </Label>
-                                    </div>
-                                )
-                            })}
-                        </RadioGroup>
+                                        </RadioCard>
+                                    )
+                                })}
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 )}
 
                 {step === 2 && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Pour vérifier que vous avez l'âge légal.</p>
-                        <div className="grid grid-cols-3 gap-2">
-                            <div>
-                                <Label htmlFor="dob_day">Jour</Label>
-                                 <NumberInputWithControls id="dob_day" placeholder="JJ" value={formData.dob_day} onChange={handleChange} min={1} max={31} onValueChange={(v) => handleDobChange('dob_day', v)} />
+                        <p className="text-sm text-muted-foreground text-center">Pour vérifier que vous avez l'âge légal pour jouer.</p>
+                        <div className="grid grid-cols-3 gap-4">
+                            <div className="space-y-1">
+                                <Label htmlFor="dob_day" className="text-xs text-muted-foreground">Jour</Label>
+                                <Input id="dob_day" type="number" placeholder="JJ" value={formData.dob_day} onChange={handleChange} className="bg-background/50 h-16 text-center text-2xl"/>
                             </div>
-                            <div>
-                                <Label htmlFor="dob_month">Mois</Label>
-                                 <NumberInputWithControls id="dob_month" placeholder="MM" value={formData.dob_month} onChange={handleChange} min={1} max={12} onValueChange={(v) => handleDobChange('dob_month', v)} />
+                            <div className="space-y-1">
+                                <Label htmlFor="dob_month" className="text-xs text-muted-foreground">Mois</Label>
+                                <Input id="dob_month" type="number" placeholder="MM" value={formData.dob_month} onChange={handleChange} className="bg-background/50 h-16 text-center text-2xl"/>
                             </div>
-                            <div>
-                                <Label htmlFor="dob_year">Année</Label>
-                                <NumberInputWithControls id="dob_year" placeholder="AAAA" value={formData.dob_year} onChange={handleChange} min={new Date().getFullYear() - 100} max={new Date().getFullYear() - 18} onValueChange={(v) => handleDobChange('dob_year', v)} />
+                            <div className="space-y-1">
+                                <Label htmlFor="dob_year" className="text-xs text-muted-foreground">Année</Label>
+                                <Input id="dob_year" type="number" placeholder="AAAA" value={formData.dob_year} onChange={handleChange} className="bg-background/50 h-16 text-center text-2xl"/>
                             </div>
                         </div>
                     </div>
                 )}
-                
+
                 {step === 3 && (
-                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Êtes-vous un pronostiqueur ? Si oui, entrez votre code promo pour des sites comme 1xBet.</p>
-                        <RadioGroup value={formData.isPronostiqueur} onValueChange={handlePronostiqueurChange} className="grid grid-cols-2 gap-4 pt-4">
-                             <Label htmlFor="pronostiqueur-oui" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="oui" id="pronostiqueur-oui" className="sr-only" />
-                              Oui
-                            </Label>
-                             <Label htmlFor="pronostiqueur-non" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="non" id="pronostiqueur-non" className="sr-only" />
-                              Non
-                            </Label>
-                        </RadioGroup>
+                    <div className="space-y-4">
+                        <p className="text-sm text-muted-foreground text-center">Si vous êtes pronostiqueur, entrez votre code promo affilié (ex: 1xBet).</p>
+                        <div className="grid grid-cols-2 gap-4 pt-4">
+                            <RadioCard id="pronostiqueur-oui" value="oui" selectedValue={formData.isPronostiqueur} onSelect={(val) => setFormData(p => ({...p, isPronostiqueur: val, pronostiqueurCode: ''}))} className="h-24">Oui</RadioCard>
+                            <RadioCard id="pronostiqueur-non" value="non" selectedValue={formData.isPronostiqueur} onSelect={(val) => setFormData(p => ({...p, isPronostiqueur: val, pronostiqueurCode: ''}))} className="h-24">Non</RadioCard>
+                        </div>
                         {formData.isPronostiqueur === 'oui' && (
-                            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="space-y-4 pt-4">
-                                <div className="relative p-4 border-dashed border-2 border-border">
-                                    <div className="flex items-center gap-4">
-                                        <ShieldCheck className="text-primary h-8 w-8 shrink-0"/>
-                                        <Input 
-                                            id="pronostiqueurCode" 
-                                            value={formData.pronostiqueurCode} 
-                                            onChange={handleChange} 
-                                            placeholder="VOTRE-CODE-PROMO"
-                                            className="text-center tracking-widest font-bold text-lg bg-transparent border-0 h-auto p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
-                                        />
-                                    </div>
-                                </div>
+                            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="space-y-2 pt-4">
+                                <Label htmlFor="pronostiqueurCode">Votre Code Promo</Label>
+                                <Input id="pronostiqueurCode" value={formData.pronostiqueurCode} onChange={handleChange} placeholder="VOTRE-CODE" className="bg-background/50 h-12 text-center tracking-widest font-bold"/>
                             </motion.div>
                         )}
                     </div>
                 )}
-
+                
                 {step === 4 && (
                     <div className="space-y-4">
-                        <p className="text-sm text-muted-foreground text-center">Avez-vous un code de parrainage ?</p>
-                        <RadioGroup value={formData.hasReferralCode} onValueChange={handleReferralChange} className="grid grid-cols-2 gap-4 pt-4">
-                             <Label htmlFor="referral-oui" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="oui" id="referral-oui" className="sr-only" />
-                              Oui
-                            </Label>
-                             <Label htmlFor="referral-non" className="p-4 border rounded-md cursor-pointer has-[:checked]:border-primary text-center">
-                              <RadioGroupItem value="non" id="referral-non" className="sr-only" />
-                              Non
-                            </Label>
-                        </RadioGroup>
+                        <p className="text-sm text-muted-foreground text-center">Si un ami vous a invité, entrez son pseudo ici.</p>
+                         <div className="grid grid-cols-2 gap-4 pt-4">
+                            <RadioCard id="referral-oui" value="oui" selectedValue={formData.hasReferralCode} onSelect={(val) => setFormData(p => ({...p, hasReferralCode: val, referralCode: ''}))} className="h-24">Oui</RadioCard>
+                            <RadioCard id="referral-non" value="non" selectedValue={formData.hasReferralCode} onSelect={(val) => setFormData(p => ({...p, hasReferralCode: val, referralCode: ''}))} className="h-24">Non</RadioCard>
+                        </div>
                         {formData.hasReferralCode === 'oui' && (
-                            <motion.div initial={{opacity: 0, height: 0}} animate={{opacity: 1, height: 'auto'}} className="grid gap-2 overflow-hidden">
-                                <Label htmlFor="referralCode">Code de parrainage</Label>
-                                <Input id="referralCode" value={formData.referralCode} onChange={handleChange} />
+                            <motion.div initial={{opacity: 0, y: 10}} animate={{opacity: 1, y: 0}} className="space-y-2 pt-4 overflow-hidden">
+                                <Label htmlFor="referralCode">Pseudo du parrain</Label>
+                                <Input id="referralCode" value={formData.referralCode} onChange={handleChange} className="bg-background/50 h-12"/>
                                 <div className="h-5 mt-1">{renderReferralCodeFeedback()}</div>
                             </motion.div>
                         )}
                     </div>
                 )}
 
-            </motion.div>
-        </AnimatePresence>
+                </div>
+                </motion.div>
+            </AnimatePresence>
+        </div>
       </main>
 
-      <footer className="w-full max-w-sm z-10 space-y-4">
-        <div className="flex w-full items-center gap-4">
-            <Button variant="outline" onClick={handlePrevStep} className="w-1/3" disabled={step === 1}>
-                <ArrowLeft className="mr-2 h-4 w-4" /> Précédent
-            </Button>
-            {step === TOTAL_STEPS ? (
-                <Button onClick={handleFinish} className="w-2/3" disabled={!isStepValid || isLoading}>
-                    {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Terminer'}
+       {step <= TOTAL_STEPS && (
+        <footer className="w-full max-w-sm z-10 space-y-4 pt-4">
+            <div className="flex w-full items-center gap-4">
+                <Button variant="outline" onClick={handlePrevStep} className="w-full bg-card/50 h-12" disabled={step === 1}>
+                    <ArrowLeft className="mr-2 h-4 w-4" />
+                    Précédent
                 </Button>
-            ) : (
-                <Button onClick={handleNextStepWithValidation} className="w-2/3" disabled={!isStepValid || isLoading || isCheckingPromo}>
-                    {(isLoading || isCheckingPromo) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Suivant <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-            )}
-        </div>
-      </footer>
+                {step === TOTAL_STEPS ? (
+                    <Button onClick={handleFinish} className="w-full h-12" disabled={!isStepValid || isFinishing}>
+                        {isFinishing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : 'Terminer'}
+                    </Button>
+                ) : (
+                    <Button onClick={() => { if(isStepValid) handleNextStep() }} className="w-full h-12" disabled={!isStepValid || isFinishing || isCheckingPromo}>
+                        {(isFinishing || isCheckingPromo) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        Suivant <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                )}
+            </div>
+        </footer>
+      )}
     </div>
   );
 }
+
+    
